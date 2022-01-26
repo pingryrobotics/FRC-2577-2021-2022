@@ -6,8 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
 /**
@@ -15,27 +17,50 @@ import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
  * the code necessary to operate a robot with tank drive.
  */
 public class Robot extends TimedRobot {
-  private DifferentialDrive m_myRobot;
-  private Joystick m_leftStick;
-  private Joystick m_rightStick;
+	private DifferentialDrive m_robotDrive;
+	private Joystick m_leftStick;
+	private Joystick m_rightStick;
 
-  private final MotorController m_leftMotor = new PWMSparkMax(0);
-  private final MotorController m_rightMotor = new PWMSparkMax(1);
+	private final MotorController m_frontLeft = new PWMSparkMax(0);
+	private final MotorController m_frontRight = new PWMSparkMax(21);
+	private final MotorController m_rearLeft = new PWMSparkMax(2);
+	private final MotorController m_rearRight = new PWMSparkMax(3);
+	private final Timer m_timer = new Timer();
 
-  @Override
-  public void robotInit() {
-    // We need to invert one side of the drivetrain so that positive voltages
-    // result in both sides moving forward. Depending on how your robot's
-    // gearbox is constructed, you might have to invert the left side instead.
-    m_rightMotor.setInverted(true);
+	@Override
+	public void robotInit() {
+		// We need to invert one side of the drivetrain so that positive voltages
+		// result in both sides moving forward. Depending on how your robot's
+		// gearbox is constructed, you might have to invert the left side instead.
+		MotorControllerGroup m_left = new MotorControllerGroup(m_frontLeft, m_rearLeft);
+		MotorControllerGroup m_right = new MotorControllerGroup(m_frontRight, m_rearRight);
+		m_right.setInverted(true);
+		m_robotDrive = new DifferentialDrive(m_left, m_right);
 
-    m_myRobot = new DifferentialDrive(m_leftMotor, m_rightMotor);
-    m_leftStick = new Joystick(0);
-    m_rightStick = new Joystick(1);
-  }
+		m_leftStick = new Joystick(0);
+		m_rightStick = new Joystick(1);
+	}
 
-  @Override
-  public void teleopPeriodic() {
-    m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
-  }
+	@Override
+	public void teleopPeriodic() {
+		m_robotDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+	}
+
+	/** This function is run once each time the robot enters autonomous mode. */
+	@Override
+	public void autonomousInit() {
+		m_timer.reset();
+		m_timer.start();
+	}
+
+	/** This function is called periodically during autonomous. */
+	@Override
+	public void autonomousPeriodic() {
+		// Drive for 2 seconds
+		if (m_timer.get() < 2.0) {
+			m_robotDrive.tankDrive(0.5, 0.0); // drive forwards half speed
+		} else {
+			m_robotDrive.stopMotor(); // stop robot
+		}
+	}
 }
