@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -21,10 +24,10 @@ public class Robot extends TimedRobot {
 	private Joystick m_leftStick;
 	private Joystick m_rightStick;
 
-	private final MotorController m_frontLeft = new PWMSparkMax(0);
-	private final MotorController m_frontRight = new PWMSparkMax(21);
-	private final MotorController m_rearLeft = new PWMSparkMax(2);
-	private final MotorController m_rearRight = new PWMSparkMax(3);
+	private final MotorController m_frontLeft = new CANSparkMax(21, MotorType.kBrushless);
+	private final MotorController m_frontRight = new CANSparkMax(20, MotorType.kBrushless);
+	private final MotorController m_rearLeft = new CANSparkMax(24, MotorType.kBrushless);
+	private final MotorController m_rearRight = new CANSparkMax(23, MotorType.kBrushless);
 	private final Timer m_timer = new Timer();
 
 	@Override
