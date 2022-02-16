@@ -14,39 +14,34 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Drive;
 
 /**
  * This is a demo program showing the use of the DifferentialDrive class, specifically it contains
  * the code necessary to operate a robot with tank drive.
  */
 public class Robot extends TimedRobot {
-	private DifferentialDrive m_robotDrive;
-	private Joystick m_leftStick;
-	private Joystick m_rightStick;
+	private Drive drive;
+	private RobotContainer m_robotContainer;
+	private Command m_autonomousCommand;
 
-	private final MotorController m_frontLeft = new CANSparkMax(21, MotorType.kBrushless);
-	private final MotorController m_frontRight = new CANSparkMax(20, MotorType.kBrushless);
-	private final MotorController m_rearLeft = new CANSparkMax(24, MotorType.kBrushless);
-	private final MotorController m_rearRight = new CANSparkMax(23, MotorType.kBrushless);
 	private final Timer m_timer = new Timer();
 
 	@Override
 	public void robotInit() {
-		// We need to invert one side of the drivetrain so that positive voltages
-		// result in both sides moving forward. Depending on how your robot's
-		// gearbox is constructed, you might have to invert the left side instead.
-		MotorControllerGroup m_left = new MotorControllerGroup(m_frontLeft, m_rearLeft);
-		MotorControllerGroup m_right = new MotorControllerGroup(m_frontRight, m_rearRight);
-		m_right.setInverted(true);
-		m_robotDrive = new DifferentialDrive(m_left, m_right);
+		m_robotContainer = new RobotContainer();
+	}
 
-		m_leftStick = new Joystick(0);
-		m_rightStick = new Joystick(1);
+	@Override
+	public void robotPeriodic() {
+		CommandScheduler.getInstance().run();
 	}
 
 	@Override
 	public void teleopPeriodic() {
-		m_robotDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+		m_robotContainer.driveControl();
 	}
 
 	/** This function is run once each time the robot enters autonomous mode. */
@@ -54,16 +49,16 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		m_timer.reset();
 		m_timer.start();
+		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+		// schedule the autonomous command (example)
+		if (m_autonomousCommand != null) {
+			m_autonomousCommand.schedule();
+		}
 	}
 
 	/** This function is called periodically during autonomous. */
 	@Override
 	public void autonomousPeriodic() {
-		// Drive for 2 seconds
-		if (m_timer.get() < 2.0) {
-			m_robotDrive.tankDrive(0.5, 0.0); // drive forwards half speed
-		} else {
-			m_robotDrive.stopMotor(); // stop robot
-		}
 	}
 }
