@@ -6,7 +6,7 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
 	private CANSparkMax roller;
-	private Boolean on = true;
+	private boolean on = true;
 
 	/**
 	 * Creates a new ExampleSubsystem.

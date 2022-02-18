@@ -24,8 +24,6 @@ import edu.wpi.first.wpilibj.SPI;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-	public static final int kIntakeSpeed = -1;
-
 	// PATH PLANNING CONSTANTS -- WILL NEED TO BE CHANGED FOR EACH ROBOT
 	public static final double kTrackwidthMeters = 0.69;
 	public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
@@ -60,4 +58,14 @@ public final class Constants {
 	public static final boolean kRightEncoderReversed = false;
 	public static final int kEncoderDistancePerPulse = -1;
 	// public static final SPI.Port imuPort = SPI.Port.kOnboardCS0; // change
+
+	public static final int kOuttakeSpeed = 1;
+	public static final int kIntakeSpeed = 1;
+	public static final int kClimberSpeed = 1;
+	public static final int kSlideLimit = 1; // in rotations
+	public static final int kArmLimit = 1; // in rotations
+	public static final int kIntakeId = -1;
+	public static final int kOuttakeId = -1;
+	public static final int kClimberId = -1;
+	public static final int kRotatingArmId = -1;
 }

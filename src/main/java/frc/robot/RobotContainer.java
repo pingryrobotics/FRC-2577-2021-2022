@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
 import java.util.List;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -27,7 +30,13 @@ import edu.wpi.first.wpilibj.XboxController;
 // import commands and subsystems
 
 import frc.robot.Constants;
+import frc.robot.commands.ChangeClimberSpeed;
+import frc.robot.commands.ChangeShooterSpeed;
+import frc.robot.commands.ToggleIntake;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -54,7 +63,10 @@ public class RobotContainer {
 	public Joystick m_leftStick = new Joystick(0);
 	public Joystick m_rightStick = new Joystick(1);
 	public Joystick m_mechanismController = new Joystick(2);
-	private Drive m_robotDrive = new Drive();
+	private final Drive m_robotDrive = new Drive();
+	private final Shooter m_shooter = new Shooter(new CANSparkMax(Constants.kOuttakeId, MotorType.kBrushless));
+	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless));
+	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -75,12 +87,13 @@ public class RobotContainer {
 	private void configureButtonBindings() {
 		// input commands here
 		// new JoystickButton(m_driverController1, 1).whenPressed(new ChangeShooterDirection(m_shooter));
-		// new JoystickButton(m_driverController1, 2).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
-		// new JoystickButton(m_driverController1, 3).whenPressed(new ChangeShooterSpeed(m_shooter, .5));
-		// new JoystickButton(m_driverController1, 4).whenPressed(new ChangeShooterSpeed(m_shooter, .7));
-		// new JoystickButton(m_driverController1, 5).whenPressed(new ChangeShooterSpeed(m_shooter, .8));
+		new JoystickButton(m_mechanismController, 2).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
+		new JoystickButton(m_mechanismController, 3).whenPressed(new ChangeShooterSpeed(m_shooter, .5));
+		new JoystickButton(m_mechanismController, 4).whenPressed(new ChangeShooterSpeed(m_shooter, .7));
+		new JoystickButton(m_mechanismController, 5).whenPressed(new ChangeShooterSpeed(m_shooter, .8));
 		// new JoystickButton(m_driverController1, 11).whenPressed(new ToggleHopper(m_hopper));
-		// new JoystickButton(m_driverController1, 10).whenPressed(new ToggleIntake(m_intake));
+		new JoystickButton(m_mechanismController, 11).whenPressed(new ChangeClimberSpeed(m_climber, true)); // toggle extend/retract 
+		new JoystickButton(m_mechanismController, 10).whenPressed(new ToggleIntake(m_intake));
 		// new JoystickButton(m_leftStick, 1).whenPressed(new ToggleIntake(m_robotDrive));
 		// new JoyStickButton(m_mechanismController, 1).whenPressed(new (m_robotDrive));
 	}

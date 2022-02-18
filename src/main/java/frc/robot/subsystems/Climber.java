@@ -7,18 +7,36 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
+	private CANSparkMax m_linearSlide;
+	private CANSparkMax m_rotatingArm;
 	/**
 	 * Creates a new ExampleSubsystem.
 	 */
-	public Climber() {
+	public Climber(CANSparkMax climbMotor, CANSparkMax armMotor) {
+		m_linearSlide = climbMotor;
+		m_linearSlide.enableVoltageCompensation(12);
+		m_linearSlide.setSoftLimit(SoftLimitDirection.kForward, Constants.kSlideLimit);
+		m_linearSlide.setSoftLimit(SoftLimitDirection.kReverse, 0);
+		m_rotatingArm = armMotor;
+		m_rotatingArm.enableVoltageCompensation(12);
+		m_rotatingArm.setSoftLimit(SoftLimitDirection.kForward, Constants.kArmLimit);
+		m_rotatingArm.setSoftLimit(SoftLimitDirection.kReverse, 0);
+	}
 
+	public void set(double speed) {
+		m_linearSlide.set(speed);
 	}
 
 	@Override
 	public void periodic() {
 		// This method will be called once per scheduler run
+
 	}
 }

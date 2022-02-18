@@ -23,7 +23,6 @@ import frc.robot.subsystems.Drive;
  * the code necessary to operate a robot with tank drive.
  */
 public class Robot extends TimedRobot {
-	private Drive drive;
 	private RobotContainer m_robotContainer;
 	private Command m_autonomousCommand;
 
@@ -37,6 +36,10 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
+	}
+
+	@Override
+	public void teleopInit() {
 	}
 
 	@Override
@@ -60,5 +63,29 @@ public class Robot extends TimedRobot {
 	/** This function is called periodically during autonomous. */
 	@Override
 	public void autonomousPeriodic() {
+	}
+
+	@Override
+	public void disabledInit() {
+	}
+
+	@Override
+	public void disabledPeriodic() {
+	}
+
+	@Override
+	public void testInit() {
+	}
+
+	@Override
+	public void testPeriodic() {
+	}
+
+	@Override
+	public void simulationInit() {
+	}
+
+	@Override
+	public void simulationPeriodic() {
 	}
 }
