@@ -8,8 +8,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -32,11 +35,16 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants;
 import frc.robot.commands.ChangeClimberSpeed;
 import frc.robot.commands.ChangeShooterSpeed;
+import frc.robot.commands.ReverseIntake;
+import frc.robot.commands.ReverseIntakeBelt;
 import frc.robot.commands.ToggleIntake;
+import frc.robot.commands.ToggleIntakeBelt;
+import frc.robot.commands.TwoCargoAuto;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import frc.robot.util.GeomUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -65,7 +73,7 @@ public class RobotContainer {
 	public Joystick m_mechanismController = new Joystick(2);
 	private final Drive m_robotDrive = new Drive();
 	private final Shooter m_shooter = new Shooter(new CANSparkMax(Constants.kOuttakeId, MotorType.kBrushless));
-	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless));
+	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
 	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
 
 	/**
@@ -87,13 +95,17 @@ public class RobotContainer {
 	private void configureButtonBindings() {
 		// input commands here
 		// new JoystickButton(m_driverController1, 1).whenPressed(new ChangeShooterDirection(m_shooter));
-		new JoystickButton(m_mechanismController, 2).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
-		new JoystickButton(m_mechanismController, 3).whenPressed(new ChangeShooterSpeed(m_shooter, .5));
-		new JoystickButton(m_mechanismController, 4).whenPressed(new ChangeShooterSpeed(m_shooter, .7));
-		new JoystickButton(m_mechanismController, 5).whenPressed(new ChangeShooterSpeed(m_shooter, .8));
+		new JoystickButton(m_mechanismController, 2).whenPressed(new ChangeShooterSpeed(m_shooter, -1));
+		new JoystickButton(m_mechanismController, 3).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
+		new JoystickButton(m_mechanismController, 4).whenPressed(new ChangeShooterSpeed(m_shooter, .5)); // lower level
+		new JoystickButton(m_mechanismController, 5).whenPressed(new ChangeShooterSpeed(m_shooter, 1)); // upper level
 		// new JoystickButton(m_driverController1, 11).whenPressed(new ToggleHopper(m_hopper));
 		new JoystickButton(m_mechanismController, 11).whenPressed(new ChangeClimberSpeed(m_climber, true)); // toggle extend/retract 
 		new JoystickButton(m_mechanismController, 10).whenPressed(new ToggleIntake(m_intake));
+		new JoystickButton(m_mechanismController, 8).whenPressed(new ReverseIntake(m_intake));
+		new JoystickButton(m_mechanismController, 9).whenPressed(new ToggleIntakeBelt(m_intake));
+		new JoystickButton(m_mechanismController, 7).whenPressed(new ReverseIntakeBelt(m_intake));
+
 		// new JoystickButton(m_leftStick, 1).whenPressed(new ToggleIntake(m_robotDrive));
 		// new JoyStickButton(m_mechanismController, 1).whenPressed(new (m_robotDrive));
 	}
@@ -102,61 +114,125 @@ public class RobotContainer {
 		m_robotDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
 	}
 
+	// A chooser for autonomous commands
+	SendableChooser<TwoCargoAuto> m_chooser = new SendableChooser<>();
+
 	/**
 	 * Use this to pass the autonomous command to the main {@link Robot} class.
 	 *
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		// Create a voltage constraint to ensure we don't accelerate too fast
-		var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
-				new SimpleMotorFeedforward(
-						Constants.ksVolts,
-						Constants.kvVoltSecondsPerMeter,
-						Constants.kaVoltSecondsSquaredPerMeter),
-				Constants.kDriveKinematics,
-				10);
+		Map<String, AutoRoutine> autoMap = new HashMap<String, AutoRoutine>();
+		autoMap.put("Two cargo (TA)",
+        	new AutoRoutine(AutoPosition.TARMAC_A,
+        	    new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter)));
+		autoMap.put("Two cargo (TB)",
+			new AutoRoutine(AutoPosition.TARMAC_B,
+				new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter)));
+		autoMap.put("Two cargo (TC)",
+			new AutoRoutine(AutoPosition.TARMAC_C,
+				new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter)));
+		autoMap.put("Two cargo (TD)",
+			new AutoRoutine(AutoPosition.TARMAC_D,
+						new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter)));
+		m_chooser.setDefaultOption("TA", new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter));
+		m_chooser.addOption("TB", new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter));
+		m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
+		m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
+		m_robotDrive.setPose(m_chooser.getSelected().pos.getPose());
+		return m_chooser.getSelected();
+		// // Create a voltage constraint to ensure we don't accelerate too fast
+		// var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+		// 		new SimpleMotorFeedforward(
+		// 				Constants.ksVolts,
+		// 				Constants.kvVoltSecondsPerMeter,
+		// 				Constants.kaVoltSecondsSquaredPerMeter),
+		// 		Constants.kDriveKinematics,
+		// 		10);
 
-		// Create config for trajectory
-		TrajectoryConfig config = new TrajectoryConfig(
-				Constants.kMaxSpeedMetersPerSecond,
-				Constants.kMaxAccelerationMetersPerSecondSquared)
-						// Add kinematics to ensure max speed is actually obeyed
-						.setKinematics(Constants.kDriveKinematics)
-						// Apply the voltage constraint
-						.addConstraint(autoVoltageConstraint);
+		// // Create config for trajectory
+		// TrajectoryConfig config = new TrajectoryConfig(
+		// 		Constants.kMaxSpeedMetersPerSecond,
+		// 		Constants.kMaxAccelerationMetersPerSecondSquared)
+		// 				// Add kinematics to ensure max speed is actually obeyed
+		// 				.setKinematics(Constants.kDriveKinematics)
+		// 				// Apply the voltage constraint
+		// 				.addConstraint(autoVoltageConstraint);
 
-		// An example trajectory to follow. All units in meters.
-		Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-				// Start at the origin facing the +X direction
-				new Pose2d(0, 0, new Rotation2d(0)),
-				// Pass through these two interior waypoints, making an 's' curve path
-				List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-				// End 3 meters straight ahead of where we started, facing forward
-				new Pose2d(3, 0, new Rotation2d(0)),
-				// Pass config
-				config);
 
-		RamseteCommand ramseteCommand = new RamseteCommand(
-				exampleTrajectory,
-				m_robotDrive::getPose,
-				new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-				new SimpleMotorFeedforward(
-						Constants.ksVolts,
-						Constants.kvVoltSecondsPerMeter,
-						Constants.kaVoltSecondsSquaredPerMeter),
-				Constants.kDriveKinematics,
-				m_robotDrive::getWheelSpeeds,
-				new PIDController(Constants.kPDriveVel, 0, 0),
-				new PIDController(Constants.kPDriveVel, 0, 0),
-				// RamseteCommand passes volts to the callback
-				m_robotDrive::tankDriveVolts,
-				m_robotDrive);
+		// // An example trajectory to follow. All units in meters.
+		// Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+		// 		// Start at the origin facing the +X direction
+		// 		new Pose2d(0, 0, new Rotation2d(0)),
+		// 		// Pass through these two interior waypoints, making an 's' curve path
+		// 		List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+		// 		// End 3 meters straight ahead of where we started, facing forward
+		// 		new Pose2d(3, 0, new Rotation2d(0)),
+		// 		// Pass config
+		// 		config);
 
-		// Reset odometry to the starting pose of the trajectory.
-		m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+		// RamseteCommand ramseteCommand = new RamseteCommand(
+		// 		exampleTrajectory,
+		// 		m_robotDrive::getPose,
+		// 		new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
+		// 		new SimpleMotorFeedforward(
+		// 				Constants.ksVolts,
+		// 				Constants.kvVoltSecondsPerMeter,
+		// 				Constants.kaVoltSecondsSquaredPerMeter),
+		// 		Constants.kDriveKinematics,
+		// 		m_robotDrive::getWheelSpeeds,
+		// 		new PIDController(Constants.kPDriveVel, 0, 0),
+		// 		new PIDController(Constants.kPDriveVel, 0, 0),
+		// 		// RamseteCommand passes volts to the callback
+		// 		m_robotDrive::tankDriveVolts,
+		// 		m_robotDrive);
 
-		// Run path following command, then stop at the end.
-		return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
+		// // Reset odometry to the starting pose of the trajectory.
+		// m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+
+		// // Run path following command, then stop at the end.
+		// return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
+	}
+
+	private static class AutoRoutine {
+		public final AutoPosition position;
+		public final Command command;
+
+		public AutoRoutine(AutoPosition position, Command command) {
+			this.position = position;
+			this.command = command;
+		}
+	}
+
+	public static enum AutoPosition {
+		ORIGIN, TARMAC_A, TARMAC_B, TARMAC_C, TARMAC_D, FENDER_A, FENDER_B;
+
+		public Pose2d getPose() {
+			switch (this) {
+				case ORIGIN:
+					return new Pose2d();
+				case TARMAC_A:
+					return Constants.referenceA
+							.transformBy(GeomUtil.transformFromTranslation(-0.5, 0.7));
+				case TARMAC_B:
+					return Constants.referenceB
+							.transformBy(GeomUtil.transformFromTranslation(-0.5, -0.2));
+				case TARMAC_C:
+					return Constants.referenceC
+							.transformBy(GeomUtil.transformFromTranslation(-0.5, -0.1));
+				case TARMAC_D:
+					return Constants.referenceD
+							.transformBy(GeomUtil.transformFromTranslation(-0.5, -0.7));
+				case FENDER_A:
+					return Constants.fenderA
+							.transformBy(GeomUtil.transformFromTranslation(0.5, 0.0));
+				case FENDER_B:
+					return Constants.fenderB
+							.transformBy(GeomUtil.transformFromTranslation(0.5, 0.0));
+				default:
+					return new Pose2d();
+			}
+		}
 	}
 }

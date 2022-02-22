@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -80,9 +79,13 @@ public class Drive extends SubsystemBase {
    *
    * @return The pose.
    */
-  public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
-  }
+	public Pose2d getPose() {
+		return m_odometry.getPoseMeters();
+	}
+
+	public void setPose(Pose2d pose) {
+		m_odometry.resetPosition(pose, new Rotation2d(m_imu.getAngle() * -1));
+	}
 
   /**
    * Returns the current wheel speeds of the robot.
@@ -100,7 +103,7 @@ public class Drive extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
-    m_odometry.resetPosition(pose, new Rotation2d(Math.toRadians(m_imu.getAngle())));
+    m_odometry.resetPosition(pose, new Rotation2d(Math.toRadians(Math.toRadians(m_imu.getAngle()))));
   }
 
   /**
@@ -189,4 +192,5 @@ public class Drive extends SubsystemBase {
   public double getTurnRate() {
     return -m_imu.getRate();
   }
+  
 }
