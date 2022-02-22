@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.HashMap;
 import java.util.List;
@@ -80,8 +81,13 @@ public class RobotContainer {
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
-		// Configure the button bindings
+		// Configure the button binding
 		configureButtonBindings();
+		m_chooser.setDefaultOption("TA", new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter));
+		m_chooser.addOption("TB", new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter));
+		m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
+		m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
+		SmartDashboard.putData("Auto choices", m_chooser);
 	}
 
 	/**
@@ -123,23 +129,19 @@ public class RobotContainer {
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		Map<String, AutoRoutine> autoMap = new HashMap<String, AutoRoutine>();
-		autoMap.put("Two cargo (TA)",
-        	new AutoRoutine(AutoPosition.TARMAC_A,
-        	    new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter)));
-		autoMap.put("Two cargo (TB)",
-			new AutoRoutine(AutoPosition.TARMAC_B,
-				new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter)));
-		autoMap.put("Two cargo (TC)",
-			new AutoRoutine(AutoPosition.TARMAC_C,
-				new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter)));
-		autoMap.put("Two cargo (TD)",
-			new AutoRoutine(AutoPosition.TARMAC_D,
-						new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter)));
-		m_chooser.setDefaultOption("TA", new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter));
-		m_chooser.addOption("TB", new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter));
-		m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
-		m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
+		// Map<String, AutoRoutine> autoMap = new HashMap<String, AutoRoutine>();
+		// autoMap.put("Two cargo (TA)",
+        // 	new AutoRoutine(AutoPosition.TARMAC_A,
+        // 	    new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter)));
+		// autoMap.put("Two cargo (TB)",
+		// 	new AutoRoutine(AutoPosition.TARMAC_B,
+		// 		new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter)));
+		// autoMap.put("Two cargo (TC)",
+		// 	new AutoRoutine(AutoPosition.TARMAC_C,
+		// 		new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter)));
+		// autoMap.put("Two cargo (TD)",
+		// 	new AutoRoutine(AutoPosition.TARMAC_D,
+		// 				new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter)));
 		m_robotDrive.setPose(m_chooser.getSelected().pos.getPose());
 		return m_chooser.getSelected();
 		// // Create a voltage constraint to ensure we don't accelerate too fast
