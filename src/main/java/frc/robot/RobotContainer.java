@@ -7,33 +7,18 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 // import commands and subsystems
-
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.commands.ChangeClimberSpeed;
 import frc.robot.commands.ChangeShooterSpeed;
 import frc.robot.commands.ReverseIntake;
@@ -71,7 +56,7 @@ public class RobotContainer {
 	// private final DriveBase m_driveBase = new DriveBase();
 	public Joystick m_leftStick = new Joystick(0);
 	public Joystick m_rightStick = new Joystick(1);
-	public Joystick m_mechanismController = new Joystick(2);
+	public XboxController m_mechanismController = new XboxController(2);
 	private final Drive m_robotDrive = new Drive();
 	private final Shooter m_shooter = new Shooter(new CANSparkMax(Constants.kOuttakeId, MotorType.kBrushless));
 	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
@@ -101,12 +86,12 @@ public class RobotContainer {
 	private void configureButtonBindings() {
 		// input commands here
 		// new JoystickButton(m_driverController1, 1).whenPressed(new ChangeShooterDirection(m_shooter));
-		new JoystickButton(m_mechanismController, 2).whenPressed(new ChangeShooterSpeed(m_shooter, -1));
-		new JoystickButton(m_mechanismController, 3).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
-		new JoystickButton(m_mechanismController, 4).whenPressed(new ChangeShooterSpeed(m_shooter, .5)); // lower level
-		new JoystickButton(m_mechanismController, 5).whenPressed(new ChangeShooterSpeed(m_shooter, 1)); // upper level
+		new JoystickButton(m_mechanismController, Button.kX.value).whenPressed(new ChangeShooterSpeed(m_shooter, -1));
+		new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
+		new JoystickButton(m_mechanismController, Button.kY.value).whenPressed(new ChangeShooterSpeed(m_shooter, .5)); // lower level
+		new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(new ChangeShooterSpeed(m_shooter, 1)); // upper level
 		// new JoystickButton(m_driverController1, 11).whenPressed(new ToggleHopper(m_hopper));
-		new JoystickButton(m_mechanismController, 11).whenPressed(new ChangeClimberSpeed(m_climber, true)); // toggle extend/retract 
+		new JoystickButton(m_mechanismController, Button.).whenPressed(new ChangeClimberSpeed(m_climber, true)); // toggle extend/retract 
 		new JoystickButton(m_mechanismController, 10).whenPressed(new ToggleIntake(m_intake));
 		new JoystickButton(m_mechanismController, 8).whenPressed(new ReverseIntake(m_intake));
 		new JoystickButton(m_mechanismController, 9).whenPressed(new ToggleIntakeBelt(m_intake));
@@ -195,16 +180,6 @@ public class RobotContainer {
 
 		// // Run path following command, then stop at the end.
 		// return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
-	}
-
-	private static class AutoRoutine {
-		public final AutoPosition position;
-		public final Command command;
-
-		public AutoRoutine(AutoPosition position, Command command) {
-			this.position = position;
-			this.command = command;
-		}
 	}
 
 	public static enum AutoPosition {

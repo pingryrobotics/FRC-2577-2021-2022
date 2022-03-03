@@ -34,6 +34,14 @@ public class Climber extends SubsystemBase {
 		m_linearSlide.set(speed);
 	}
 
+	public void invertExtendable() {
+		m_linearSlide.setInverted(true);
+	}
+
+	public void invertRetractable() {
+		m_rotatingArm.setInverted(true);
+	}
+
 	@Override
 	public void periodic() {
 		// This method will be called once per scheduler run
