@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.XboxController;
 // import commands and subsystems
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.commands.ChangeClimberSpeed;
+import frc.robot.commands.ChangeRotatingClimberSpeed;
 import frc.robot.commands.ChangeShooterSpeed;
 import frc.robot.commands.ReverseIntake;
 import frc.robot.commands.ReverseIntakeBelt;
@@ -34,6 +35,7 @@ import frc.robot.util.GeomUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -91,11 +93,12 @@ public class RobotContainer {
 		new JoystickButton(m_mechanismController, Button.kY.value).whenPressed(new ChangeShooterSpeed(m_shooter, .5)); // lower level
 		new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(new ChangeShooterSpeed(m_shooter, 1)); // upper level
 		// new JoystickButton(m_driverController1, 11).whenPressed(new ToggleHopper(m_hopper));
-		new JoystickButton(m_mechanismController, Button.).whenPressed(new ChangeClimberSpeed(m_climber, true)); // toggle extend/retract 
-		new JoystickButton(m_mechanismController, 10).whenPressed(new ToggleIntake(m_intake));
-		new JoystickButton(m_mechanismController, 8).whenPressed(new ReverseIntake(m_intake));
-		new JoystickButton(m_mechanismController, 9).whenPressed(new ToggleIntakeBelt(m_intake));
-		new JoystickButton(m_mechanismController, 7).whenPressed(new ReverseIntakeBelt(m_intake));
+		new JoystickButton(m_mechanismController, Button.kLeftBumper.value).whenPressed(new ChangeClimberSpeed(m_climber)); // toggle extend/retract 
+		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenPressed(new ChangeRotatingClimberSpeed(m_climber)); // toggle extend/retract
+		new POVButton(m_mechanismController, 0).whenPressed(new ToggleIntake(m_intake));
+		new POVButton(m_mechanismController, 90).whenPressed(new ReverseIntake(m_intake));
+		new POVButton(m_mechanismController, 180).whenPressed(new ToggleIntakeBelt(m_intake));
+		new POVButton(m_mechanismController, 270).whenPressed(new ReverseIntakeBelt(m_intake));
 
 		// new JoystickButton(m_leftStick, 1).whenPressed(new ToggleIntake(m_robotDrive));
 		// new JoyStickButton(m_mechanismController, 1).whenPressed(new (m_robotDrive));
