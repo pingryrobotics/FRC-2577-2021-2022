@@ -17,10 +17,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Axis;
 // import commands and subsystems
 import edu.wpi.first.wpilibj.XboxController.Button;
-import frc.robot.commands.ChangeClimberSpeed;
-import frc.robot.commands.ChangeRotatingClimberSpeed;
+import frc.robot.commands.Climb;
+import frc.robot.commands.ReverseClimb;
+// import frc.robot.commands.ChangeRotatingClimberSpeed;
 import frc.robot.commands.ChangeShooterSpeed;
 import frc.robot.commands.ReverseIntake;
 import frc.robot.commands.ReverseIntakeBelt;
@@ -56,13 +58,17 @@ public class RobotContainer {
 	// 		new CANSparkMax(Constants.kHopperUpperId, MotorType.kBrushless));
 	// private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless));
 	// private final DriveBase m_driveBase = new DriveBase();
-	public Joystick m_leftStick = new Joystick(0);
-	public Joystick m_rightStick = new Joystick(1);
+	public XboxController m_leftStick = new XboxController(0);
+	public XboxController m_rightStick = new XboxController(1);
+	// public Joystick m_leftStick = new Joystick(0);
+	// public Joystick m_rightStick = new Joystick(1);
 	public XboxController m_mechanismController = new XboxController(2);
 	private final Drive m_robotDrive = new Drive();
-	private final Shooter m_shooter = new Shooter(new CANSparkMax(Constants.kOuttakeId, MotorType.kBrushless));
+	private final Shooter m_shooter = new Shooter(new CANSparkMax(Constants.kOuttakeLId, MotorType.kBrushless), new CANSparkMax(Constants.kOuttakeRId, MotorType.kBrushless));
 	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
-	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
+	// private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
+	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless));
+
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -95,17 +101,23 @@ public class RobotContainer {
 		// new JoystickButton(m_driverController1, 11).whenPressed(new ToggleHopper(m_hopper));
 		new JoystickButton(m_mechanismController, Button.kLeftBumper.value).whenPressed(new ToggleIntake(m_intake)); // toggle intake
 		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenPressed(new ToggleIntakeBelt(m_intake)); // toggle intake belt
-		new POVButton(m_mechanismController, 0).whenPressed(new ChangeClimberSpeed(m_climber)); // extend/retract arm
-		new POVButton(m_mechanismController, 90).whenPressed(new ReverseIntake(m_intake));
-		new POVButton(m_mechanismController, 180).whenPressed(new ChangeRotatingClimberSpeed(m_climber)); // rotate arm
-		new POVButton(m_mechanismController, 270).whenPressed(new ReverseIntakeBelt(m_intake));
+		new POVButton(m_mechanismController, 0).whenPressed(new Climb(m_climber)); // extend/retract arm
+		new POVButton(m_mechanismController, 90).whenPressed(new ReverseClimb(m_climber));
+		// new POVButton(m_mechanismController, 180).whenPressed(new RotatingClimb(m_climber)); // rotate arm
+		// new POVButton(m_mechanismController, 270).whenPressed(new ReverseRotatingClimb(m_climber));
+
+		new JoystickButton(m_mechanismController, Button.kLeftStick.value).whenPressed(new ReverseIntake(m_intake)); // reverse intake
+		new JoystickButton(m_mechanismController, Button.kRightStick.value).whenPressed(new ReverseIntakeBelt(m_intake)); // reverse
+		// m_mechanismController.getTriggerAxis(Hand.kLeft).whenActive(new ReverseIntakeBelt(m_intake));
+		// m_mechanismController.getTriggerAxis(Hand.kRight).whenActive(new ReverseIntake(m_intake));
 
 		// new JoystickButton(m_leftStick, 1).whenPressed(new ToggleIntake(m_robotDrive));
 		// new JoyStickButton(m_mechanismController, 1).whenPressed(new (m_robotDrive));
 	}
 
 	public void driveControl() {
-		m_robotDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+		// m_robotDrive.tankDrive(m_leftStick.getY(), m_leftStick.getX());
+		m_robotDrive.tankDrive(m_leftStick.getRawAxis(Axis.kLeftY.value), m_rightStick.getRawAxis(Axis.kRightY.value));
 	}
 
 	// A chooser for autonomous commands

@@ -11,20 +11,25 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
-	private CANSparkMax outtake;
+	private CANSparkMax outtake1;
+	private CANSparkMax outtake2;
 	private double speed = 1;
 	private int flip = 1;
 
 	/**
 	 * Creates a new ExampleSubsystem.
 	 */
-	public Shooter(CANSparkMax outtake) {
-		outtake.enableVoltageCompensation(12);
+	public Shooter(CANSparkMax outtake1, CANSparkMax outtake2) {
+		this.outtake1 = outtake1;
+		this.outtake2 = outtake2;
+		outtake1.enableVoltageCompensation(12);
+		outtake2.enableVoltageCompensation(12);
 	}
 
 	@Override
 	public void periodic() {
-		outtake.set(flip * speed);
+		outtake1.set(flip * speed);
+		outtake2.set(-flip * speed);
 	}
 
 	public void flipDirection() {

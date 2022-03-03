@@ -6,7 +6,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.ExampleSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class ChangeClimberSpeed extends CommandBase {
+public class Climb extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
 	private final Climber m_subsystem;
 
@@ -15,7 +15,7 @@ public class ChangeClimberSpeed extends CommandBase {
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public ChangeClimberSpeed(Climber subsystem) {
+	public Climb(Climber subsystem) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
@@ -23,11 +23,13 @@ public class ChangeClimberSpeed extends CommandBase {
 
 	@Override
 	public void initialize() {
-		m_subsystem.invertExtendable();
+		m_subsystem.set(Constants.kClimberSpeed);
+		// m_subsystem.invertExtendable();
 		// m_subsystem.set((direc ? 1 : -1) * Constants.kClimberSpeed);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
+		m_subsystem.set(0);
 	}
 }

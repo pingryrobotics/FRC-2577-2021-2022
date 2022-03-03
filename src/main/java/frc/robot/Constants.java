@@ -54,10 +54,10 @@ public final class Constants {
 	public static final double kaVoltSecondsSquaredPerMeter = 0.2;
 	// Example value only - as above, this must be tuned for your drive!
 	public static final double kPDriveVel = 8.5;
-	public static final int kLeftMotor1Port = -1;
-	public static final int kLeftMotor2Port = -1;
-	public static final int kRightMotor1Port = -1;
-	public static final int kRightMotor2Port = -1;
+	public static final int kLeftMotor1Port = 10;
+	public static final int kLeftMotor2Port = 11;
+	public static final int kRightMotor1Port = 12;
+	public static final int kRightMotor2Port = 13;
 	public static final int[] kLeftEncoderPorts = { -1, -1 };
 	public static final int[] kRightEncoderPorts = { -1, -1 };
 	public static final boolean kLeftEncoderReversed = false;
@@ -71,11 +71,12 @@ public final class Constants {
 	public static final int kClimberSpeed = 1;
 	public static final int kSlideLimit = 1; // in rotations
 	public static final int kArmLimit = 1; // in rotations
-	public static final int kIntakeId = -1;
-	public static final int kOuttakeId = -1;
-	public static final int kClimberId = -1;
+	public static final int kIntakeId = 20;
+	public static final int kOuttakeLId = 22;
+	public static final int kOuttakeRId = 23;
+	public static final int kClimberId = 30;
 	public static final int kRotatingArmId = -1;
-	public static final int kBeltId = -1;
+	public static final int kBeltId = 21;
 
 
 	// Field dimensions
