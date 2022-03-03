@@ -93,11 +93,11 @@ public class RobotContainer {
 		new JoystickButton(m_mechanismController, Button.kY.value).whenPressed(new ChangeShooterSpeed(m_shooter, .5)); // lower level
 		new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(new ChangeShooterSpeed(m_shooter, 1)); // upper level
 		// new JoystickButton(m_driverController1, 11).whenPressed(new ToggleHopper(m_hopper));
-		new JoystickButton(m_mechanismController, Button.kLeftBumper.value).whenPressed(new ChangeClimberSpeed(m_climber)); // toggle extend/retract 
-		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenPressed(new ChangeRotatingClimberSpeed(m_climber)); // toggle extend/retract
-		new POVButton(m_mechanismController, 0).whenPressed(new ToggleIntake(m_intake));
+		new JoystickButton(m_mechanismController, Button.kLeftBumper.value).whenPressed(new ToggleIntake(m_intake)); // toggle intake
+		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenPressed(new ToggleIntakeBelt(m_intake)); // toggle intake belt
+		new POVButton(m_mechanismController, 0).whenPressed(new ChangeClimberSpeed(m_climber)); // extend/retract arm
 		new POVButton(m_mechanismController, 90).whenPressed(new ReverseIntake(m_intake));
-		new POVButton(m_mechanismController, 180).whenPressed(new ToggleIntakeBelt(m_intake));
+		new POVButton(m_mechanismController, 180).whenPressed(new ChangeRotatingClimberSpeed(m_climber)); // rotate arm
 		new POVButton(m_mechanismController, 270).whenPressed(new ReverseIntakeBelt(m_intake));
 
 		// new JoystickButton(m_leftStick, 1).whenPressed(new ToggleIntake(m_robotDrive));

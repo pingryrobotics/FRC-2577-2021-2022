@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer.AutoPosition;
 import frc.robot.subsystems.Drive;
@@ -20,7 +21,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.util.GeomUtil;
 
 public class TwoCargoAuto extends SequentialCommandGroup {
-	public static final double shootDurationSecs = 2.0;
+	public static final double shootDurationSecs = 3.0;
 	public static final Map<AutoPosition, Pose2d> cargoPositions = Map.of(AutoPosition.TARMAC_A,
 			Constants.cargoB
 					.transformBy(GeomUtil.transformFromTranslation(-0.5, 0.0)),
@@ -45,6 +46,11 @@ public class TwoCargoAuto extends SequentialCommandGroup {
 		Pose2d startingPose = position.getPose();
 		pos = position;
 		addCommands(deadline(
+				new ChangeShooterSpeed(shooter, 1),
+				new ToggleIntakeBelt(intake),
+				new WaitCommand(3.0),
+				new ToggleIntakeBelt(intake),	
+				new ChangeShooterSpeed(shooter, 0),
 				sequence(
 						sequence(
 								new DriveCommand(drive, 0.0,
@@ -55,8 +61,14 @@ public class TwoCargoAuto extends SequentialCommandGroup {
 												shootPositions.get(position)),
 										0.0, true)).deadlineWith(
 												new ToggleIntake(intake)),
+						new ToggleIntakeBelt(intake),
+						new WaitCommand(1.0),
 						new ToggleIntake(intake),
-						new ChangeShooterSpeed(shooter, 1).withTimeout(shootDurationSecs)),
+						new ToggleIntakeBelt(intake),
+						new ChangeShooterSpeed(shooter, 1)),
+						new WaitCommand(3.0),
+						new ToggleIntakeBelt(intake),
+						new WaitCommand(3.0),
 				new ChangeShooterSpeed(shooter, 0),
 				new ChangeDriveSpeed(drive, 0))
 				);
