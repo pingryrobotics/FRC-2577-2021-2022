@@ -28,14 +28,10 @@ public class Drive extends SubsystemBase {
   private final CANSparkMax leftMotor2 = new CANSparkMax(Constants.kLeftMotor2Port, MotorType.kBrushless);
   private final CANSparkMax rightMotor1 = new CANSparkMax(Constants.kRightMotor1Port, MotorType.kBrushless);
   private final CANSparkMax rightMotor2 = new CANSparkMax(Constants.kRightMotor2Port, MotorType.kBrushless);
-  private final MotorControllerGroup m_leftMotors =
-      new MotorControllerGroup(
-          leftMotor1, leftMotor2);
+  private MotorControllerGroup m_leftMotors;
 
   // The motors on the right side of the drive.
-  private final MotorControllerGroup m_rightMotors =
-      new MotorControllerGroup(
-          rightMotor1, rightMotor2);
+  private MotorControllerGroup m_rightMotors;
 
   // The robot's drive
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
@@ -59,11 +55,26 @@ public class Drive extends SubsystemBase {
     m_rightMotors.setInverted(true);
 
     // Sets the distance per pulse for the encoders
-    // m_leftEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction);
-    // m_rightEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction);
+    m_leftEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction);
+    m_rightEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction);
 
-    // m_leftEncoder.setVelocityConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction);
-    // m_rightEncoder.setVelocityConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction);
+    m_leftEncoder.setVelocityConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction/60.0);
+    m_rightEncoder.setVelocityConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction/60.0);
+
+    leftMotor1.burnFlash();
+    leftMotor2.burnFlash();
+    rightMotor1.burnFlash();
+    rightMotor2.burnFlash();
+
+    m_leftMotors =
+    new MotorControllerGroup(
+        leftMotor1, leftMotor2);
+
+// The motors on the right side of the drive.
+    m_rightMotors =
+    new MotorControllerGroup(
+        rightMotor1, rightMotor2);
+
 
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(new Rotation2d(Math.toRadians(m_imu.getAngle()))); // wrong axis?
@@ -74,7 +85,7 @@ public class Drive extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        new Rotation2d(Math.toRadians(m_imu.getAngle())), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+        new Rotation2d(Math.toRadians(m_imu.getAngle())), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
   }
 
   /**
@@ -96,7 +107,7 @@ public class Drive extends SubsystemBase {
    * @return The current wheel speeds.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
+    return new DifferentialDriveWheelSpeeds(m_leftEncoder.getVelocity(), m_rightEncoder.getVelocity());
   }
 
   /**
@@ -133,8 +144,8 @@ public class Drive extends SubsystemBase {
 
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {
-    m_leftEncoder.reset();
-    m_rightEncoder.reset();
+    m_leftEncoder.setPosition(0);
+    m_rightEncoder.setPosition(0);
   }
 
   /**
@@ -143,7 +154,7 @@ public class Drive extends SubsystemBase {
    * @return the average of the two encoder readings
    */
   public double getAverageEncoderDistance() {
-    return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
+    return (m_leftEncoder.getPosition() + m_rightEncoder.getPosition()) / 2.0;
   }
 
   /**
@@ -151,7 +162,7 @@ public class Drive extends SubsystemBase {
    *
    * @return the left drive encoder
    */
-  public Encoder getLeftEncoder() {
+  public RelativeEncoder getLeftEncoder() {
     return m_leftEncoder;
   }
 
@@ -160,7 +171,7 @@ public class Drive extends SubsystemBase {
    *
    * @return the right drive encoder
    */
-  public Encoder getRightEncoder() {
+  public RelativeEncoder getRightEncoder() {
     return m_rightEncoder;
   }
 
