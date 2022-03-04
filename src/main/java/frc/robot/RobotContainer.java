@@ -26,6 +26,8 @@ import frc.robot.commands.ReverseClimb;
 import frc.robot.commands.ChangeShooterSpeed;
 import frc.robot.commands.ReverseIntake;
 import frc.robot.commands.ReverseIntakeBelt;
+import frc.robot.commands.ReverseRotatingClimb;
+import frc.robot.commands.RotatingClimb;
 import frc.robot.commands.ToggleIntake;
 import frc.robot.commands.ToggleIntakeBelt;
 import frc.robot.commands.TwoCargoAuto;
@@ -58,16 +60,15 @@ public class RobotContainer {
 	// 		new CANSparkMax(Constants.kHopperUpperId, MotorType.kBrushless));
 	// private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless));
 	// private final DriveBase m_driveBase = new DriveBase();
-	public XboxController m_leftStick = new XboxController(0);
-	public XboxController m_rightStick = new XboxController(1);
+	public XboxController m_driverController = new XboxController(0);
 	// public Joystick m_leftStick = new Joystick(0);
 	// public Joystick m_rightStick = new Joystick(1);
-	public XboxController m_mechanismController = new XboxController(2);
+	public XboxController m_mechanismController = new XboxController(1);
 	private final Drive m_robotDrive = new Drive();
 	private final Shooter m_shooter = new Shooter(new CANSparkMax(Constants.kOuttakeLId, MotorType.kBrushless), new CANSparkMax(Constants.kOuttakeRId, MotorType.kBrushless));
 	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
 	// private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
-	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless));
+	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
 
 
 	/**
@@ -94,7 +95,7 @@ public class RobotContainer {
 	private void configureButtonBindings() {
 		// input commands here
 		// new JoystickButton(m_driverController1, 1).whenPressed(new ChangeShooterDirection(m_shooter));
-		new JoystickButton(m_mechanismController, Button.kX.value).whenPressed(new ChangeShooterSpeed(m_shooter, -1));
+		new JoystickButton(m_mechanismController, Button.kX.value).whenPressed(new ChangeShooterSpeed(m_shooter, -0.1));
 		new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
 		new JoystickButton(m_mechanismController, Button.kY.value).whenPressed(new ChangeShooterSpeed(m_shooter, .5)); // lower level
 		new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(new ChangeShooterSpeed(m_shooter, 1)); // upper level
@@ -103,11 +104,14 @@ public class RobotContainer {
 		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenPressed(new ToggleIntakeBelt(m_intake)); // toggle intake belt
 		new POVButton(m_mechanismController, 0).whenPressed(new Climb(m_climber)); // extend/retract arm
 		new POVButton(m_mechanismController, 90).whenPressed(new ReverseClimb(m_climber));
-		// new POVButton(m_mechanismController, 180).whenPressed(new RotatingClimb(m_climber)); // rotate arm
-		// new POVButton(m_mechanismController, 270).whenPressed(new ReverseRotatingClimb(m_climber));
+		new POVButton(m_mechanismController, 180).whenPressed(new RotatingClimb(m_climber)); // rotate arm
+		new POVButton(m_mechanismController, 270).whenPressed(new ReverseRotatingClimb(m_climber));
 
 		new JoystickButton(m_mechanismController, Button.kLeftStick.value).whenPressed(new ReverseIntake(m_intake)); // reverse intake
 		new JoystickButton(m_mechanismController, Button.kRightStick.value).whenPressed(new ReverseIntakeBelt(m_intake)); // reverse
+
+		new JoystickButton(m_driverController, Button.kLeftBumper.value).whenPressed(new Climb(m_climber)); // toggle climber
+		new JoystickButton(m_driverController, Button.kRightBumper.value).whenPressed(new ReverseClimb(m_climber)); // toggle climber
 		// m_mechanismController.getTriggerAxis(Hand.kLeft).whenActive(new ReverseIntakeBelt(m_intake));
 		// m_mechanismController.getTriggerAxis(Hand.kRight).whenActive(new ReverseIntake(m_intake));
 
@@ -117,7 +121,7 @@ public class RobotContainer {
 
 	public void driveControl() {
 		// m_robotDrive.tankDrive(m_leftStick.getY(), m_leftStick.getX());
-		m_robotDrive.tankDrive(m_leftStick.getRawAxis(Axis.kLeftY.value), m_rightStick.getRawAxis(Axis.kRightY.value));
+		m_robotDrive.tankDrive(m_driverController.getRawAxis(Axis.kLeftY.value), m_driverController.getRawAxis(Axis.kRightY.value));
 	}
 
 	// A chooser for autonomous commands

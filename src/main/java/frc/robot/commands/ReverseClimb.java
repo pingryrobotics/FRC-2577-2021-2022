@@ -24,11 +24,12 @@ public class ReverseClimb extends CommandBase {
 	@Override
 	public void initialize() {
 		m_subsystem.invertExtendable();
+		m_subsystem.setExtendableSpeed(Constants.kClimberSpeed);
 		// m_subsystem.set((direc ? 1 : -1) * Constants.kClimberSpeed);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		// m_subsystem.set(0);
+		m_subsystem.setExtendableSpeed(0);
 	}
 }

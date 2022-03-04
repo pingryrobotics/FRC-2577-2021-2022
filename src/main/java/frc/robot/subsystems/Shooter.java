@@ -13,8 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Shooter extends SubsystemBase {
 	private CANSparkMax outtake1;
 	private CANSparkMax outtake2;
-	private double speed = 1;
-	private int flip = 1;
+	private double speed = 0;
 
 	/**
 	 * Creates a new ExampleSubsystem.
@@ -28,12 +27,13 @@ public class Shooter extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		outtake1.set(flip * speed);
-		outtake2.set(-flip * speed);
+		outtake1.set(speed);
+		outtake2.set(-speed);
 	}
 
 	public void flipDirection() {
-		flip *= -1;
+		outtake1.setInverted(!outtake1.getInverted());
+		outtake2.setInverted(!outtake2.getInverted());
 	}
 
 	public void setDesiredSpeed(double speed) {

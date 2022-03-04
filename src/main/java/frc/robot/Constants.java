@@ -49,17 +49,17 @@ public final class Constants {
 	// The Robot Characterization Toolsuite provides a convenient tool for obtaining
 	// these
 	// values for your robot.
-	public static final double ksVolts = 0.22;
-	public static final double kvVoltSecondsPerMeter = 1.98;
-	public static final double kaVoltSecondsSquaredPerMeter = 0.2;
+	public static final double ksVolts = -1; // 0.22
+	public static final double kvVoltSecondsPerMeter = -1; // 1.98
+	public static final double kaVoltSecondsSquaredPerMeter = -1; // 0.2
 	// Example value only - as above, this must be tuned for your drive!
 	public static final double kPDriveVel = 8.5;
 	public static final int kLeftMotor1Port = 10;
 	public static final int kLeftMotor2Port = 11;
 	public static final int kRightMotor1Port = 12;
 	public static final int kRightMotor2Port = 13;
-	public static final int[] kLeftEncoderPorts = { -1, -1 };
-	public static final int[] kRightEncoderPorts = { -1, -1 };
+	public static final int[] kLeftEncoderPorts = { 10, 11 };
+	public static final int[] kRightEncoderPorts = { 12, 13 };
 	public static final boolean kLeftEncoderReversed = false;
 	public static final boolean kRightEncoderReversed = false;
 	public static final int kEncoderDistancePerPulse = -1;
@@ -69,13 +69,14 @@ public final class Constants {
 	public static final int kIntakeSpeed = 1;
 	public static final int kBeltSpeed = 1;
 	public static final int kClimberSpeed = 1;
+	public static final int kRotatingSpeed = 1;
 	public static final int kSlideLimit = 1; // in rotations
 	public static final int kArmLimit = 1; // in rotations
 	public static final int kIntakeId = 20;
 	public static final int kOuttakeLId = 22;
 	public static final int kOuttakeRId = 23;
 	public static final int kClimberId = 30;
-	public static final int kRotatingArmId = -1;
+	public static final int kRotatingArmId = 31;
 	public static final int kBeltId = 21;
 
 

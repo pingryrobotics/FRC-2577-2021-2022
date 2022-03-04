@@ -14,49 +14,49 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
-	private CANSparkMax m_linearSlide;
+	private CANSparkMax m_extendableArm;
 	private CANSparkMax m_rotatingArm;
+
 	/**
 	 * Creates a new ExampleSubsystem.
 	 */
 	public Climber(CANSparkMax climbMotor, CANSparkMax armMotor) {
-		m_linearSlide = climbMotor;
-		m_linearSlide.enableVoltageCompensation(12);
-		m_linearSlide.setSoftLimit(SoftLimitDirection.kForward, Constants.kSlideLimit);
-		m_linearSlide.setSoftLimit(SoftLimitDirection.kReverse, 0);
+		m_extendableArm = climbMotor;
+		m_extendableArm.enableVoltageCompensation(12);
+		m_extendableArm.setSoftLimit(SoftLimitDirection.kForward, Constants.kSlideLimit);
+		m_extendableArm.setSoftLimit(SoftLimitDirection.kReverse, 0);
 		m_rotatingArm = armMotor;
 		m_rotatingArm.enableVoltageCompensation(12);
 		m_rotatingArm.setSoftLimit(SoftLimitDirection.kForward, Constants.kArmLimit);
 		m_rotatingArm.setSoftLimit(SoftLimitDirection.kReverse, 0);
 	}
 
-
-	public Climber(CANSparkMax climbMotor) {
-		m_linearSlide = climbMotor;
-		m_linearSlide.enableVoltageCompensation(12);
-		m_linearSlide.setSoftLimit(SoftLimitDirection.kForward, Constants.kSlideLimit);
-		m_linearSlide.setSoftLimit(SoftLimitDirection.kReverse, 0);
-	}
-
-	public void set(double speed) {
-		m_linearSlide.set(speed);
-	}
-
-	// public void setArm(double speed) {
-		// m_rotatingArm.set(speed);
-	// }
-
-	public void invertExtendable() {
-		m_linearSlide.setInverted(true);
-	}
-
-	// public void invertRetractable() {
-		// m_rotatingArm.setInverted(true);
+	// public Climber(CANSparkMax climbMotor) {
+	// 	m_extendableArm = climbMotor;
+	// 	m_extendableArm.enableVoltageCompensation(12);
+	// 	m_extendableArm.setSoftLimit(SoftLimitDirection.kForward, Constants.kSlideLimit);
+	// 	m_extendableArm.setSoftLimit(SoftLimitDirection.kReverse, 0);
 	// }
 
 	@Override
 	public void periodic() {
-		// This method will be called once per scheduler run
+		m_extendableArm.set(Constants.kClimberSpeed);
+		m_rotatingArm.set(Constants.kRotatingSpeed);
+	}
 
+	public void invertExtendable() {
+		m_extendableArm.setInverted(!m_extendableArm.getInverted());
+	}
+
+	public void invertRotating() {
+		m_rotatingArm.setInverted(!m_rotatingArm.getInverted());
+	}
+
+	public void setExtendableSpeed(double speed) {
+		m_extendableArm.set(speed);
+	}
+
+	public void setRotatingSpeed(double speed) {
+		m_rotatingArm.set(speed);
 	}
 }

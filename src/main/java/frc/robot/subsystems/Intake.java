@@ -6,8 +6,8 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
 	private CANSparkMax roller;
-	private boolean on = true;
-	private boolean onBelt = true;
+	private boolean on = false;
+	private boolean onBelt = false;
 	private CANSparkMax belt;
 
 	/**
@@ -24,9 +24,12 @@ public class Intake extends SubsystemBase {
 	public void periodic() {
 		if (on) {
 			roller.set(Constants.kIntakeSpeed);
-			belt.set(Constants.kBeltSpeed);
 		} else {
 			roller.set(0);
+		}
+		if (onBelt) {
+			belt.set(Constants.kBeltSpeed);
+		} else {
 			belt.set(0);
 		}
 	}
