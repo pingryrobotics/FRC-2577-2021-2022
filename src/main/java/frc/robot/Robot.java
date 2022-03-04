@@ -44,7 +44,9 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopPeriodic() {
+		CommandScheduler.getInstance().run();
 		m_robotContainer.driveControl();
+		// m_robotContainer.configureButtonBindings();
 	}
 
 	/** This function is run once each time the robot enters autonomous mode. */

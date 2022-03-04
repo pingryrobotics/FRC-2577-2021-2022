@@ -49,9 +49,9 @@ public final class Constants {
 	// The Robot Characterization Toolsuite provides a convenient tool for obtaining
 	// these
 	// values for your robot.
-	public static final double ksVolts = -1; // 0.22
-	public static final double kvVoltSecondsPerMeter = -1; // 1.98
-	public static final double kaVoltSecondsSquaredPerMeter = -1; // 0.2
+	public static final double ksVolts = 0.22;
+	public static final double kvVoltSecondsPerMeter = 1.98;
+	public static final double kaVoltSecondsSquaredPerMeter = 0.2;
 	// Example value only - as above, this must be tuned for your drive!
 	public static final double kPDriveVel = 8.5;
 	public static final int kLeftMotor1Port = 10;
@@ -62,13 +62,13 @@ public final class Constants {
 	public static final int[] kRightEncoderPorts = { 12, 13 };
 	public static final boolean kLeftEncoderReversed = false;
 	public static final boolean kRightEncoderReversed = false;
-	public static final int kEncoderDistancePerPulse = -1;
+	public static final int kEncoderDistancePerPulse = 10000; // change
 	// public static final SPI.Port imuPort = SPI.Port.kOnboardCS0; // change
 
 	public static final int kOuttakeSpeed = 1;
 	public static final int kIntakeSpeed = 1;
 	public static final int kBeltSpeed = 1;
-	public static final int kClimberSpeed = 1;
+	public static final double kClimberSpeed = 0.1;
 	public static final int kRotatingSpeed = 1;
 	public static final int kSlideLimit = 1; // in rotations
 	public static final int kArmLimit = 1; // in rotations

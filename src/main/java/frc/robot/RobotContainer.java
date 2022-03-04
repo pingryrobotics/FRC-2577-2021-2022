@@ -64,7 +64,7 @@ public class RobotContainer {
 	// public Joystick m_leftStick = new Joystick(0);
 	// public Joystick m_rightStick = new Joystick(1);
 	public XboxController m_mechanismController = new XboxController(1);
-	private final Drive m_robotDrive = new Drive();
+	// private final Drive m_robotDrive = new Drive();
 	private final Shooter m_shooter = new Shooter(new CANSparkMax(Constants.kOuttakeLId, MotorType.kBrushless), new CANSparkMax(Constants.kOuttakeRId, MotorType.kBrushless));
 	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
 	// private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
@@ -77,10 +77,10 @@ public class RobotContainer {
 	public RobotContainer() {
 		// Configure the button binding
 		configureButtonBindings();
-		m_chooser.setDefaultOption("TA", new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter));
-		m_chooser.addOption("TB", new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter));
-		m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
-		m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
+		// m_chooser.setDefaultOption("TA", new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter));
+		// m_chooser.addOption("TB", new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter));
+		// m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
+		// m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
 		SmartDashboard.putData("Auto choices", m_chooser);
 	}
 
@@ -121,7 +121,7 @@ public class RobotContainer {
 
 	public void driveControl() {
 		// m_robotDrive.tankDrive(m_leftStick.getY(), m_leftStick.getX());
-		m_robotDrive.tankDrive(m_driverController.getRawAxis(Axis.kLeftY.value), m_driverController.getRawAxis(Axis.kRightY.value));
+		// m_robotDrive.tankDrive(m_driverController.getRawAxis(Axis.kLeftY.value), m_driverController.getRawAxis(Axis.kRightY.value));
 	}
 
 	// A chooser for autonomous commands
@@ -146,7 +146,11 @@ public class RobotContainer {
 		// autoMap.put("Two cargo (TD)",
 		// 	new AutoRoutine(AutoPosition.TARMAC_D,
 		// 				new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter)));
-		m_robotDrive.setPose(m_chooser.getSelected().pos.getPose());
+
+
+
+
+		// m_robotDrive.setPose(m_chooser.getSelected().pos.getPose());
 		return m_chooser.getSelected();
 		// // Create a voltage constraint to ensure we don't accelerate too fast
 		// var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(

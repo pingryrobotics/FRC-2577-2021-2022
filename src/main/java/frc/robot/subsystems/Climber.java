@@ -40,8 +40,8 @@ public class Climber extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		m_extendableArm.set(Constants.kClimberSpeed);
-		m_rotatingArm.set(Constants.kRotatingSpeed);
+		// m_extendableArm.set();
+		// m_rotatingArm.set();
 	}
 
 	public void invertExtendable() {

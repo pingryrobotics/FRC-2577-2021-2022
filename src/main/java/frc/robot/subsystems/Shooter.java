@@ -28,7 +28,7 @@ public class Shooter extends SubsystemBase {
 	@Override
 	public void periodic() {
 		outtake1.set(speed);
-		outtake2.set(-speed);
+		outtake2.set(speed);
 	}
 
 	public void flipDirection() {
