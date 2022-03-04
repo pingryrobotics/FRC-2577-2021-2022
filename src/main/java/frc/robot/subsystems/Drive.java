@@ -4,6 +4,7 @@ import frc.robot.Constants;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,33 +23,27 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drive extends SubsystemBase {
   // The motors on the left side of the drive.
+
+  private final CANSparkMax leftMotor1 = new CANSparkMax(Constants.kLeftMotor1Port, MotorType.kBrushless);
+  private final CANSparkMax leftMotor2 = new CANSparkMax(Constants.kLeftMotor2Port, MotorType.kBrushless);
+  private final CANSparkMax rightMotor1 = new CANSparkMax(Constants.kRightMotor1Port, MotorType.kBrushless);
+  private final CANSparkMax rightMotor2 = new CANSparkMax(Constants.kRightMotor2Port, MotorType.kBrushless);
   private final MotorControllerGroup m_leftMotors =
       new MotorControllerGroup(
-          new PWMSparkMax(Constants.kLeftMotor1Port),
-          new PWMSparkMax(Constants.kLeftMotor2Port));
+          leftMotor1, leftMotor2);
 
   // The motors on the right side of the drive.
   private final MotorControllerGroup m_rightMotors =
       new MotorControllerGroup(
-          new PWMSparkMax(Constants.kRightMotor1Port),
-          new PWMSparkMax(Constants.kRightMotor2Port));
+          rightMotor1, rightMotor2);
 
   // The robot's drive
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
   // The left-side drive encoder
-  private final Encoder m_leftEncoder =
-      new Encoder(
-          Constants.kLeftEncoderPorts[0],
-          Constants.kLeftEncoderPorts[1],
-          Constants.kLeftEncoderReversed);
 
-  // The right-side drive encoder
-  private final Encoder m_rightEncoder =
-      new Encoder(
-          Constants.kRightEncoderPorts[0],
-          Constants.kRightEncoderPorts[1],
-          Constants.kRightEncoderReversed);
+  private final RelativeEncoder m_leftEncoder = leftMotor1.getEncoder();
+  private final RelativeEncoder m_rightEncoder = rightMotor1.getEncoder();
 
   // The gyro sensor
 	private final ADIS16470_IMU m_imu = new ADIS16470_IMU(); // 4 seconds for automatic calibration
@@ -64,8 +59,11 @@ public class Drive extends SubsystemBase {
     m_rightMotors.setInverted(true);
 
     // Sets the distance per pulse for the encoders
-    m_leftEncoder.setDistancePerPulse(Constants.kEncoderDistancePerPulse);
-    m_rightEncoder.setDistancePerPulse(Constants.kEncoderDistancePerPulse);
+    // m_leftEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction);
+    // m_rightEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction);
+
+    // m_leftEncoder.setVelocityConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction);
+    // m_rightEncoder.setVelocityConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction);
 
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(new Rotation2d(Math.toRadians(m_imu.getAngle()))); // wrong axis?
