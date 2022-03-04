@@ -23,6 +23,8 @@ public class Shooter extends SubsystemBase {
 		this.outtake2 = outtake2;
 		outtake1.enableVoltageCompensation(12);
 		outtake2.enableVoltageCompensation(12);
+		outtake1.setInverted(false);
+		outtake2.setInverted(false);
 	}
 
 	@Override

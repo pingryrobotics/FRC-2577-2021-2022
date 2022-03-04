@@ -18,6 +18,8 @@ public class Intake extends SubsystemBase {
 		roller.enableVoltageCompensation(12);
 		belt = beltSpark;
 		belt.enableVoltageCompensation(12);
+		roller.setInverted(false);
+		belt.setInverted(false);
 	}
 
 	@Override

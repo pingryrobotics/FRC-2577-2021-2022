@@ -29,6 +29,8 @@ public class Climber extends SubsystemBase {
 		m_rotatingArm.enableVoltageCompensation(12);
 		m_rotatingArm.setSoftLimit(SoftLimitDirection.kForward, Constants.kArmLimit);
 		m_rotatingArm.setSoftLimit(SoftLimitDirection.kReverse, 0);
+		m_extendableArm.setInverted(false);
+		m_rotatingArm.setInverted(false);
 	}
 
 	// public Climber(CANSparkMax climbMotor) {
