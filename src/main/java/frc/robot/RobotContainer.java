@@ -78,15 +78,19 @@ public class RobotContainer {
 
 	// The motors on the right side of the drive.
 	private MotorControllerGroup m_rightMotors = new MotorControllerGroup(rightMotor1, rightMotor2);
-	private DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+	private DifferentialDrive m_robotDiffDrive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 	// private final Drive m_robotDrive = new Drive();
 	private final Shooter m_shooter = new Shooter(new CANSparkMax(Constants.kOuttakeLId, MotorType.kBrushless), new CANSparkMax(Constants.kOuttakeRId, MotorType.kBrushless));
 	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
 	// private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
 	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
+<<<<<<< HEAD
 	private Command m_autonomousCommand;
 	private int direction = 1;
 	private double factor = 1;
+=======
+	private Drive m_robotSubsystemDrive = new Drive();
+>>>>>>> 4beeb33cde8802fb17dd85b08cf7b4076c6d523f
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -112,7 +116,9 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		// input commands here
-		// new JoystickButton(m_driverController1, 1).whenPressed(new ChangeShooterDirection(m_shooter));
+		
+
+
 		new JoystickButton(m_mechanismController, Button.kX.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.7));
 		new JoystickButton(m_mechanismController, Button.kStart.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
 		new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.3));
@@ -145,6 +151,7 @@ public class RobotContainer {
 	}
 
 	public void driveControl() {
+<<<<<<< HEAD
 		m_robotDrive.tankDrive(m_leftStick.getY()*factor*direction, m_rightStick.getY()*factor*direction);
 		if(m_leftStick.getRawButton(0)){
 			if(factor == 1)
@@ -159,6 +166,12 @@ public class RobotContainer {
 			else
 				direction = 1;
 		}
+=======
+		// m_robotDiffDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+		m_robotSubsystemDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY(), m_leftStick.getThrottle());
+
+
+>>>>>>> 4beeb33cde8802fb17dd85b08cf7b4076c6d523f
 		// m_robotDrive.tankDrive(m_driverController.getRawAxis(Axis.kLeftY.value), m_driverController.getRawAxis(Axis.kRightY.value));
 	}
 
