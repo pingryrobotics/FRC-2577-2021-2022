@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import frc.robot.commands.Climb;
+import frc.robot.commands.OneBallAuto;
 import frc.robot.commands.ReverseClimb;
 // import frc.robot.commands.ChangeRotatingClimberSpeed;
 import frc.robot.commands.ChangeShooterSpeed;
@@ -40,6 +42,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.util.GeomUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
@@ -81,7 +84,9 @@ public class RobotContainer {
 	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
 	// private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
 	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
-
+	private Command m_autonomousCommand;
+	private int direction = 1;
+	private double factor = 1;
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -140,7 +145,20 @@ public class RobotContainer {
 	}
 
 	public void driveControl() {
-		m_robotDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+		m_robotDrive.tankDrive(m_leftStick.getY()*factor*direction, m_rightStick.getY()*factor*direction);
+		if(m_leftStick.getRawButton(0)){
+			if(factor == 1)
+				factor = 0.5;
+			else
+				factor = 1;
+		}
+
+		if(m_rightStick.getRawButton(0)){
+			if(direction == 1)
+				direction = -1;
+			else
+				direction = 1;
+		}
 		// m_robotDrive.tankDrive(m_driverController.getRawAxis(Axis.kLeftY.value), m_driverController.getRawAxis(Axis.kRightY.value));
 	}
 
@@ -153,8 +171,57 @@ public class RobotContainer {
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		// Command cmd = 
-		// return cmd;
+		Command cmd = new OneBallAuto(m_intake, m_shooter);
+		return cmd;
+	}
+
+	public void oneBall(){
+		m_robotDrive.tankDrive(-0.5, -0.5);
+		new WaitCommand(1).schedule();
+		m_robotDrive.stopMotor();
+		
+		m_autonomousCommand = getAutonomousCommand();
+		// schedule the autonomous command (example)
+		if (m_autonomousCommand != null) {
+			m_autonomousCommand.schedule();
+		}
+		
+		m_robotDrive.tankDrive(-0.5, -0.5);
+		new WaitCommand(1).schedule();
+		m_robotDrive.stopMotor();
+	}
+
+	public void twoBalls(){
+		ADIS16470_IMU m_imu = new ADIS16470_IMU(); 
+		double yawOriginal = m_imu.getAngle();
+		new ToggleIntake(m_intake).schedule();
+		m_robotDrive.tankDrive(0.5, 0.5);
+		new ToggleIntakeBelt(m_intake).schedule();
+		new WaitCommand(1).schedule();
+		m_robotDrive.stopMotor();
+		new ToggleIntakeBelt(m_intake).end(true);
+		m_robotDrive.tankDrive(0.3, -0.3);
+		while(180 >= Math.abs(yawOriginal-m_imu.getAngle())){
+		}
+		m_robotDrive.stopMotor();
+
+		m_robotDrive.tankDrive(0.5, 0.5);
+		new WaitCommand(1).schedule();;
+		m_robotDrive.stopMotor();
+		
+		new ReverseIntakeBelt(m_intake).schedule();
+		new WaitCommand(0.5).schedule();
+		new ReverseIntakeBelt(m_intake).end(true);
+		new ChangeShooterSpeed(m_shooter, 0.7).schedule();
+		new WaitCommand(1).schedule();
+		new ToggleIntakeBelt(m_intake).schedule();
+		new WaitCommand(3).schedule();
+
+			
+		m_robotDrive.tankDrive(-0.5, -0.5);
+		new WaitCommand(1).schedule();
+		m_robotDrive.stopMotor();
+	}
 		// Map<String, AutoRoutine> autoMap = new HashMap<String, AutoRoutine>();
 		// autoMap.put("Two cargo (TA)",
         // 	new AutoRoutine(AutoPosition.TARMAC_A,
@@ -173,7 +240,7 @@ public class RobotContainer {
 
 
 		// m_robotDrive.setPose(m_chooser.getSelected().pos.getPose());
-		return m_chooser.getSelected();
+		//return m_chooser.getSelected();
 
 
 
