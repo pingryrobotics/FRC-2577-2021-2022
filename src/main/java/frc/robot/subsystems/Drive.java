@@ -47,6 +47,10 @@ public class Drive extends SubsystemBase {
   // Odometry class for tracking robot pose
   private final DifferentialDriveOdometry m_odometry;
 
+  private boolean isDriveDirectionForwards = true;
+  private double speedMultiplier = 1;
+
+
   /** Creates a new DriveSubsystem. */
   public Drive() {
     // We need to invert one side of the drivetrain so that positive voltages
@@ -126,8 +130,35 @@ public class Drive extends SubsystemBase {
    * @param fwd the commanded forward movement
    * @param rot the commanded rotation
    */
-  public void tankDrive(double left, double right) {
-    m_drive.tankDrive(left, right);
+  public void tankDrive(double left, double right, double throttleValue) {
+
+    // value is -1 to 1, so reverse so its 1 to -1, add 1 so its 2 to 1, divide by 2 so its 1 to 0
+    double multiplier = ((throttleValue * -1) + 1)/2;
+    setSpeedMultiplier(multiplier);
+
+    double multipliedLeft = left * speedMultiplier;
+    double multipliedRight = right * speedMultiplier;
+    if (isDriveDirectionForwards) {
+      m_drive.tankDrive(multipliedLeft, multipliedRight);
+    } else {
+      m_drive.tankDrive(multipliedRight, multipliedLeft);
+    }
+  }
+
+  /**
+   * Sets the forwards direction of the drivetrain
+   * @param isForwards if true, forwards will be intake, otherwise its reversed
+   */
+  public void setDriveDirection(boolean isForwards) {
+    this.isDriveDirectionForwards = isForwards;
+  }
+
+  /**
+   * Sets the number to multiply the drive speeds by.
+   * @param multiplier the multiplier
+   */
+  public void setSpeedMultiplier(double multiplier) {
+    this.speedMultiplier = multiplier;
   }
 
   /**
