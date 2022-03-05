@@ -23,13 +23,14 @@ public class ReverseRotatingClimb extends CommandBase {
 
 	@Override
 	public void initialize() {
-		m_subsystem.invertRotating();
-		m_subsystem.setRotatingSpeed(Constants.kClimberSpeed);
+		// m_subsystem.invertRotating();
+		m_subsystem.setRotatingSpeed(-Constants.kRotatingSpeed);
 		// m_subsystem.set((direc ? 1 : -1) * Constants.kClimberSpeed);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
+		// m_subsystem.invertRotating();
 		m_subsystem.setRotatingSpeed(0);
 	}
 }

@@ -11,6 +11,7 @@ public class Climb extends CommandBase {
 	private final Climber m_subsystem;
 
 	/**
+	 * 
 	 * Creates a new ExampleCommand.
 	 *
 	 * @param subsystem The subsystem used by this command.

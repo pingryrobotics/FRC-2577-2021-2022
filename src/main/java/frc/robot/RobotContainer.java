@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 // import commands and subsystems
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import frc.robot.commands.Climb;
 import frc.robot.commands.ReverseClimb;
 // import frc.robot.commands.ChangeRotatingClimberSpeed;
@@ -60,10 +62,20 @@ public class RobotContainer {
 	// 		new CANSparkMax(Constants.kHopperUpperId, MotorType.kBrushless));
 	// private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless));
 	// private final DriveBase m_driveBase = new DriveBase();
-	public XboxController m_driverController = new XboxController(0);
-	// public Joystick m_leftStick = new Joystick(0);
-	// public Joystick m_rightStick = new Joystick(1);
-	public XboxController m_mechanismController = new XboxController(1);
+	// public XboxController m_driverController = new XboxController(0);
+	public Joystick m_leftStick = new Joystick(0);
+	public Joystick m_rightStick = new Joystick(1);
+	public Joystick climbJoystick = new Joystick(2);
+	public XboxController m_mechanismController = new XboxController(3);
+	private final CANSparkMax leftMotor1 = new CANSparkMax(Constants.kLeftMotor1Port, MotorType.kBrushless);
+	private final CANSparkMax leftMotor2 = new CANSparkMax(Constants.kLeftMotor2Port, MotorType.kBrushless);
+	private final CANSparkMax rightMotor1 = new CANSparkMax(Constants.kRightMotor1Port, MotorType.kBrushless);
+	private final CANSparkMax rightMotor2 = new CANSparkMax(Constants.kRightMotor2Port, MotorType.kBrushless);
+	private MotorControllerGroup m_leftMotors = new MotorControllerGroup(leftMotor1, leftMotor2);
+
+	// The motors on the right side of the drive.
+	private MotorControllerGroup m_rightMotors = new MotorControllerGroup(rightMotor1, rightMotor2);
+	private DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 	// private final Drive m_robotDrive = new Drive();
 	private final Shooter m_shooter = new Shooter(new CANSparkMax(Constants.kOuttakeLId, MotorType.kBrushless), new CANSparkMax(Constants.kOuttakeRId, MotorType.kBrushless));
 	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
@@ -77,6 +89,7 @@ public class RobotContainer {
 	public RobotContainer() {
 		// Configure the button binding
 		configureButtonBindings();
+		m_rightMotors.setInverted(true); 	
 		// m_chooser.setDefaultOption("TA", new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter));
 		// m_chooser.addOption("TB", new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter));
 		// m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
@@ -95,23 +108,30 @@ public class RobotContainer {
 	private void configureButtonBindings() {
 		// input commands here
 		// new JoystickButton(m_driverController1, 1).whenPressed(new ChangeShooterDirection(m_shooter));
-		new JoystickButton(m_mechanismController, Button.kX.value).whenPressed(new ChangeShooterSpeed(m_shooter, -0.1));
-		new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
+		new JoystickButton(m_mechanismController, Button.kX.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.7));
+		new JoystickButton(m_mechanismController, Button.kStart.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
+		new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.3));
 		new JoystickButton(m_mechanismController, Button.kY.value).whenPressed(new ChangeShooterSpeed(m_shooter, .5)); // lower level
 		new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(new ChangeShooterSpeed(m_shooter, 1)); // upper level
 		// new JoystickButton(m_driverController1, 11).whenPressed(new ToggleHopper(m_hopper));
 		new JoystickButton(m_mechanismController, Button.kLeftBumper.value).whenPressed(new ToggleIntake(m_intake)); // toggle intake
 		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenPressed(new ToggleIntakeBelt(m_intake)); // toggle intake belt
-		new POVButton(m_mechanismController, 0).whenPressed(new Climb(m_climber)); // extend/retract arm
-		new POVButton(m_mechanismController, 90).whenPressed(new ReverseClimb(m_climber));
-		new POVButton(m_mechanismController, 180).whenPressed(new RotatingClimb(m_climber)); // rotate arm
-		new POVButton(m_mechanismController, 270).whenPressed(new ReverseRotatingClimb(m_climber));
+		new POVButton(m_mechanismController, 90).whenHeld(new Climb(m_climber)); // extend/retract arm
+		new POVButton(m_mechanismController, 270).whenHeld(new ReverseClimb(m_climber));
+		new POVButton(m_mechanismController, 0).whenHeld(new RotatingClimb(m_climber)); // rotate arm
+		new POVButton(m_mechanismController, 180).whenHeld(new ReverseRotatingClimb(m_climber));
 
 		new JoystickButton(m_mechanismController, Button.kLeftStick.value).whenPressed(new ReverseIntake(m_intake)); // reverse intake
 		new JoystickButton(m_mechanismController, Button.kRightStick.value).whenPressed(new ReverseIntakeBelt(m_intake)); // reverse
 
-		new JoystickButton(m_driverController, Button.kLeftBumper.value).whenPressed(new Climb(m_climber)); // toggle climber
-		new JoystickButton(m_driverController, Button.kRightBumper.value).whenPressed(new ReverseClimb(m_climber)); // toggle climber
+		// new JoystickButton(m_driverController, Button.kLeftBumper.value).whenHeld(new Climb(m_climber)); // toggle climber
+		// new JoystickButton(m_driverController, Button.kRightBumper.value).whenHeld(new ReverseClimb(m_climber)); // toggle climber
+
+		new JoystickButton(climbJoystick, 6).whenHeld(new Climb(m_climber));
+		new JoystickButton(climbJoystick, 7).whenHeld(new ReverseClimb(m_climber));
+
+		new JoystickButton(climbJoystick, 11).whenHeld(new RotatingClimb(m_climber));
+		new JoystickButton(climbJoystick, 10).whenHeld(new ReverseRotatingClimb(m_climber));
 		// m_mechanismController.getTriggerAxis(Hand.kLeft).whenActive(new ReverseIntakeBelt(m_intake));
 		// m_mechanismController.getTriggerAxis(Hand.kRight).whenActive(new ReverseIntake(m_intake));
 
@@ -120,7 +140,7 @@ public class RobotContainer {
 	}
 
 	public void driveControl() {
-		// m_robotDrive.tankDrive(m_leftStick.getY(), m_leftStick.getX());
+		m_robotDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
 		// m_robotDrive.tankDrive(m_driverController.getRawAxis(Axis.kLeftY.value), m_driverController.getRawAxis(Axis.kRightY.value));
 	}
 
@@ -133,13 +153,15 @@ public class RobotContainer {
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
+		// Command cmd = 
+		// return cmd;
 		// Map<String, AutoRoutine> autoMap = new HashMap<String, AutoRoutine>();
 		// autoMap.put("Two cargo (TA)",
         // 	new AutoRoutine(AutoPosition.TARMAC_A,
         // 	    new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter)));
 		// autoMap.put("Two cargo (TB)",
 		// 	new AutoRoutine(AutoPosition.TARMAC_B,
-		// 		new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter)));
+		// 		new TwoCargoAuto(AutoPositioPn.TARMAC_B, m_robotDrive, m_intake, m_shooter)));
 		// autoMap.put("Two cargo (TC)",
 		// 	new AutoRoutine(AutoPosition.TARMAC_C,
 		// 		new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter)));
@@ -152,6 +174,9 @@ public class RobotContainer {
 
 		// m_robotDrive.setPose(m_chooser.getSelected().pos.getPose());
 		return m_chooser.getSelected();
+
+
+
 		// // Create a voltage constraint to ensure we don't accelerate too fast
 		// var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
 		// 		new SimpleMotorFeedforward(

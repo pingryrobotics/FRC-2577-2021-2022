@@ -58,20 +58,20 @@ public final class Constants {
 	public static final int kLeftMotor2Port = 11;
 	public static final int kRightMotor1Port = 12;
 	public static final int kRightMotor2Port = 13;
-	public static final int[] kLeftEncoderPorts = { 0, 1 };
-	public static final int[] kRightEncoderPorts = { 2, 3 };
 	public static final boolean kLeftEncoderReversed = false;
 	public static final boolean kRightEncoderReversed = false;
-	public static final int kEncoderDistancePerPulse = 10000; // change
+	// public static final int kEncoderDistancePerPulse = 10000; // change
 	public static final double kDistancePerWheelRevolutionMeters = 0.478778; // pi * 6 inches to meters
-	public static final double kDrivetTrainGearReduction = 12;
+	public static final double kDriveTrainGearReduction = 12;
 	// public static final SPI.Port imuPort = SPI.Port.kOnboardCS0; // change
+	public static final double kImageCaptureLatency = 11.0 / 1000.0;
+
 
 	public static final int kOuttakeSpeed = 1;
 	public static final int kIntakeSpeed = 1;
-	public static final int kBeltSpeed = 1;
-	public static final double kClimberSpeed = 0.1;
-	public static final int kRotatingSpeed = 1;
+	public static final double kBeltSpeed = 0.5;
+	public static final double kClimberSpeed = 0.5;
+	public static final double kRotatingSpeed = 0.1;
 	public static final int kSlideLimit = 1; // in rotations
 	public static final int kArmLimit = 1; // in rotations
 	public static final int kIntakeId = 20;

@@ -55,11 +55,11 @@ public class Drive extends SubsystemBase {
     m_rightMotors.setInverted(true);
 
     // Sets the distance per pulse for the encoders
-    m_leftEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction);
-    m_rightEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction);
+    m_leftEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDriveTrainGearReduction);
+    m_rightEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDriveTrainGearReduction);
 
-    m_leftEncoder.setVelocityConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction/60.0);
-    m_rightEncoder.setVelocityConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDrivetTrainGearReduction/60.0);
+    m_leftEncoder.setVelocityConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDriveTrainGearReduction/60.0);
+    m_rightEncoder.setVelocityConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDriveTrainGearReduction/60.0);
 
     leftMotor1.burnFlash();
     leftMotor2.burnFlash();

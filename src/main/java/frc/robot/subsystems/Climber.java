@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,14 +24,17 @@ public class Climber extends SubsystemBase {
 	public Climber(CANSparkMax climbMotor, CANSparkMax armMotor) {
 		m_extendableArm = climbMotor;
 		m_extendableArm.enableVoltageCompensation(12);
-		m_extendableArm.setSoftLimit(SoftLimitDirection.kForward, Constants.kSlideLimit);
-		m_extendableArm.setSoftLimit(SoftLimitDirection.kReverse, 0);
+		// m_extendableArm.setSoftLimit(SoftLimitDirection.kForward, Constants.kSlideLimit);
+		// m_extendableArm.setSoftLimit(SoftLimitDirection.kReverse, 0);
 		m_rotatingArm = armMotor;
 		m_rotatingArm.enableVoltageCompensation(12);
 		m_rotatingArm.setSoftLimit(SoftLimitDirection.kForward, Constants.kArmLimit);
 		m_rotatingArm.setSoftLimit(SoftLimitDirection.kReverse, 0);
 		m_extendableArm.setInverted(false);
 		m_rotatingArm.setInverted(false);
+
+		m_rotatingArm.setIdleMode(IdleMode.kBrake);
+		m_extendableArm.setIdleMode(IdleMode.kBrake);
 	}
 
 	// public Climber(CANSparkMax climbMotor) {

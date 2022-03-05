@@ -23,7 +23,7 @@ public class RotatingClimb extends CommandBase {
 
 	@Override
 	public void initialize() {
-		m_subsystem.setRotatingSpeed(Constants.kClimberSpeed);
+		m_subsystem.setRotatingSpeed(Constants.kRotatingSpeed);
 		// m_subsystem.invertExtendable();
 		// m_subsystem.set((direc ? 1 : -1) * Constants.kClimberSpeed);
 	}
