@@ -26,12 +26,15 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import frc.robot.commands.Climb;
 import frc.robot.commands.OneBallAuto;
 import frc.robot.commands.ReverseClimb;
+import frc.robot.commands.ChangeDriveSpeed;
 // import frc.robot.commands.ChangeRotatingClimberSpeed;
 import frc.robot.commands.ChangeShooterSpeed;
 import frc.robot.commands.ReverseIntake;
 import frc.robot.commands.ReverseIntakeBelt;
 import frc.robot.commands.ReverseRotatingClimb;
 import frc.robot.commands.RotatingClimb;
+import frc.robot.commands.SetDriveDirection;
+import frc.robot.commands.SetDriveSpeed;
 import frc.robot.commands.ToggleIntake;
 import frc.robot.commands.ToggleIntakeBelt;
 import frc.robot.commands.TwoCargoAuto;
@@ -84,13 +87,7 @@ public class RobotContainer {
 	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
 	// private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
 	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
-<<<<<<< HEAD
-	private Command m_autonomousCommand;
-	private int direction = 1;
-	private double factor = 1;
-=======
 	private Drive m_robotSubsystemDrive = new Drive();
->>>>>>> 4beeb33cde8802fb17dd85b08cf7b4076c6d523f
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -143,6 +140,9 @@ public class RobotContainer {
 
 		new JoystickButton(climbJoystick, 11).whenHeld(new RotatingClimb(m_climber));
 		new JoystickButton(climbJoystick, 10).whenHeld(new ReverseRotatingClimb(m_climber));
+
+		new JoystickButton(m_leftStick, 0).whenPressed(new SetDriveSpeed(m_robotSubsystemDrive, 0.5));
+		new JoystickButton(m_rightStick, 0).whenPressed(new SetDriveDirection(m_robotSubsystemDrive, ));
 		// m_mechanismController.getTriggerAxis(Hand.kLeft).whenActive(new ReverseIntakeBelt(m_intake));
 		// m_mechanismController.getTriggerAxis(Hand.kRight).whenActive(new ReverseIntake(m_intake));
 
@@ -151,13 +151,10 @@ public class RobotContainer {
 	}
 
 	public void driveControl() {
-<<<<<<< HEAD
-		m_robotDrive.tankDrive(m_leftStick.getY()*factor*direction, m_rightStick.getY()*factor*direction);
+		// m_robotDiffDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+		m_robotSubsystemDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY(), m_leftStick.getThrottle());
 		if(m_leftStick.getRawButton(0)){
-			if(factor == 1)
-				factor = 0.5;
-			else
-				factor = 1;
+			new CommandSetDriveDirection();
 		}
 
 		if(m_rightStick.getRawButton(0)){
@@ -166,12 +163,8 @@ public class RobotContainer {
 			else
 				direction = 1;
 		}
-=======
-		// m_robotDiffDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
-		m_robotSubsystemDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY(), m_leftStick.getThrottle());
 
 
->>>>>>> 4beeb33cde8802fb17dd85b08cf7b4076c6d523f
 		// m_robotDrive.tankDrive(m_driverController.getRawAxis(Axis.kLeftY.value), m_driverController.getRawAxis(Axis.kRightY.value));
 	}
 
