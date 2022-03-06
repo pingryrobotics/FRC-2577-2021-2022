@@ -43,6 +43,7 @@ import frc.robot.commands.ToggleIntakeAndBelt;
 // import frc.robot.commands.ToggleIntakeBelt;
 // import frc.robot.commands.TwoCargoAuto;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.DifferentialSubsystem;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
@@ -97,7 +98,9 @@ public class RobotContainer {
 	private final Shooter m_shooter = new Shooter(new CANSparkMax(Constants.kOuttakeLId, MotorType.kBrushless), new CANSparkMax(Constants.kOuttakeRId, MotorType.kBrushless));
 	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
 	// private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
-	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
+	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless),
+			new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
+	private final ColorSensor m_colorSensor = new ColorSensor(m_intake);
 	private Drive m_robotSubsystemDrive;
 	private double speed = 1;
 	private Command m_autonomousCommand;

@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.I2C.Port;
 import frc.robot.util.GeomUtil;
 
 /**
@@ -80,6 +81,7 @@ public final class Constants {
 	public static final int kClimberId = 30;
 	public static final int kRotatingArmId = 31;
 	public static final int kBeltId = 21;
+	public static final int kProximityThreshold = 10;
 
 
 	// Field dimensions
