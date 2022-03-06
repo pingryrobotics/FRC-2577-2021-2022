@@ -9,21 +9,23 @@ import frc.robot.subsystems.ExampleSubsystem;
 public class RotatingClimb extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
 	private final Climber m_subsystem;
+	private final double speed;
 
 	/**
 	 * Creates a new ExampleCommand.
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public RotatingClimb(Climber subsystem) {
+	public RotatingClimb(Climber subsystem, double speed) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
+		this.speed = speed;
 	}
 
 	@Override
 	public void initialize() {
-		m_subsystem.setRotatingSpeed(Constants.kRotatingSpeed);
+		m_subsystem.setRotatingSpeed(speed);
 		// m_subsystem.invertExtendable();
 		// m_subsystem.set((direc ? 1 : -1) * Constants.kClimberSpeed);
 	}

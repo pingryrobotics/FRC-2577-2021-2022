@@ -8,7 +8,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
@@ -27,7 +26,7 @@ public class Climber extends SubsystemBase {
 		m_extendableArm.enableVoltageCompensation(12);
 		// m_extendableArm.setSoftLimit(SoftLimitDirection.kForward, Constants.kSlideLimit);
 		// m_extendableArm.setSoftLimit(SoftLimitDirection.kReverse, 0);
-		m_rotatingArm = armMotor;
+		m_rotatingArm = armMotor; 
 		m_rotatingArm.enableVoltageCompensation(12);
 		m_rotatingArm.setSoftLimit(SoftLimitDirection.kForward, Constants.kArmLimit);
 		m_rotatingArm.setSoftLimit(SoftLimitDirection.kReverse, 0);
@@ -65,5 +64,9 @@ public class Climber extends SubsystemBase {
 
 	public void setRotatingSpeed(double speed) {
 		m_rotatingArm.set(speed);
+	}
+
+	public void toggleRotate() {
+		
 	}
 }

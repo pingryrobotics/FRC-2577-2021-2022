@@ -7,37 +7,33 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.Drive;
+import frc.robot.Constants;
+import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * An example command that uses an example subsystem.
  */
-public class ChangeDriveSpeed extends CommandBase {
+public class IntakeBelt extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-	private final Drive m_subsystem;
-	private double speed;
+	private final Intake m_subsystem;
 
 	/**
 	 * Creates a new ExampleCommand.
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public ChangeDriveSpeed(Drive subsystem) {
+	public IntakeBelt(Intake subsystem) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
-
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		if(m_subsystem.getDriveSpeed() == 1)
-			m_subsystem.setSpeedMultiplier(0.5);
-		else
-			m_subsystem.setSpeedMultiplier(1);
+		m_subsystem.toggleBeltStart();
+		// m_subsystem.setBeltSpeed(Constants.kBeltSpeed);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
@@ -48,6 +44,7 @@ public class ChangeDriveSpeed extends CommandBase {
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
+		// m_subsystem.setBeltSpeed(0);
 	}
 
 	// Returns true when the command should end.

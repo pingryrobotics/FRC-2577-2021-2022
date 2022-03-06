@@ -23,22 +23,27 @@ import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import frc.robot.commands.Climb;
+import frc.robot.commands.ReverseExtendableClimb;
+import frc.robot.commands.IntakeBelt;
 import frc.robot.commands.OneBallAuto;
-import frc.robot.commands.ReverseClimb;
+import frc.robot.commands.ExtendableClimb;
+import frc.robot.commands.ChangeDriveDirection;
 import frc.robot.commands.ChangeDriveSpeed;
 // import frc.robot.commands.ChangeRotatingClimberSpeed;
 import frc.robot.commands.ChangeShooterSpeed;
 import frc.robot.commands.ReverseIntake;
+import frc.robot.commands.ReverseIntakeAndBelt;
 import frc.robot.commands.ReverseIntakeBelt;
 import frc.robot.commands.ReverseRotatingClimb;
 import frc.robot.commands.RotatingClimb;
 import frc.robot.commands.SetDriveDirection;
 import frc.robot.commands.SetDriveSpeed;
 import frc.robot.commands.ToggleIntake;
-import frc.robot.commands.ToggleIntakeBelt;
-import frc.robot.commands.TwoCargoAuto;
+import frc.robot.commands.ToggleIntakeAndBelt;
+// import frc.robot.commands.ToggleIntakeBelt;
+// import frc.robot.commands.TwoCargoAuto;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.DifferentialSubsystem;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -77,17 +82,28 @@ public class RobotContainer {
 	private final CANSparkMax leftMotor2 = new CANSparkMax(Constants.kLeftMotor2Port, MotorType.kBrushless);
 	private final CANSparkMax rightMotor1 = new CANSparkMax(Constants.kRightMotor1Port, MotorType.kBrushless);
 	private final CANSparkMax rightMotor2 = new CANSparkMax(Constants.kRightMotor2Port, MotorType.kBrushless);
+	// private final CANSparkMax leftMotor1 = new CANSparkMax(Constants.kLeftMotor1Port, MotorType.kBrushless);
+	// private final CANSparkMax leftMotor2 = new CANSparkMax(Constants.kLeftMotor2Port, MotorType.kBrushless);
+	// private final CANSparkMax rightMotor1 = new CANSparkMax(Constants.kRightMotor1Port, MotorType.kBrushless);
+	// private final CANSparkMax rightMotor2 = new CANSparkMax(Constants.kRightMotor2Port, MotorType.kBrushless);
 	private MotorControllerGroup m_leftMotors = new MotorControllerGroup(leftMotor1, leftMotor2);
 
 	// The motors on the right side of the drive.
 	private MotorControllerGroup m_rightMotors = new MotorControllerGroup(rightMotor1, rightMotor2);
-	private DifferentialDrive m_robotDiffDrive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+	private DifferentialDrive m_robotDiffDrive;
+
+	private DifferentialSubsystem m_diffSub;
 	// private final Drive m_robotDrive = new Drive();
 	private final Shooter m_shooter = new Shooter(new CANSparkMax(Constants.kOuttakeLId, MotorType.kBrushless), new CANSparkMax(Constants.kOuttakeRId, MotorType.kBrushless));
 	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
 	// private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
 	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
-	private Drive m_robotSubsystemDrive = new Drive();
+	private Drive m_robotSubsystemDrive;
+	private double speed = 1;
+	private Command m_autonomousCommand;
+	private boolean isForwards = true;
+	public boolean intakeReversed = false;
+	public boolean intakeOn = false;
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -95,12 +111,17 @@ public class RobotContainer {
 	public RobotContainer() {
 		// Configure the button binding
 		configureButtonBindings();
-		m_rightMotors.setInverted(true); 	
+		m_robotDiffDrive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+		m_leftMotors.setInverted(true);
+		m_diffSub = new DifferentialSubsystem(m_leftMotors, m_rightMotors, m_robotDiffDrive);
+
+		// m_intake.toggleBeltStart();
+		// m_robotSubsystemDrive = new Drive(m_leftMotors, m_rightMotors);
 		// m_chooser.setDefaultOption("TA", new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter));
 		// m_chooser.addOption("TB", new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter));
 		// m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
 		// m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
-		SmartDashboard.putData("Auto choices", m_chooser);
+		// SmartDashboard.putData("Auto choices", m_chooser);
 	}
 
 	/**
@@ -113,36 +134,44 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		// input commands here
-		
-
-
-		new JoystickButton(m_mechanismController, Button.kX.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.7));
-		new JoystickButton(m_mechanismController, Button.kStart.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
-		new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.3));
-		new JoystickButton(m_mechanismController, Button.kY.value).whenPressed(new ChangeShooterSpeed(m_shooter, .5)); // lower level
-		new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(new ChangeShooterSpeed(m_shooter, 1)); // upper level
+		new JoystickButton(m_mechanismController, Button.kX.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.3));
+		new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
+		new JoystickButton(m_mechanismController, Button.kStart.value).whenPressed(new ChangeShooterSpeed(m_shooter, -0.4));
+		// new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.3));
+		new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.7)); // lower level
+		new JoystickButton(m_mechanismController, Button.kY.value).whenPressed(new ChangeShooterSpeed(m_shooter, 1)); // upper level
 		// new JoystickButton(m_driverController1, 11).whenPressed(new ToggleHopper(m_hopper));
-		new JoystickButton(m_mechanismController, Button.kLeftBumper.value).whenPressed(new ToggleIntake(m_intake)); // toggle intake
-		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenPressed(new ToggleIntakeBelt(m_intake)); // toggle intake belt
-		new POVButton(m_mechanismController, 90).whenHeld(new Climb(m_climber)); // extend/retract arm
-		new POVButton(m_mechanismController, 270).whenHeld(new ReverseClimb(m_climber));
-		new POVButton(m_mechanismController, 0).whenHeld(new RotatingClimb(m_climber)); // rotate arm
-		new POVButton(m_mechanismController, 180).whenHeld(new ReverseRotatingClimb(m_climber));
+		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenPressed(new ReverseIntakeAndBelt(m_intake)); // toggle intake
+		new JoystickButton(m_mechanismController, Button.kLeftBumper.value).whenPressed(new ToggleIntakeAndBelt(m_intake)); // toggle intake belt
+		new POVButton(m_mechanismController, 90).whenHeld(new ReverseExtendableClimb(m_climber)); // extend/retract arm
+		new POVButton(m_mechanismController, 270).whenHeld(new ExtendableClimb(m_climber));
+		new POVButton(m_mechanismController, 0).whenHeld(new RotatingClimb(m_climber, 0.1)); // rotate arm
+		new POVButton(m_mechanismController, 180).whenHeld(new ReverseRotatingClimb(m_climber, 0.1));
 
-		new JoystickButton(m_mechanismController, Button.kLeftStick.value).whenPressed(new ReverseIntake(m_intake)); // reverse intake
-		new JoystickButton(m_mechanismController, Button.kRightStick.value).whenPressed(new ReverseIntakeBelt(m_intake)); // reverse
+		SmartDashboard.putString("Direction", intakeReversed ? "Going out" : "Going in");
+		SmartDashboard.putString("Intake status", intakeOn ? "On" : "Off");
+
+
+		// new JoystickButton(m_mechanismController, Button.kBack.value).whenPressed(new ReverseIntake(m_intake)); // reverse intake
+		// new JoystickButton(m_mechanismController, Button.kStart.value).whenPressed(new ReverseIntakeBelt(m_intake)); // reverse
 
 		// new JoystickButton(m_driverController, Button.kLeftBumper.value).whenHeld(new Climb(m_climber)); // toggle climber
 		// new JoystickButton(m_driverController, Button.kRightBumper.value).whenHeld(new ReverseClimb(m_climber)); // toggle climber
 
-		new JoystickButton(climbJoystick, 6).whenHeld(new Climb(m_climber));
-		new JoystickButton(climbJoystick, 7).whenHeld(new ReverseClimb(m_climber));
+		new JoystickButton(climbJoystick, 6).whenHeld(new RotatingClimb(m_climber, 1));
+		new JoystickButton(climbJoystick, 7).whenHeld(new ReverseRotatingClimb(m_climber, 1));
 
-		new JoystickButton(climbJoystick, 11).whenHeld(new RotatingClimb(m_climber));
-		new JoystickButton(climbJoystick, 10).whenHeld(new ReverseRotatingClimb(m_climber));
+		new JoystickButton(m_rightStick, 3).whenHeld(new ExtendableClimb(m_climber));
+		new JoystickButton(m_rightStick, 2).whenHeld(new ReverseExtendableClimb(m_climber));
+		new JoystickButton(m_rightStick, 4).whenHeld(new SetDriveDirection(m_diffSub, true));
+		new JoystickButton(m_rightStick, 5).whenHeld(new SetDriveDirection(m_diffSub, false));
 
-		new JoystickButton(m_leftStick, 0).whenPressed(new SetDriveSpeed(m_robotSubsystemDrive, 0.5));
-		new JoystickButton(m_rightStick, 0).whenPressed(new SetDriveDirection(m_robotSubsystemDrive, ));
+
+		new JoystickButton(climbJoystick, 11).whenHeld(new RotatingClimb(m_climber, 0.1));
+		new JoystickButton(climbJoystick, 10).whenHeld(new ReverseRotatingClimb(m_climber, 0.1));
+
+		// new JoystickButton(m_leftStick, 4).whenPressed(new ChangeDriveSpeed(m_robotSubsystemDrive));
+		// new JoystickButton(m_leftStick, 5).whenPressed(new ChangeDriveDirection(m_robotSubsystemDrive));
 		// m_mechanismController.getTriggerAxis(Hand.kLeft).whenActive(new ReverseIntakeBelt(m_intake));
 		// m_mechanismController.getTriggerAxis(Hand.kRight).whenActive(new ReverseIntake(m_intake));
 
@@ -151,25 +180,15 @@ public class RobotContainer {
 	}
 
 	public void driveControl() {
-		// m_robotDiffDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
-		m_robotSubsystemDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY(), m_leftStick.getThrottle());
-		if(m_leftStick.getRawButton(0)){
-			new CommandSetDriveDirection();
-		}
-
-		if(m_rightStick.getRawButton(0)){
-			if(direction == 1)
-				direction = -1;
-			else
-				direction = 1;
-		}
-
+		m_robotDiffDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+		// m_robotSubsystemDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+		
 
 		// m_robotDrive.tankDrive(m_driverController.getRawAxis(Axis.kLeftY.value), m_driverController.getRawAxis(Axis.kRightY.value));
 	}
 
 	// A chooser for autonomous commands
-	SendableChooser<TwoCargoAuto> m_chooser = new SendableChooser<>();
+	// SendableChooser<TwoCargoAuto> m_chooser = new SendableChooser<>();
 
 	/**
 	 * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -177,56 +196,60 @@ public class RobotContainer {
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		Command cmd = new OneBallAuto(m_intake, m_shooter);
+		Command cmd = new OneBallAuto(m_diffSub, m_intake, m_shooter);
 		return cmd;
 	}
 
 	public void oneBall(){
-		m_robotDrive.tankDrive(-0.5, -0.5);
-		new WaitCommand(1).schedule();
-		m_robotDrive.stopMotor();
 		
-		m_autonomousCommand = getAutonomousCommand();
-		// schedule the autonomous command (example)
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.schedule();
-		}
+		// m_robotDiffDrive.stopMotor();
 		
-		m_robotDrive.tankDrive(-0.5, -0.5);
-		new WaitCommand(1).schedule();
-		m_robotDrive.stopMotor();
+		// // m_autonomousCommand = getAutonomousCommand();
+		// // schedule the autonomous command (example)
+		// // if (m_autonomousCommand != null) {
+		// 	// m_autonomousCommand.schedule();
+		// // }
+		// Command command = new OneBallAuto(m_intake, m_shooter);
+		// if (command != null) {
+		// 	command.schedule();
+		// }
+		
+		// m_robotDiffDrive.tankDrive(-0.5, -0.5);
+		// new WaitCommand(1).schedule();
+		// m_robotDiffDrive.stopMotor();
 	}
 
 	public void twoBalls(){
 		ADIS16470_IMU m_imu = new ADIS16470_IMU(); 
 		double yawOriginal = m_imu.getAngle();
-		new ToggleIntake(m_intake).schedule();
-		m_robotDrive.tankDrive(0.5, 0.5);
-		new ToggleIntakeBelt(m_intake).schedule();
+		// new ToggleIntake(m_intake).schedule();
+		new ToggleIntakeAndBelt(m_intake).schedule();
+		m_robotDiffDrive.tankDrive(0.5, 0.5);
 		new WaitCommand(1).schedule();
-		m_robotDrive.stopMotor();
-		new ToggleIntakeBelt(m_intake).end(true);
-		m_robotDrive.tankDrive(0.3, -0.3);
+		m_robotDiffDrive.stopMotor();
+		new ToggleIntakeAndBelt(m_intake).end(true);
+		m_robotDiffDrive.tankDrive(0.3, -0.3);
 		while(180 >= Math.abs(yawOriginal-m_imu.getAngle())){
+			new WaitCommand(0.05).schedule();
 		}
-		m_robotDrive.stopMotor();
+		m_robotDiffDrive.stopMotor();
 
-		m_robotDrive.tankDrive(0.5, 0.5);
-		new WaitCommand(1).schedule();;
-		m_robotDrive.stopMotor();
+		m_robotDiffDrive.tankDrive(0.5, 0.5);
+		new WaitCommand(1).schedule();
+		m_robotDiffDrive.stopMotor();
 		
 		new ReverseIntakeBelt(m_intake).schedule();
 		new WaitCommand(0.5).schedule();
 		new ReverseIntakeBelt(m_intake).end(true);
 		new ChangeShooterSpeed(m_shooter, 0.7).schedule();
 		new WaitCommand(1).schedule();
-		new ToggleIntakeBelt(m_intake).schedule();
+		new ToggleIntakeAndBelt(m_intake).schedule();
 		new WaitCommand(3).schedule();
 
 			
-		m_robotDrive.tankDrive(-0.5, -0.5);
+		m_robotDiffDrive.tankDrive(-0.5, -0.5);
 		new WaitCommand(1).schedule();
-		m_robotDrive.stopMotor();
+		m_robotDiffDrive.stopMotor();
 	}
 		// Map<String, AutoRoutine> autoMap = new HashMap<String, AutoRoutine>();
 		// autoMap.put("Two cargo (TA)",
@@ -301,7 +324,7 @@ public class RobotContainer {
 
 		// // Run path following command, then stop at the end.
 		// return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
-	}
+	// }
 
 	public static enum AutoPosition {
 		ORIGIN, TARMAC_A, TARMAC_B, TARMAC_C, TARMAC_D, FENDER_A, FENDER_B;

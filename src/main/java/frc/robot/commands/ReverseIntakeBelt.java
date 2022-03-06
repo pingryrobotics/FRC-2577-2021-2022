@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -32,6 +33,7 @@ public class ReverseIntakeBelt extends CommandBase {
 	@Override
 	public void initialize() {
 		m_subsystem.flipDirectionBelt();
+		// m_subsystem.setBeltSpeed(-Constants.kBeltSpeed);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
@@ -42,6 +44,7 @@ public class ReverseIntakeBelt extends CommandBase {
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
+		// m_subsystem.setBeltSpeed(0);
 	}
 
 	// Returns true when the command should end.

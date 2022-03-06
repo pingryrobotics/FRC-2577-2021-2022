@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 /**
  * An example command that uses an example subsystem.
  */
-public class ChangeDriveSpeed extends CommandBase {
+public class ChangeDriveDirection extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
 	private final Drive m_subsystem;
 	private double speed;
@@ -24,7 +24,7 @@ public class ChangeDriveSpeed extends CommandBase {
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public ChangeDriveSpeed(Drive subsystem) {
+	public ChangeDriveDirection(Drive subsystem) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
@@ -34,10 +34,10 @@ public class ChangeDriveSpeed extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		if(m_subsystem.getDriveSpeed() == 1)
-			m_subsystem.setSpeedMultiplier(0.5);
+		if(m_subsystem.getDriveDirection())
+			m_subsystem.setDriveDirection(false);
 		else
-			m_subsystem.setSpeedMultiplier(1);
+		m_subsystem.setDriveDirection(true);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.

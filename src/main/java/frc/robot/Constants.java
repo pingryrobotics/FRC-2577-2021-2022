@@ -69,8 +69,8 @@ public final class Constants {
 
 	public static final int kOuttakeSpeed = 1;
 	public static final int kIntakeSpeed = 1;
-	public static final double kBeltSpeed = 0.5;
-	public static final double kClimberSpeed = 0.5;
+	public static final double kBeltSpeed = 1;
+	public static final double kClimberSpeed = 1;
 	public static final double kRotatingSpeed = 0.1;
 	public static final int kSlideLimit = 1; // in rotations
 	public static final int kArmLimit = 1; // in rotations

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer.AutoPosition;
+import frc.robot.subsystems.DifferentialSubsystem;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -24,16 +25,30 @@ import frc.robot.util.GeomUtil;
 public class OneBallAuto extends SequentialCommandGroup {
 
 	/** Creates a new TwoCargoAuto. */
-	public OneBallAuto(Intake intake, Shooter shooter) {
+	public OneBallAuto(DifferentialSubsystem drive, Intake intake, Shooter shooter) {
 						// Create a voltage constraint to ensure we don't accelerate too fast
 		addCommands(deadline(
-				new ChangeShooterSpeed(shooter, 0.7),
-				// new ToggleIntakeBelt(intake),
-				new WaitCommand(3.0),
-				
-                new ToggleIntakeBelt(intake),
 
-				new ChangeShooterSpeed(shooter, 0),
+				new ChangeShooterSpeed(shooter, 0.2),
+				// new ToggleIntakeBelt(intake),
+				new WaitCommand(10.0),
+			
+				new ToggleIntakeAndBelt(intake),
+			
+				new WaitCommand(5.0)),
+				new MoveBackwards(drive, 7000, .5),
+
+				new WaitCommand(3.0),
+
+				
+				
+				new ToggleIntakeAndBelt(intake)
+
+				
+				);
+
+				// new ChangeShooterSpeed(shooter, 0),
+				// new ToggleIntakeAndBelt(intake)));
 				// sequence(
 				// 		sequence(
 				// 				new DriveCommand(drive, 0.0,
@@ -52,7 +67,7 @@ public class OneBallAuto extends SequentialCommandGroup {
 				// 		new WaitCommand(3.0),
 				// 		new ToggleIntakeBelt(intake),
 				// 		new WaitCommand(3.0),
-				new ChangeShooterSpeed(shooter, 0)));
+				// new ChangeShooterSpeed(shooter, 0)));
 	}
 
 }

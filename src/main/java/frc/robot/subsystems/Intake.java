@@ -9,6 +9,7 @@ public class Intake extends SubsystemBase {
 	private boolean on = false;
 	private boolean onBelt = false;
 	private CANSparkMax belt;
+	private double beltSpeed = Constants.kBeltSpeed;
 
 	/**
 	 * Creates a new ExampleSubsystem.
@@ -30,7 +31,7 @@ public class Intake extends SubsystemBase {
 			roller.set(0);
 		}
 		if (onBelt) {
-			belt.set(Constants.kBeltSpeed);
+			belt.set(beltSpeed);
 		} else {
 			belt.set(0);
 		}
@@ -44,11 +45,16 @@ public class Intake extends SubsystemBase {
 		on = !on;
 	}
 
-	public void toggleStartBelt() {
+	public void toggleBeltStart() {
 		onBelt = !onBelt;
 	}
 
 	public void flipDirectionBelt() {
 		belt.setInverted(!belt.getInverted());
+		if (belt.getInverted()) {
+			beltSpeed = 0.1;
+		} else {
+			beltSpeed = Constants.kBeltSpeed;
+		}
 	}
 }
