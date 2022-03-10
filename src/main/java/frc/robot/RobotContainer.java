@@ -27,7 +27,7 @@ import frc.robot.commands.ReverseExtendableClimb;
 import frc.robot.commands.IntakeBelt;
 import frc.robot.commands.OneBallAuto;
 import frc.robot.commands.ExtendableClimb;
-import frc.robot.commands.ChangeDriveDirection;
+// import frc.robot.commands.ChangeDriveDirection;
 import frc.robot.commands.ChangeDriveSpeed;
 // import frc.robot.commands.ChangeRotatingClimberSpeed;
 import frc.robot.commands.ChangeShooterSpeed;
@@ -41,8 +41,8 @@ import frc.robot.commands.SetDriveSpeed;
 // import frc.robot.commands.ToggleColorSensor;
 import frc.robot.commands.ToggleIntake;
 import frc.robot.commands.ToggleIntakeAndBelt;
-// import frc.robot.commands.ToggleIntakeBelt;
-// import frc.robot.commands.TwoCargoAuto;
+import frc.robot.commands.ToggleBelt;
+import frc.robot.commands.TwoCargoAuto;
 import frc.robot.subsystems.Climber;
 // import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.DifferentialSubsystem;
@@ -74,27 +74,27 @@ public class RobotContainer {
 	// private final Hopper m_hopper = new Hopper(new CANSparkMax(Constants.kHopperLowerId, MotorType.kBrushless),
 	// 		new CANSparkMax(Constants.kHopperUpperId, MotorType.kBrushless));
 	// private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless));
-	// private final DriveBase m_driveBase = new DriveBase();
 	// public XboxController m_driverController = new XboxController(0);
 	public Joystick m_leftStick = new Joystick(0);
 	public Joystick m_rightStick = new Joystick(1);
 	public Joystick climbJoystick = new Joystick(2);
 	public XboxController m_mechanismController = new XboxController(3);
-	private final CANSparkMax leftMotor1 = new CANSparkMax(Constants.kLeftMotor1Port, MotorType.kBrushless);
-	private final CANSparkMax leftMotor2 = new CANSparkMax(Constants.kLeftMotor2Port, MotorType.kBrushless);
-	private final CANSparkMax rightMotor1 = new CANSparkMax(Constants.kRightMotor1Port, MotorType.kBrushless);
-	private final CANSparkMax rightMotor2 = new CANSparkMax(Constants.kRightMotor2Port, MotorType.kBrushless);
 	// private final CANSparkMax leftMotor1 = new CANSparkMax(Constants.kLeftMotor1Port, MotorType.kBrushless);
 	// private final CANSparkMax leftMotor2 = new CANSparkMax(Constants.kLeftMotor2Port, MotorType.kBrushless);
 	// private final CANSparkMax rightMotor1 = new CANSparkMax(Constants.kRightMotor1Port, MotorType.kBrushless);
 	// private final CANSparkMax rightMotor2 = new CANSparkMax(Constants.kRightMotor2Port, MotorType.kBrushless);
-	private MotorControllerGroup m_leftMotors = new MotorControllerGroup(leftMotor1, leftMotor2);
+	// private final CANSparkMax leftMotor1 = new CANSparkMax(Constants.kLeftMotor1Port, MotorType.kBrushless);
+	// private final CANSparkMax leftMotor2 = new CANSparkMax(Constants.kLeftMotor2Port, MotorType.kBrushless);
+	// private final CANSparkMax rightMotor1 = new CANSparkMax(Constants.kRightMotor1Port, MotorType.kBrushless);
+	// private final CANSparkMax rightMotor2 = new CANSparkMax(Constants.kRightMotor2Port, MotorType.kBrushless);
+	// private MotorControllerGroup m_leftMotors = new MotorControllerGroup(leftMotor1, leftMotor2);
 
 	// The motors on the right side of the drive.
-	private MotorControllerGroup m_rightMotors = new MotorControllerGroup(rightMotor1, rightMotor2);
-	private DifferentialDrive m_robotDiffDrive;
+	// private MotorControllerGroup m_rightMotors = new MotorControllerGroup(rightMotor1, rightMotor2);
+	// private DifferentialDrive m_robotDiffDrive;
+	private Drive m_robotDrive = new Drive();
 
-	private DifferentialSubsystem m_diffSub;
+	// private DifferentialSubsystem m_diffSub;
 	// private final Drive m_robotDrive = new Drive();
 	private final Shooter m_shooter = new Shooter(new CANSparkMax(Constants.kOuttakeLId, MotorType.kBrushless), new CANSparkMax(Constants.kOuttakeRId, MotorType.kBrushless));
 	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
@@ -115,18 +115,18 @@ public class RobotContainer {
 	public RobotContainer() {
 		// Configure the button binding
 		configureButtonBindings();
-		m_robotDiffDrive = new DifferentialDrive(m_leftMotors, m_rightMotors);
-		m_leftMotors.setInverted(true);
+		// m_robotDiffDrive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+		// m_leftMotors.setInverted(true);
 		// m_rightMotors.setInverted(true);
-		m_diffSub = new DifferentialSubsystem(m_leftMotors, m_rightMotors, m_robotDiffDrive);
+		// m_diffSub = new DifferentialSubsystem(m_leftMotors, m_rightMotors, m_robotDiffDrive);
 
 		// m_intake.toggleBeltStart();
 		// m_robotSubsystemDrive = new Drive(m_leftMotors, m_rightMotors);
-		// m_chooser.setDefaultOption("TA", new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter));
-		// m_chooser.addOption("TB", new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter));
-		// m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
-		// m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
-		// SmartDashboard.putData("Auto choices", m_chooser);
+		m_chooser.setDefaultOption("TA", new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter));
+		m_chooser.addOption("TB", new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter));
+		m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
+		m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
+		SmartDashboard.putData("Auto choices", m_chooser);
 	}
 
 	/**
@@ -186,7 +186,8 @@ public class RobotContainer {
 	}
 
 	public void driveControl() {
-		m_robotDiffDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+		m_robotDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+		// m_robotDiffDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
 		// m_robotSubsystemDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
 		
 
@@ -194,7 +195,7 @@ public class RobotContainer {
 	}
 
 	// A chooser for autonomous commands
-	// SendableChooser<TwoCargoAuto> m_chooser = new SendableChooser<>();
+	SendableChooser<TwoCargoAuto> m_chooser = new SendableChooser<>();
 
 	/**
 	 * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -221,57 +222,6 @@ public class RobotContainer {
 
 		// m_robotDrive.setPose(m_chooser.getSelected().pos.getPose());
 		return m_chooser.getSelected();
-		// // Create a voltage constraint to ensure we don't accelerate too fast
-		// var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
-		// 		new SimpleMotorFeedforward(
-		// 				Constants.ksVolts,
-		// 				Constants.kvVoltSecondsPerMeter,
-		// 				Constants.kaVoltSecondsSquaredPerMeter),
-		// 		Constants.kDriveKinematics,
-		// 		10);
-
-		// // Create config for trajectory
-		// TrajectoryConfig config = new TrajectoryConfig(
-		// 		Constants.kMaxSpeedMetersPerSecond,
-		// 		Constants.kMaxAccelerationMetersPerSecondSquared)
-		// 				// Add kinematics to ensure max speed is actually obeyed
-		// 				.setKinematics(Constants.kDriveKinematics)
-		// 				// Apply the voltage constraint
-		// 				.addConstraint(autoVoltageConstraint);
-
-
-		// // An example trajectory to follow. All units in meters.
-		// Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-		// 		// Start at the origin facing the +X direction
-		// 		new Pose2d(0, 0, new Rotation2d(0)),
-		// 		// Pass through these two interior waypoints, making an 's' curve path
-		// 		List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-		// 		// End 3 meters straight ahead of where we started, facing forward
-		// 		new Pose2d(3, 0, new Rotation2d(0)),
-		// 		// Pass config
-		// 		config);
-
-		// RamseteCommand ramseteCommand = new RamseteCommand(
-		// 		exampleTrajectory,
-		// 		m_robotDrive::getPose,
-		// 		new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-		// 		new SimpleMotorFeedforward(
-		// 				Constants.ksVolts,
-		// 				Constants.kvVoltSecondsPerMeter,
-		// 				Constants.kaVoltSecondsSquaredPerMeter),
-		// 		Constants.kDriveKinematics,
-		// 		m_robotDrive::getWheelSpeeds,
-		// 		new PIDController(Constants.kPDriveVel, 0, 0),
-		// 		new PIDController(Constants.kPDriveVel, 0, 0),
-		// 		// RamseteCommand passes volts to the callback
-		// 		m_robotDrive::tankDriveVolts,
-		// 		m_robotDrive);
-
-		// // Reset odometry to the starting pose of the trajectory.
-		// m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-
-		// // Run path following command, then stop at the end.
-		// return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
 	}
 
 	public void oneBall(){
@@ -293,38 +243,38 @@ public class RobotContainer {
 		// m_robotDiffDrive.stopMotor();
 	}
 
-	public void twoBalls(){
-		ADIS16470_IMU m_imu = new ADIS16470_IMU(); 
-		double yawOriginal = m_imu.getAngle();
-		// new ToggleIntake(m_intake).schedule();
-		new ToggleIntakeAndBelt(m_intake).schedule();
-		m_robotDiffDrive.tankDrive(0.5, 0.5);
-		new WaitCommand(1).schedule();
-		m_robotDiffDrive.stopMotor();
-		new ToggleIntakeAndBelt(m_intake).end(true);
-		m_robotDiffDrive.tankDrive(0.3, -0.3);
-		while(180 >= Math.abs(yawOriginal-m_imu.getAngle())){
-			new WaitCommand(0.05).schedule();
-		}
-		m_robotDiffDrive.stopMotor();
+	// public void twoBalls(){
+	// 	ADIS16470_IMU m_imu = new ADIS16470_IMU(); 
+	// 	double yawOriginal = m_imu.getAngle();
+	// 	// new ToggleIntake(m_intake).schedule();
+	// 	new ToggleIntakeAndBelt(m_intake).schedule();
+	// 	m_robotDiffDrive.tankDrive(0.5, 0.5);
+	// 	new WaitCommand(1).schedule();
+	// 	m_robotDiffDrive.stopMotor();
+	// 	new ToggleIntakeAndBelt(m_intake).end(true);
+	// 	m_robotDiffDrive.tankDrive(0.3, -0.3);
+	// 	while(180 >= Math.abs(yawOriginal-m_imu.getAngle())){
+	// 		new WaitCommand(0.05).schedule();
+	// 	}
+	// 	m_robotDiffDrive.stopMotor();
 
-		m_robotDiffDrive.tankDrive(0.5, 0.5);
-		new WaitCommand(1).schedule();
-		m_robotDiffDrive.stopMotor();
+	// 	m_robotDiffDrive.tankDrive(0.5, 0.5);
+	// 	new WaitCommand(1).schedule();
+	// 	m_robotDiffDrive.stopMotor();
 		
-		new ReverseIntakeBelt(m_intake).schedule();
-		new WaitCommand(0.5).schedule();
-		new ReverseIntakeBelt(m_intake).end(true);
-		new ChangeShooterSpeed(m_shooter, 0.7).schedule();
-		new WaitCommand(1).schedule();
-		new ToggleIntakeAndBelt(m_intake).schedule();
-		new WaitCommand(3).schedule();
+	// 	new ReverseIntakeBelt(m_intake).schedule();
+	// 	new WaitCommand(0.5).schedule();
+	// 	new ReverseIntakeBelt(m_intake).end(true);
+	// 	new ChangeShooterSpeed(m_shooter, 0.7).schedule();
+	// 	new WaitCommand(1).schedule();
+	// 	new ToggleIntakeAndBelt(m_intake).schedule();
+	// 	new WaitCommand(3).schedule();
 
 			
-		m_robotDiffDrive.tankDrive(-0.5, -0.5);
-		new WaitCommand(1).schedule();
-		m_robotDiffDrive.stopMotor();
-	}
+	// 	m_robotDiffDrive.tankDrive(-0.5, -0.5);
+	// 	new WaitCommand(1).schedule();
+	// 	m_robotDiffDrive.stopMotor();
+	// }
 		// Map<String, AutoRoutine> autoMap = new HashMap<String, AutoRoutine>();
 		// autoMap.put("Two cargo (TA)",
         // 	new AutoRoutine(AutoPosition.TARMAC_A,

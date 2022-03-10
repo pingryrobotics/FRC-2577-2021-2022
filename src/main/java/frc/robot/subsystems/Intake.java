@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase {
 		}
 	}
 
-	public void flipDirection() {
+	public void flipDirectionRollers() {
 		roller.setInverted(!roller.getInverted());
 	}
 

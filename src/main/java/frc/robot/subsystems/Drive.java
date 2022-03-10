@@ -28,10 +28,10 @@ public class Drive extends SubsystemBase {
   private final CANSparkMax leftMotor2 = new CANSparkMax(Constants.kLeftMotor2Port, MotorType.kBrushless);
   private final CANSparkMax rightMotor1 = new CANSparkMax(Constants.kRightMotor1Port, MotorType.kBrushless);
   private final CANSparkMax rightMotor2 = new CANSparkMax(Constants.kRightMotor2Port, MotorType.kBrushless);
-  private MotorControllerGroup m_leftMotors;
+  private MotorControllerGroup m_leftMotors = new MotorControllerGroup(leftMotor1, leftMotor2);
 
   // The motors on the right side of the drive.
-  private MotorControllerGroup m_rightMotors;
+  private MotorControllerGroup m_rightMotors = new MotorControllerGroup(rightMotor1, rightMotor2);
 
   // The robot's drive
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
@@ -52,7 +52,7 @@ public class Drive extends SubsystemBase {
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
-    m_rightMotors.setInverted(true);
+    m_leftMotors.setInverted(true);
 
     // Sets the distance per pulse for the encoders
     m_leftEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDriveTrainGearReduction);

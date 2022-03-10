@@ -24,20 +24,17 @@ public class ChangeDriveSpeed extends CommandBase {
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public ChangeDriveSpeed(Drive subsystem) {
+	public ChangeDriveSpeed(Drive subsystem, double speed) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
-
+		this.speed = speed;
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		if(m_subsystem.getDriveSpeed() == 1)
-			m_subsystem.setSpeedMultiplier(0.5);
-		else
-			m_subsystem.setSpeedMultiplier(1);
+		m_subsystem.tankDrive(speed, speed);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
