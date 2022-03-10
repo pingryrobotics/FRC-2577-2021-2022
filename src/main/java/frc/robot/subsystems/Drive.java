@@ -24,6 +24,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Drive extends SubsystemBase {
   // The motors on the left side of the drive.
 
+  private final CANSparkMax leftMotor1 = new CANSparkMax(Constants.kLeftMotor1Port, MotorType.kBrushless);
+  private final CANSparkMax leftMotor2 = new CANSparkMax(Constants.kLeftMotor2Port, MotorType.kBrushless);
+  private final CANSparkMax rightMotor1 = new CANSparkMax(Constants.kRightMotor1Port, MotorType.kBrushless);
+  private final CANSparkMax rightMotor2 = new CANSparkMax(Constants.kRightMotor2Port, MotorType.kBrushless);
   private MotorControllerGroup m_leftMotors;
 
   // The motors on the right side of the drive.
@@ -34,18 +38,14 @@ public class Drive extends SubsystemBase {
 
   // The left-side drive encoder
 
-  // private final RelativeEncoder m_leftEncoder;
-  // private final RelativeEncoder m_rightEncoder;
+  private final RelativeEncoder m_leftEncoder = leftMotor1.getEncoder();
+  private final RelativeEncoder m_rightEncoder = rightMotor1.getEncoder();
 
   // The gyro sensor
 	private final ADIS16470_IMU m_imu = new ADIS16470_IMU(); // 4 seconds for automatic calibration
 
   // Odometry class for tracking robot pose
   private final DifferentialDriveOdometry m_odometry;
-
-  private boolean isDriveDirectionForwards = true;
-  private double speedMultiplier = 1;
-
 
   /** Creates a new DriveSubsystem. */
   public Drive() {
@@ -55,43 +55,37 @@ public class Drive extends SubsystemBase {
     m_rightMotors.setInverted(true);
 
     // Sets the distance per pulse for the encoders
-    // m_leftEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDriveTrainGearReduction);
-    // m_rightEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDriveTrainGearReduction);
+    m_leftEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDriveTrainGearReduction);
+    m_rightEncoder.setPositionConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDriveTrainGearReduction);
 
-    // m_leftEncoder.setVelocityConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDriveTrainGearReduction/60.0);
-    // m_rightEncoder.setVelocityConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDriveTrainGearReduction/60.0);
-// 
-    // leftMotor1.burnFlash();
-    // leftMotor2.burnFlash();
-    // rightMotor1.burnFlash();
-    // rightMotor2.burnFlash();
+    m_leftEncoder.setVelocityConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDriveTrainGearReduction/60.0);
+    m_rightEncoder.setVelocityConversionFactor(Constants.kDistancePerWheelRevolutionMeters*Constants.kDriveTrainGearReduction/60.0);
 
-    // m_leftMotors =
-    // new MotorControllerGroup(
-        // leftMotor1, leftMotor2);
+    leftMotor1.burnFlash();
+    leftMotor2.burnFlash();
+    rightMotor1.burnFlash();
+    rightMotor2.burnFlash();
+
+    m_leftMotors =
+    new MotorControllerGroup(
+        leftMotor1, leftMotor2);
 
 // The motors on the right side of the drive.
-    // m_rightMotors =
-    // new MotorControllerGroup(
-    //     rightMotor1, rightMotor2);
+    m_rightMotors =
+    new MotorControllerGroup(
+        rightMotor1, rightMotor2);
 
 
-    // resetEncoders();
+    resetEncoders();
     m_odometry = new DifferentialDriveOdometry(new Rotation2d(Math.toRadians(m_imu.getAngle()))); // wrong axis?
 																								  // default is y	
   }
 
-  public Drive(MotorControllerGroup a, MotorControllerGroup b) {
-		m_leftMotors = a;
-		m_rightMotors = b;
-    m_odometry = new DifferentialDriveOdometry(new Rotation2d(Math.toRadians(m_imu.getAngle()))); // wrong axis?
-	}
-
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-    // m_odometry.update(
-        // new Rotation2d(Math.toRadians(m_imu.getAngle())), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
+    m_odometry.update(
+        new Rotation2d(Math.toRadians(m_imu.getAngle())), m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
   }
 
   /**
@@ -110,21 +104,21 @@ public class Drive extends SubsystemBase {
   /**
    * Returns the current wheel speeds of the robot.
    *
-  //  * @return The current wheel speeds.
-  //  */
-  // public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-  //   return new DifferentialDriveWheelSpeeds(m_leftEncoder.getVelocity(), m_rightEncoder.getVelocity());
-  // }
+   * @return The current wheel speeds.
+   */
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(m_leftEncoder.getVelocity(), m_rightEncoder.getVelocity());
+  }
 
   /**
    * Resets the odometry to the specified pose.
    *
    * @param pose The pose to which to set the odometry.
-  //  */
-  // public void resetOdometry(Pose2d pose) {
-  //   resetEncoders();
-  //   m_odometry.resetPosition(pose, new Rotation2d(Math.toRadians(Math.toRadians(m_imu.getAngle()))));
-  // }
+   */
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();
+    m_odometry.resetPosition(pose, new Rotation2d(Math.toRadians(Math.toRadians(m_imu.getAngle()))));
+  }
 
   /**
    * Drives the robot using arcade controls.
@@ -133,36 +127,7 @@ public class Drive extends SubsystemBase {
    * @param rot the commanded rotation
    */
   public void tankDrive(double left, double right) {
-
-    // value is -1 to 1, so reverse so its 1 to -1, add 1 so its 2 to 1, divide by 2 so its 1 to 0
-    // setSpeedMultiplier(multiplier);
-    double multipliedLeft = left * speedMultiplier;
-    double multipliedRight = right * speedMultiplier;
-    if (isDriveDirectionForwards) {
-      m_drive.tankDrive(multipliedLeft, multipliedRight);
-    } else {
-      m_drive.tankDrive(-multipliedRight, -multipliedLeft);
-    }
-  }
-
-  public double getDriveSpeed() {return speedMultiplier;}
-  /**
-   * Sets the forwards direction of the drivetrain
-   * @param isForwards if true, forwards will be intake, otherwise its reversed
-   */
-  public void setDriveDirection(boolean isForwards) {
-    this.isDriveDirectionForwards = isForwards;
-  }
-
-  public boolean getDriveDirection(){
-      return isDriveDirectionForwards;
-  }
-  /**
-   * Sets the number to multiply the drive speeds by.
-   * @param multiplier the multiplier
-   */
-  public void setSpeedMultiplier(double multiplier) {
-    this.speedMultiplier = multiplier;
+    m_drive.tankDrive(left, right);
   }
 
   /**
@@ -177,38 +142,38 @@ public class Drive extends SubsystemBase {
     m_drive.feed();
   }
 
-  // /** Resets the drive encoders to currently read a position of 0. */
-  // public void resetEncoders() {
-  //   m_leftEncoder.setPosition(0);
-  //   m_rightEncoder.setPosition(0);
-  // }
+  /** Resets the drive encoders to currently read a position of 0. */
+  public void resetEncoders() {
+    m_leftEncoder.setPosition(0);
+    m_rightEncoder.setPosition(0);
+  }
 
-  // /**
-  //  * Gets the average distance of the two encoders.
-  //  *
-  //  * @return the average of the two encoder readings
-  //  */
-  // public double getAverageEncoderDistance() {
-  //   return (m_leftEncoder.getPosition() + m_rightEncoder.getPosition()) / 2.0;
-  // }
+  /**
+   * Gets the average distance of the two encoders.
+   *
+   * @return the average of the two encoder readings
+   */
+  public double getAverageEncoderDistance() {
+    return (m_leftEncoder.getPosition() + m_rightEncoder.getPosition()) / 2.0;
+  }
 
   /**
    * Gets the left drive encoder.
    *
    * @return the left drive encoder
    */
-  // public RelativeEncoder getLeftEncoder() {
-  //   return m_leftEncoder;
-  // }
+  public RelativeEncoder getLeftEncoder() {
+    return m_leftEncoder;
+  }
 
-  // /**
-  //  * Gets the right drive encoder.
-  //  *
-  //  * @return the right drive encoder
-  //  */
-  // public RelativeEncoder getRightEncoder() {
-  //   return m_rightEncoder;
-  // }
+  /**
+   * Gets the right drive encoder.
+   *
+   * @return the right drive encoder
+   */
+  public RelativeEncoder getRightEncoder() {
+    return m_rightEncoder;
+  }
 
   /**
    * Sets the max output of the drive. Useful for scaling the drive to drive more slowly.
