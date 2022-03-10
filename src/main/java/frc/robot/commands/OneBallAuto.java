@@ -29,7 +29,7 @@ public class OneBallAuto extends SequentialCommandGroup {
 						// Create a voltage constraint to ensure we don't accelerate too fast
 		addCommands(deadline(
 
-				new ChangeShooterSpeed(shooter, 0.2),
+				new ChangeShooterSpeed(shooter, 0.26),
 				// new ToggleIntakeBelt(intake),
 				new WaitCommand(10.0),
 			

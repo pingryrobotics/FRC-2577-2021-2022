@@ -57,6 +57,10 @@ public class Intake extends SubsystemBase {
 		on = false;
 	}
 
+	public boolean isOn() {
+		return (on && onBelt);
+	}
+
 	public void flipDirectionBelt() {
 		belt.setInverted(!belt.getInverted());
 		if (belt.getInverted()) {

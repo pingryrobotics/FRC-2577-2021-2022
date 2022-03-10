@@ -38,12 +38,13 @@ import frc.robot.commands.ReverseRotatingClimb;
 import frc.robot.commands.RotatingClimb;
 import frc.robot.commands.SetDriveDirection;
 import frc.robot.commands.SetDriveSpeed;
+// import frc.robot.commands.ToggleColorSensor;
 import frc.robot.commands.ToggleIntake;
 import frc.robot.commands.ToggleIntakeAndBelt;
 // import frc.robot.commands.ToggleIntakeBelt;
 // import frc.robot.commands.TwoCargoAuto;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.ColorSensor;
+// import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.DifferentialSubsystem;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
@@ -100,7 +101,7 @@ public class RobotContainer {
 	// private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
 	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless),
 			new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
-	private final ColorSensor m_colorSensor = new ColorSensor(m_intake);
+	// private final ColorSensor m_colorSensor = new ColorSensor(m_intake);
 	private Drive m_robotSubsystemDrive;
 	private double speed = 1;
 	private Command m_autonomousCommand;
@@ -116,6 +117,7 @@ public class RobotContainer {
 		configureButtonBindings();
 		m_robotDiffDrive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 		m_leftMotors.setInverted(true);
+		// m_rightMotors.setInverted(true);
 		m_diffSub = new DifferentialSubsystem(m_leftMotors, m_rightMotors, m_robotDiffDrive);
 
 		// m_intake.toggleBeltStart();
@@ -141,7 +143,7 @@ public class RobotContainer {
 		new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
 		new JoystickButton(m_mechanismController, Button.kStart.value).whenPressed(new ChangeShooterSpeed(m_shooter, -0.4));
 		// new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.3));
-		new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.7)); // lower level
+		new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.60)); // lower level
 		new JoystickButton(m_mechanismController, Button.kY.value).whenPressed(new ChangeShooterSpeed(m_shooter, 1)); // upper level
 		// new JoystickButton(m_driverController1, 11).whenPressed(new ToggleHopper(m_hopper));
 		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenPressed(new ReverseIntakeAndBelt(m_intake)); // toggle intake
@@ -150,6 +152,7 @@ public class RobotContainer {
 		new POVButton(m_mechanismController, 270).whenHeld(new ExtendableClimb(m_climber));
 		new POVButton(m_mechanismController, 0).whenHeld(new RotatingClimb(m_climber, 0.1)); // rotate arm
 		new POVButton(m_mechanismController, 180).whenHeld(new ReverseRotatingClimb(m_climber, 0.1));
+		// new JoystickButton(m_mechanismController, Button.kBack.value).whenPressed(new ToggleColorSensor(m_colorSensor));
 
 		SmartDashboard.putString("Direction", intakeReversed ? "Going out" : "Going in");
 		SmartDashboard.putString("Intake status", intakeOn ? "On" : "Off");
@@ -166,8 +169,8 @@ public class RobotContainer {
 
 		new JoystickButton(m_rightStick, 3).whenHeld(new ExtendableClimb(m_climber));
 		new JoystickButton(m_rightStick, 2).whenHeld(new ReverseExtendableClimb(m_climber));
-		new JoystickButton(m_rightStick, 4).whenHeld(new SetDriveDirection(m_diffSub, true));
-		new JoystickButton(m_rightStick, 5).whenHeld(new SetDriveDirection(m_diffSub, false));
+		// new JoystickButton(m_rightStick, 4).whenHeld(new SetDriveDirection(m_diffSub, true));
+		// new JoystickButton(m_rightStick, 5).whenHeld(new SetDriveDirection(m_diffSub, false));
 
 
 		new JoystickButton(climbJoystick, 11).whenHeld(new RotatingClimb(m_climber, 0.1));
