@@ -202,8 +202,76 @@ public class RobotContainer {
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		Command cmd = new OneBallAuto(m_diffSub, m_intake, m_shooter);
-		return cmd;
+		// Map<String, AutoRoutine> autoMap = new HashMap<String, AutoRoutine>();
+		// autoMap.put("Two cargo (TA)",
+        // 	new AutoRoutine(AutoPosition.TARMAC_A,
+        // 	    new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter)));
+		// autoMap.put("Two cargo (TB)",
+		// 	new AutoRoutine(AutoPosition.TARMAC_B,
+		// 		new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter)));
+		// autoMap.put("Two cargo (TC)",
+		// 	new AutoRoutine(AutoPosition.TARMAC_C,
+		// 		new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter)));
+		// autoMap.put("Two cargo (TD)",
+		// 	new AutoRoutine(AutoPosition.TARMAC_D,
+		// 				new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter)));
+
+
+
+
+		// m_robotDrive.setPose(m_chooser.getSelected().pos.getPose());
+		return m_chooser.getSelected();
+		// // Create a voltage constraint to ensure we don't accelerate too fast
+		// var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+		// 		new SimpleMotorFeedforward(
+		// 				Constants.ksVolts,
+		// 				Constants.kvVoltSecondsPerMeter,
+		// 				Constants.kaVoltSecondsSquaredPerMeter),
+		// 		Constants.kDriveKinematics,
+		// 		10);
+
+		// // Create config for trajectory
+		// TrajectoryConfig config = new TrajectoryConfig(
+		// 		Constants.kMaxSpeedMetersPerSecond,
+		// 		Constants.kMaxAccelerationMetersPerSecondSquared)
+		// 				// Add kinematics to ensure max speed is actually obeyed
+		// 				.setKinematics(Constants.kDriveKinematics)
+		// 				// Apply the voltage constraint
+		// 				.addConstraint(autoVoltageConstraint);
+
+
+		// // An example trajectory to follow. All units in meters.
+		// Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+		// 		// Start at the origin facing the +X direction
+		// 		new Pose2d(0, 0, new Rotation2d(0)),
+		// 		// Pass through these two interior waypoints, making an 's' curve path
+		// 		List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+		// 		// End 3 meters straight ahead of where we started, facing forward
+		// 		new Pose2d(3, 0, new Rotation2d(0)),
+		// 		// Pass config
+		// 		config);
+
+		// RamseteCommand ramseteCommand = new RamseteCommand(
+		// 		exampleTrajectory,
+		// 		m_robotDrive::getPose,
+		// 		new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
+		// 		new SimpleMotorFeedforward(
+		// 				Constants.ksVolts,
+		// 				Constants.kvVoltSecondsPerMeter,
+		// 				Constants.kaVoltSecondsSquaredPerMeter),
+		// 		Constants.kDriveKinematics,
+		// 		m_robotDrive::getWheelSpeeds,
+		// 		new PIDController(Constants.kPDriveVel, 0, 0),
+		// 		new PIDController(Constants.kPDriveVel, 0, 0),
+		// 		// RamseteCommand passes volts to the callback
+		// 		m_robotDrive::tankDriveVolts,
+		// 		m_robotDrive);
+
+		// // Reset odometry to the starting pose of the trajectory.
+		// m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+
+		// // Run path following command, then stop at the end.
+		// return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
 	}
 
 	public void oneBall(){
