@@ -42,7 +42,7 @@ import frc.robot.commands.SetDriveSpeed;
 import frc.robot.commands.ToggleIntake;
 import frc.robot.commands.ToggleIntakeAndBelt;
 import frc.robot.commands.ToggleBelt;
-import frc.robot.commands.TwoCargoAuto;
+//import frc.robot.commands.TwoCargoAuto;
 import frc.robot.subsystems.Climber;
 // import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.DifferentialSubsystem;
@@ -122,11 +122,11 @@ public class RobotContainer {
 
 		// m_intake.toggleBeltStart();
 		// m_robotSubsystemDrive = new Drive(m_leftMotors, m_rightMotors);
-		m_chooser.setDefaultOption("TA", new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter));
-		m_chooser.addOption("TB", new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter));
-		m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
-		m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
-		SmartDashboard.putData("Auto choices", m_chooser);
+		// m_chooser.setDefaultOption("TA", new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter));
+		// m_chooser.addOption("TB", new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter));
+		// m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
+		// m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
+		// SmartDashboard.putData("Auto choices", m_chooser);
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class RobotContainer {
 
 
 		// new JoystickButton(m_mechanismController, Button.kBack.value).whenPressed(new ReverseIntake(m_intake)); // reverse intake
-		// new JoystickButton(m_mechanismController, Button.kStart.value).whenPressed(new ReverseIntakeBelt(m_intake)); // reverse
+		// new JoystickButton(m_0mechanismController, Button.kStart.value).whenPressed(new ReverseIntakeBelt(m_intake)); // reverse
 
 		// new JoystickButton(m_driverController, Button.kLeftBumper.value).whenHeld(new Climb(m_climber)); // toggle climber
 		// new JoystickButton(m_driverController, Button.kRightBumper.value).whenHeld(new ReverseClimb(m_climber)); // toggle climber
@@ -173,8 +173,8 @@ public class RobotContainer {
 		// new JoystickButton(m_rightStick, 5).whenHeld(new SetDriveDirection(m_diffSub, false));
 
 
-		new JoystickButton(climbJoystick, 11).whenHeld(new RotatingClimb(m_climber, 0.1));
-		new JoystickButton(climbJoystick, 10).whenHeld(new ReverseRotatingClimb(m_climber, 0.1));
+		new JoystickButton(climbJoystick, 11).whenHeld(new RotatingClimb(m_climber, 0.5));
+		new JoystickButton(climbJoystick, 10).whenHeld(new ReverseRotatingClimb(m_climber, 0.5));
 
 		// new JoystickButton(m_leftStick, 4).whenPressed(new ChangeDriveSpeed(m_robotSubsystemDrive));
 		// new JoystickButton(m_leftStick, 5).whenPressed(new ChangeDriveDirection(m_robotSubsystemDrive));
@@ -195,34 +195,35 @@ public class RobotContainer {
 	}
 
 	// A chooser for autonomous commands
-	SendableChooser<TwoCargoAuto> m_chooser = new SendableChooser<>();
+	// SendableChooser<TwoCargoAuto> m_chooser = new SendableChooser<>();
 
 	/**
 	 * Use this to pass the autonomous command to the main {@link Robot} class.
 	 *
 	 * @return the command to run in autonomous
 	 */
-	public Command getAutonomousCommand() {
-		// Map<String, AutoRoutine> autoMap = new HashMap<String, AutoRoutine>();
-		// autoMap.put("Two cargo (TA)",
-        // 	new AutoRoutine(AutoPosition.TARMAC_A,
-        // 	    new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter)));
-		// autoMap.put("Two cargo (TB)",
-		// 	new AutoRoutine(AutoPosition.TARMAC_B,
-		// 		new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter)));
-		// autoMap.put("Two cargo (TC)",
-		// 	new AutoRoutine(AutoPosition.TARMAC_C,
-		// 		new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter)));
-		// autoMap.put("Two cargo (TD)",
-		// 	new AutoRoutine(AutoPosition.TARMAC_D,
-		// 				new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter)));
+	// public Command getAutonomousCommand() {
+	// 	// Map<String, AutoRoutine> autoMap = new HashMap<String, AutoRoutine>();
+	// 	// autoMap.put("Two cargo (TA)",
+    //     // 	new AutoRoutine(AutoPosition.TARMAC_A,
+    //     // 	    new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter)));
+	// 	// autoMap.put("Two cargo (TB)",
+	// 	// 	new AutoRoutine(AutoPosition.TARMAC_B,
+	// 	// 		new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter)));
+	// 	// autoMap.put("Two cargo (TC)",
+	// 	// 	new AutoRoutine(AutoPosition.TARMAC_C,
+	// 	// 		new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter)));
+	// 	// autoMap.put("Two cargo (TD)",
+	// 	// 	new AutoRoutine(AutoPosition.TARMAC_D,
+	// 	// 				new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter)));
 
 
 
 
-		// m_robotDrive.setPose(m_chooser.getSelected().pos.getPose());
-		return m_chooser.getSelected();
-	}
+	// 	// m_robotDrive.setPose(m_chooser.getSelected().pos.getPose());
+	// 	//return m_chooser.getSelected();
+	// 	return void;
+	// }
 
 	public void oneBall(){
 		

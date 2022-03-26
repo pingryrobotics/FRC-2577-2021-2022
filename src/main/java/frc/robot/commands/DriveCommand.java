@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.math.controller.RamseteController;
@@ -76,14 +77,20 @@ public class DriveCommand extends CommandBase {
 						.addConstraint(autoVoltageConstraint);
 
 
+		// limited to 2 points for now
+		List<Translation2d> passPoints = new ArrayList<Translation2d>();
+		// for (int waypointInd = 1; waypointInd < waypoints.size() - 2; waypointInd++) {
+			// 
+			// passPoints.add(waypoints.get(waypointInd));
+		// }
 		// An example trajectory to follow. All units in meters.
 		Trajectory traj = TrajectoryGenerator.generateTrajectory(
 				// Start at the origin facing the +X direction
-				new Pose2d(0, 0, new Rotation2d(0)),
+				waypoints.get(0),
 				// Pass through these two interior waypoints, making an 's' curve path
-				List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+				passPoints,
 				// End 3 meters straight ahead of where we started, facing forward
-				new Pose2d(3, 0, new Rotation2d(0)),
+				waypoints.get(waypoints.size() - 1),
 				// Pass config
 				config);
 

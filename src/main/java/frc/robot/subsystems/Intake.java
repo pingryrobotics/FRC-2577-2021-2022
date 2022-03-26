@@ -64,7 +64,8 @@ public class Intake extends SubsystemBase {
 	public void flipDirectionBelt() {
 		belt.setInverted(!belt.getInverted());
 		if (belt.getInverted()) {
-			beltSpeed = 0.1;
+			// beltSpeed = 0.1;
+			beltSpeed = Constants.kBeltSpeed;
 		} else {
 			beltSpeed = Constants.kBeltSpeed;
 		}

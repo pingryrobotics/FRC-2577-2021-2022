@@ -69,7 +69,7 @@ public final class Constants {
 
 
 	public static final int kOuttakeSpeed = 1;
-	public static final int kIntakeSpeed = 1;
+	public static final double kIntakeSpeed = 0.2;
 	public static final double kBeltSpeed = 1;
 	public static final double kClimberSpeed = 1;
 	public static final double kRotatingSpeed = 0.1;
