@@ -70,6 +70,10 @@ public final class Constants {
 
 	public static final int kOuttakeSpeed = 1;
 	public static final double kIntakeSpeed = 0.2;
+	public static final double kIndexerSpeed = 1.0;
+	public static final double kFlipDownArmSpeed = 0.1;
+	public static final double kFlipDownArmPosition = -1;
+	public static final double kFlipUpArmPosition = -1;
 	public static final double kBeltSpeed = 1;
 	public static final double kClimberSpeed = 1;
 	public static final double kRotatingSpeed = 0.1;
@@ -81,6 +85,8 @@ public final class Constants {
 	public static final int kClimberId = 30;
 	public static final int kRotatingArmId = 31;
 	public static final int kBeltId = 21;
+	public static final int kIndexerId = 24;
+	public static final int kIntakeArmId = 25;
 	public static final int kProximityThreshold = 10;
 
 

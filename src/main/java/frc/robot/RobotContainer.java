@@ -48,6 +48,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DifferentialSubsystem;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeArm;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.GeomUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -98,6 +99,7 @@ public class RobotContainer {
 	// private final Drive m_robotDrive = new Drive();
 	private final Shooter m_shooter = new Shooter(new CANSparkMax(Constants.kOuttakeLId, MotorType.kBrushless), new CANSparkMax(Constants.kOuttakeRId, MotorType.kBrushless));
 	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
+	private final IntakeArm m_intakeArm = new IntakeArm(new CANSparkMax(Constants.kIntakeArmId, MotorType.kBrushless));
 	// private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
 	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless),
 			new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
