@@ -66,14 +66,14 @@ public class Drive extends SubsystemBase {
     rightMotor1.burnFlash();
     rightMotor2.burnFlash();
 
-    m_leftMotors =
-    new MotorControllerGroup(
-        leftMotor1, leftMotor2);
+    // m_leftMotors =
+    // new MotorControllerGroup(
+        // leftMotor1, leftMotor2);
 
 // The motors on the right side of the drive.
-    m_rightMotors =
-    new MotorControllerGroup(
-        rightMotor1, rightMotor2);
+    // m_rightMotors =
+    // new MotorControllerGroup(
+        // rightMotor1, rightMotor2);
 
 
     resetEncoders();
