@@ -27,6 +27,8 @@ import frc.robot.commands.ReverseExtendableClimb;
 import frc.robot.commands.IntakeBelt;
 import frc.robot.commands.OneBallAuto;
 import frc.robot.commands.ExtendableClimb;
+import frc.robot.commands.ArmDown;
+import frc.robot.commands.ArmUp;
 // import frc.robot.commands.ChangeDriveDirection;
 import frc.robot.commands.ChangeDriveSpeed;
 // import frc.robot.commands.ChangeRotatingClimberSpeed;
@@ -150,8 +152,8 @@ public class RobotContainer {
 		// new JoystickButton(m_driverController1, 11).whenPressed(new ToggleHopper(m_hopper));
 		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenPressed(new ReverseIntakeAndBelt(m_intake)); // toggle intake
 		new JoystickButton(m_mechanismController, Button.kLeftBumper.value).whenPressed(new ToggleIntakeAndBelt(m_intake)); // toggle intake belt
-		new POVButton(m_mechanismController, 90).whenHeld(new ReverseExtendableClimb(m_climber)); // extend/retract arm
-		new POVButton(m_mechanismController, 270).whenHeld(new ExtendableClimb(m_climber));
+		new POVButton(m_mechanismController, 90).whenHeld(new ArmUp(m_intakeArm)); // extend/retract arm
+		new POVButton(m_mechanismController, 270).whenHeld(new ArmDown(m_intakeArm));
 		new POVButton(m_mechanismController, 0).whenHeld(new RotatingClimb(m_climber, 0.1)); // rotate arm
 		new POVButton(m_mechanismController, 180).whenHeld(new ReverseRotatingClimb(m_climber, 0.1));
 		// new JoystickButton(m_mechanismController, Button.kBack.value).whenPressed(new ToggleColorSensor(m_colorSensor));

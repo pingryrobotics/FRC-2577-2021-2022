@@ -33,7 +33,7 @@ public class Drive extends SubsystemBase {
 	private MotorControllerGroup m_rightMotors;
 
 	// The robot's drive
-	private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+	private DifferentialDrive m_drive;
 
 	// The left-side drive encoder
 
@@ -51,8 +51,6 @@ public class Drive extends SubsystemBase {
 		// We need to invert one side of the drivetrain so that positive voltages
 		// result in both sides moving forward. Depending on how your robot's
 		// gearbox is constructed, you might have to invert the left side instead.
-		m_rightMotors.setInverted(true);
-
 		// Sets the distance per pulse for the encoders
 		m_leftEncoder.setPositionConversionFactor(
 				Constants.kDistancePerWheelRevolutionMeters * Constants.kDriveTrainGearReduction);
@@ -78,6 +76,10 @@ public class Drive extends SubsystemBase {
 
 		m_rightMotors = new MotorControllerGroup(
 				rightMotor1, rightMotor2);
+
+		m_leftMotors.setInverted(true);
+
+		m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
 		resetEncoders();
 		m_odometry = new DifferentialDriveOdometry(new Rotation2d(Math.toRadians(m_imu.getAngle()))); // wrong axis?

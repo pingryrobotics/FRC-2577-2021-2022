@@ -72,8 +72,8 @@ public final class Constants {
 	public static final double kIntakeSpeed = 0.2;
 	public static final double kIndexerSpeed = 1.0;
 	public static final double kFlipDownArmSpeed = 0.1;
-	public static final double kFlipDownArmPosition = -1;
-	public static final double kFlipUpArmPosition = -1;
+	public static final double kFlipDownArmPosition = 0.214286;
+	public static final double kFlipUpArmPosition = 11.8;
 	public static final double kBeltSpeed = 1;
 	public static final double kClimberSpeed = 1;
 	public static final double kRotatingSpeed = 0.1;

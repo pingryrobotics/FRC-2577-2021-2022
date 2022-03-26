@@ -35,15 +35,15 @@ public class IntakeArm extends SubsystemBase {
 	}
 
 	public void flipDown() {
-		while (m_flipDownArm.getEncoder().getPosition() < Constants.kFlipDownArmPosition) {
-			m_flipDownArm.set(Constants.kFlipDownArmSpeed);
+		while (m_flipDownArm.getEncoder().getPosition() > Constants.kFlipDownArmPosition) {
+			m_flipDownArm.set(-Constants.kFlipDownArmSpeed);
 		}
 		m_flipDownArm.set(0);
 	}
 	
 	public void flipUp() {
 		while (m_flipDownArm.getEncoder().getPosition() < Constants.kFlipUpArmPosition) {
-			m_flipDownArm.set(-Constants.kFlipDownArmSpeed);
+			m_flipDownArm.set(Constants.kFlipDownArmSpeed);
 		}
 		m_flipDownArm.set(0);
 	}
