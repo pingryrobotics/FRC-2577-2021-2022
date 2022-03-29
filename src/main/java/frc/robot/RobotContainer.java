@@ -10,10 +10,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.sql.Driver;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -82,6 +86,7 @@ public class RobotContainer {
 	public Joystick m_rightStick = new Joystick(1);
 	public Joystick climbJoystick = new Joystick(2);
 	public XboxController m_mechanismController = new XboxController(3);
+	public XboxController driveController = new XboxController(4);
 	// private final CANSparkMax leftMotor1 = new CANSparkMax(Constants.kLeftMotor1Port, MotorType.kBrushless);
 	// private final CANSparkMax leftMotor2 = new CANSparkMax(Constants.kLeftMotor2Port, MotorType.kBrushless);
 	// private final CANSparkMax rightMotor1 = new CANSparkMax(Constants.kRightMotor1Port, MotorType.kBrushless);
@@ -112,6 +117,9 @@ public class RobotContainer {
 	private boolean isForwards = true;
 	public boolean intakeReversed = false;
 	public boolean intakeOn = false;
+	private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight"); 
+	private double kP = 0.1;
+	private double minValue = 0.05;
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -177,8 +185,8 @@ public class RobotContainer {
 		// new JoystickButton(m_rightStick, 5).whenHeld(new SetDriveDirection(m_diffSub, false));
 
 
-		new JoystickButton(climbJoystick, 11).whenHeld(new RotatingClimb(m_climber, 0.5));
-		new JoystickButton(climbJoystick, 10).whenHeld(new ReverseRotatingClimb(m_climber, 0.5));
+		new JoystickButton(climbJoystick, 10).whenHeld(new ExtendableClimb(m_climber));
+		new JoystickButton(climbJoystick, 11).whenHeld(new ReverseExtendableClimb(m_climber));
 
 		// new JoystickButton(m_leftStick, 4).whenPressed(new ChangeDriveSpeed(m_robotSubsystemDrive));
 		// new JoystickButton(m_leftStick, 5).whenPressed(new ChangeDriveDirection(m_robotSubsystemDrive));
@@ -191,6 +199,21 @@ public class RobotContainer {
 
 	public void driveControl() {
 		m_robotDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+
+		if(driveController.getLeftBumper()){
+			if(table.getEntry("tv").getDouble(0.0) == 1){
+				double tx = table.getEntry("tx").getDouble(0.0);
+				double headingError = -table.getEntry("tx").getDouble(0.0);
+				double steeringAdjust = 0.0;
+				if(tx > 0){
+					steeringAdjust = kP*headingError - minValue;
+				}
+				else if(tx < 1.0){
+					steeringAdjust = kP*headingError + minValue;
+				}
+				m_robotDrive.tankDrive(steeringAdjust, -steeringAdjust);
+			}
+		}
 		// m_robotDiffDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
 		// m_robotSubsystemDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
 		

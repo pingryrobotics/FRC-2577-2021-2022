@@ -11,10 +11,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.ADIS16448_IMU;
+import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
+import edu.wpi.first.wpilibj.ADIS16448_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -41,7 +42,7 @@ public class Drive extends SubsystemBase {
 	private final RelativeEncoder m_rightEncoder = rightMotor1.getEncoder();
 
 	// The gyro sensor
-	private final ADIS16470_IMU m_imu = new ADIS16470_IMU(); // 4 seconds for automatic calibration
+	private final ADIS16448_IMU m_imu = new ADIS16448_IMU(); // 4 seconds for automatic calibration
 
 	// Odometry class for tracking robot pose
 	private final DifferentialDriveOdometry m_odometry;
