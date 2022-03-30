@@ -28,7 +28,17 @@ public class ChangeShooterSpeed extends CommandBase {
 	}
 
 	@Override
+	public void execute() {
+	}
+
+	@Override
+	public boolean isFinished() {
+		return true;
+	}
+
+	@Override
 	public void end(boolean interrupted) {
-		m_subsystem.setDesiredSpeed(0);
+		if (interrupted)
+			m_subsystem.setDesiredSpeed(0);
 	}
 }

@@ -24,6 +24,7 @@ import frc.robot.subsystems.Drive;
  */
 public class Robot extends TimedRobot {
 	private RobotContainer m_robotContainer;
+	private Command m_autonomousCommand;
 	// private Command m_autonomousCommand;
 
 	private final Timer m_timer = new Timer();
@@ -40,6 +41,9 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		if (m_autonomousCommand != null) {
+			m_autonomousCommand.cancel();
+		}
 	}
 
 	@Override
@@ -54,18 +58,18 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		m_timer.reset();
 		m_timer.start();
-		// m_robotContainer.oneBall();
-		// m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
 		// schedule the autonomous command (example)
-		// if (m_autonomousCommand != null) {
-			// m_autonomousCommand.schedule();
-		// }
+		if (m_autonomousCommand != null) {
+			m_autonomousCommand.schedule();
+		}
 	}
 
 	/** This function is called periodically during autonomous. */
 	@Override
 	public void autonomousPeriodic() {
+		CommandScheduler.getInstance().run();
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class Vision extends SubsystemBase {
     public int desiredSnapshot = 0;
     private boolean mOutputsHaveChanged = true;
     private boolean mSeesTarget = false;
-    private final double limelightMountAngleDegrees = 0.0;
+    private final double limelightMountAngleDegrees = 30.0;
     private final double limelightHeightInches = 29.5;
 	private final double goalHeightInches = 104.0;
 
@@ -102,6 +102,7 @@ public class Vision extends SubsystemBase {
 		if (shootOn && mSeesTarget) {
 			shooter.setDesiredSpeed(getPower(distanceFromLimelightToGoalInches));
 		}
+        SmartDashboard.putNumber("LimelightDist", targetOffsetAngle_Vertical);
 
 		// SmartDashboard.putBoolean("Limelight Has Target", mSeesTarget);
 		// SmartDashboard.putNumber("Limelight Pipeline Latency (ms)", latency);

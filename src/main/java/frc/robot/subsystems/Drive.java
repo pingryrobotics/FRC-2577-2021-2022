@@ -93,6 +93,7 @@ public class Drive extends SubsystemBase {
 		m_odometry.update(
 				new Rotation2d(Math.toRadians(m_imu.getAngle())), m_leftEncoder.getPosition(),
 				m_rightEncoder.getPosition());
+		m_drive.feed();
 	}
 
 	/**
