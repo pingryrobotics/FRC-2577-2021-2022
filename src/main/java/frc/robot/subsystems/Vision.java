@@ -30,7 +30,8 @@ public class Vision extends SubsystemBase {
     private NetworkTableEntry snapshot;
     public double latency;
     public LedMode givenLedMode;
-    public int givenPipeline;
+	public int givenPipeline;
+	public double distanceInches;
     public double xOffset;
     public double yOffset;
     public double area;
@@ -57,8 +58,7 @@ public class Vision extends SubsystemBase {
         table = NetworkTableInstance.getDefault().getTable("limelight");
 		this.shooter = shooter;
 		ty = table.getEntry("ty");
-
-        // tv = table.getEntry("tv");
+        tv = table.getEntry("tv");
         // tx = table.getEntry("tx");
         // ta = table.getEntry("ta");
         // ts = table.getEntry("ts");
@@ -76,15 +76,23 @@ public class Vision extends SubsystemBase {
         // snapshot = table.getEntry("snapshot");
     }
 
+
+
 	/**
 	 * Get power based on distance from target
 	 */
-	public double getPower(double distanceInches) {
+	public double getPower() {
 		// polynomial regression of distance vs. power
 		// y = ax^5 + bx^4 + etc.
 		// distance should be measured 
+
+		// points:
 		double x = distanceInches;
 		return x;
+	}
+
+	public boolean seesTarget() {
+		return (tv.getDouble(0.0) == 1.0);
 	}
 
     @Override
@@ -97,11 +105,8 @@ public class Vision extends SubsystemBase {
 		}
 		double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
 		double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
-		double distanceFromLimelightToGoalInches = (goalHeightInches - limelightHeightInches)
+		distanceInches = (goalHeightInches - limelightHeightInches)
 				/ Math.tan(angleToGoalRadians);
-		if (shootOn && mSeesTarget) {
-			shooter.setDesiredSpeed(getPower(distanceFromLimelightToGoalInches));
-		}
         SmartDashboard.putNumber("LimelightDist", targetOffsetAngle_Vertical);
 
 		// SmartDashboard.putBoolean("Limelight Has Target", mSeesTarget);
@@ -144,7 +149,7 @@ public class Vision extends SubsystemBase {
     // public int getLedMode() {
         // return givenLedMode;
     // }
-    public boolean seesTarget() {
-        return mSeesTarget;
-    }
+    // public boolean seesTarget() {
+        // return mSeesTarget;
+    // }
   }

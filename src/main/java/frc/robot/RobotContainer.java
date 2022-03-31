@@ -135,6 +135,8 @@ public class RobotContainer {
 	private double minValue = 0.05;
 
 
+	SendableChooser<ChangeShooterSpeed> shooterRegression = new SendableChooser<>();
+
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
@@ -164,6 +166,17 @@ public class RobotContainer {
 		m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
 		m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
 		SmartDashboard.putData("Auto choices", m_chooser);
+		shooterRegression.addOption("0.1", new ChangeShooterSpeed(m_shooter, 0.1));
+		shooterRegression.addOption("0.2", new ChangeShooterSpeed(m_shooter, 0.2));
+		shooterRegression.addOption("0.3", new ChangeShooterSpeed(m_shooter, 0.3));
+		shooterRegression.addOption("0.4", new ChangeShooterSpeed(m_shooter, 0.4));
+		shooterRegression.addOption("0.5", new ChangeShooterSpeed(m_shooter, 0.5));
+		shooterRegression.addOption("0.6", new ChangeShooterSpeed(m_shooter, 0.6));
+		shooterRegression.addOption("0.7", new ChangeShooterSpeed(m_shooter, 0.7));
+		shooterRegression.addOption("0.8", new ChangeShooterSpeed(m_shooter, 0.8));
+		shooterRegression.addOption("0.9", new ChangeShooterSpeed(m_shooter, 0.9));
+		shooterRegression.addOption("1.0", new ChangeShooterSpeed(m_shooter, 1.0));
+		SmartDashboard.putData("Shooter Speed", shooterRegression);
 	}
 
 	/**
@@ -181,10 +194,27 @@ public class RobotContainer {
 		new JoystickButton(m_mechanismController, Button.kStart.value).whenPressed(new ChangeShooterSpeed(m_shooter, -0.4));
 		// new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.3));
 		new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.60)); // lower level
-		new JoystickButton(m_mechanismController, Button.kY.value).whenPressed(new ChangeShooterSpeed(m_shooter, 1)); // upper level
+		new JoystickButton(m_mechanismController, Button.kBack.value).whenPressed(shooterRegression.getSelected());
+		
+		new JoystickButton(m_mechanismController, Button.kY.value).whenPressed(
+				new ChangeShooterSpeed(m_shooter, m_vision.getPower())); // automatic distance adjustment
 		// new JoystickButton(m_driverController1, 11).whenPressed(new ToggleHopper(m_hopper));
-		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenPressed(new ReverseIntakeAndBelt(m_intake)); // toggle intake
-		new JoystickButton(m_mechanismController, Button.kLeftBumper.value).whenPressed(new ToggleIntakeAndBelt(m_intake)); // toggle intake belt
+		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenPressed(new SequentialCommandGroup(
+				new SetIntakeDirection(m_intake, false),
+				new SetIntakeEnabled(m_intake, true),
+				new SetBeltDirection(m_intake, false),
+				new SetBeltEnabled(m_intake, true))); // intake on and reversed when when held
+		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenReleased(new SequentialCommandGroup(
+				new SetIntakeEnabled(m_intake, false),
+				new SetBeltEnabled(m_intake, false))); // intake off when released
+		new JoystickButton(m_mechanismController, Button.kLeftBumper.value).whenPressed(new SequentialCommandGroup(
+				new SetIntakeDirection(m_intake, true),	
+				new SetIntakeEnabled(m_intake, true),
+				new SetBeltDirection(m_intake, true),
+				new SetBeltEnabled(m_intake, true))); // intake on while when held
+		new JoystickButton(m_mechanismController, Button.kLeftBumper.value).whenReleased(new SequentialCommandGroup(
+				new SetIntakeEnabled(m_intake, false),
+				new SetBeltEnabled(m_intake, false))); // intake off when released
 		new POVButton(m_mechanismController, 180).whenHeld(new IntakeLiftUp(m_intakeLift)); // extend/retract arm
 		new POVButton(m_mechanismController, 0).whenHeld(new IntakeLiftDown(m_intakeLift));
 		new POVButton(m_mechanismController, 90).whenHeld(new RotatingClimb(m_climber, 0.1)); // rotate arm
