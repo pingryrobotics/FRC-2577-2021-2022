@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.shooter_commands;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.Indexer;
@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /**
  * An example command that uses an example subsystem.
  */
-public class IndexerIn extends CommandBase {
+public class IndexerOut extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
 	private final Indexer m_subsystem;
 
@@ -24,7 +24,7 @@ public class IndexerIn extends CommandBase {
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public IndexerIn(Indexer subsystem) {
+	public IndexerOut(Indexer subsystem) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
@@ -33,7 +33,7 @@ public class IndexerIn extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-        m_subsystem.moveDown();
+        m_subsystem.moveUp();
 		// m_subsystem.setBeltSpeed(Constants.kBeltSpeed);
 	}
 

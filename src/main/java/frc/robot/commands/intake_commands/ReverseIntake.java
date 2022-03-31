@@ -5,16 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.intake_commands;
 
-import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * An example command that uses an example subsystem.
  */
-public class ToggleBelt extends CommandBase {
+public class ReverseIntake extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
 	private final Intake m_subsystem;
 
@@ -23,7 +22,7 @@ public class ToggleBelt extends CommandBase {
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public ToggleBelt(Intake subsystem) {
+	public ReverseIntake(Intake subsystem) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
@@ -32,8 +31,7 @@ public class ToggleBelt extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		m_subsystem.toggleBeltStart();
-		// m_subsystem.setBeltSpeed(Constants.kBeltSpeed);
+		m_subsystem.flipDirectionRollers();
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
@@ -44,7 +42,6 @@ public class ToggleBelt extends CommandBase {
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-
 	}
 
 	// Returns true when the command should end.

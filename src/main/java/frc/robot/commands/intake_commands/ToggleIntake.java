@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.intake_commands;
 
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /**
  * An example command that uses an example subsystem.
  */
-public class ReverseIntake extends CommandBase {
+public class ToggleIntake extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
 	private final Intake m_subsystem;
 
@@ -22,7 +22,7 @@ public class ReverseIntake extends CommandBase {
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public ReverseIntake(Intake subsystem) {
+	public ToggleIntake(Intake subsystem) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
@@ -31,7 +31,7 @@ public class ReverseIntake extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		m_subsystem.flipDirectionRollers();
+		m_subsystem.toggleStart();
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.

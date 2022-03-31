@@ -15,13 +15,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class IntakeArm extends SubsystemBase {
+public class IntakeLift extends SubsystemBase {
 	private CANSparkMax m_flipDownArm;
 
 	/**
 	 * Creates a new ExampleSubsystem.
 	 */
-	public IntakeArm(CANSparkMax armMotor) {
+	public IntakeLift(CANSparkMax armMotor) {
 		m_flipDownArm = armMotor;
 		m_flipDownArm.enableVoltageCompensation(12);
 		m_flipDownArm.setInverted(false);
@@ -42,9 +42,26 @@ public class IntakeArm extends SubsystemBase {
 	}
 	
 	public void flipUp() {
+		
 		while (m_flipDownArm.getEncoder().getPosition() < Constants.kFlipUpArmPosition) {
-			m_flipDownArm.set(Constants.kFlipUpArmSpeed);
+			
 		}
 		m_flipDownArm.set(0);
+	}
+
+	public void powerUpwards() {
+		m_flipDownArm.set(Constants.kFlipUpArmSpeed);
+	}
+
+	public void powerDownwards() {
+		m_flipDownArm.set(-Constants.kFlipDownArmSpeed);
+	}
+
+	public void powerOff() {
+		m_flipDownArm.set(0);
+	}
+
+	public double getLiftPosition() {
+		return m_flipDownArm.getEncoder().getPosition();
 	}
 }

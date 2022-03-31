@@ -5,33 +5,36 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.drive_commands;
 
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Drive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * An example command that uses an example subsystem.
  */
-public class ToggleIntake extends CommandBase {
+public class ChangeDriveSpeed extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-	private final Intake m_subsystem;
+	private final Drive m_subsystem;
+	private double speed;
 
 	/**
 	 * Creates a new ExampleCommand.
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public ToggleIntake(Intake subsystem) {
+	public ChangeDriveSpeed(Drive subsystem, double speed) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
+		this.speed = speed;
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		m_subsystem.toggleStart();
+		m_subsystem.tankDrive(speed, speed);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.

@@ -1,21 +1,22 @@
-package frc.robot.commands;
+package frc.robot.commands.climb_commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.Shooter;
 
 /** An example command that uses an example subsystem. */
-public class ChangeShooterSpeed extends CommandBase {
+public class RotatingClimb extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-	private final Shooter m_subsystem;
-	private double speed;
+	private final Climber m_subsystem;
+	private final double speed;
 
 	/**
-	 * Creates a new ChangeShooterSpeed.
+	 * Creates a new ExampleCommand.
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public ChangeShooterSpeed(Shooter subsystem, double speed) {
+	public RotatingClimb(Climber subsystem, double speed) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
@@ -24,21 +25,13 @@ public class ChangeShooterSpeed extends CommandBase {
 
 	@Override
 	public void initialize() {
-		m_subsystem.setDesiredSpeed(speed);
-	}
-
-	@Override
-	public void execute() {
-	}
-
-	@Override
-	public boolean isFinished() {
-		return true;
+		m_subsystem.setRotatingSpeed(speed);
+		// m_subsystem.invertExtendable();
+		// m_subsystem.set((direc ? 1 : -1) * Constants.kClimberSpeed);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		if (interrupted)
-			m_subsystem.setDesiredSpeed(0);
+		m_subsystem.setRotatingSpeed(0);
 	}
 }

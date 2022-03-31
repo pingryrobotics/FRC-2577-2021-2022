@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.intake_commands;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
@@ -14,17 +14,19 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /**
  * An example command that uses an example subsystem.
  */
-public class IntakeBelt extends CommandBase {
+public class SetBeltEnabled extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
 	private final Intake m_subsystem;
+	private final boolean turnOn;
 
 	/**
 	 * Creates a new ExampleCommand.
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public IntakeBelt(Intake subsystem) {
+	public SetBeltEnabled(Intake subsystem, boolean turnOn) {
 		m_subsystem = subsystem;
+		this.turnOn = turnOn;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
 	}
@@ -32,7 +34,7 @@ public class IntakeBelt extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		m_subsystem.toggleBeltStart();
+		m_subsystem.setBeltEnabled(turnOn);
 		// m_subsystem.setBeltSpeed(Constants.kBeltSpeed);
 	}
 
@@ -44,7 +46,7 @@ public class IntakeBelt extends CommandBase {
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		// m_subsystem.setBeltSpeed(0);
+
 	}
 
 	// Returns true when the command should end.

@@ -9,10 +9,12 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
 	private CANSparkMax roller;
-	private boolean on = false;
-	private boolean onBelt = false;
+	private boolean intakeOn = false;
+	private boolean beltOn = false;
 	private CANSparkMax belt;
 	private double beltSpeed = Constants.kBeltSpeed;
+	private final boolean beltForwardsBoolean = true;
+	private final boolean intakeForwardsBoolean = false;
 
 	/**
 	 * Creates a new ExampleSubsystem.
@@ -22,18 +24,18 @@ public class Intake extends SubsystemBase {
 		roller.enableVoltageCompensation(12);
 		belt = beltSpark;
 		belt.enableVoltageCompensation(12);
-		roller.setInverted(true);
-		belt.setInverted(false);
+		roller.setInverted(intakeForwardsBoolean);
+		belt.setInverted(beltForwardsBoolean);
 	}
 
 	@Override
 	public void periodic() {
-		if (on) {
+		if (intakeOn) {
 			roller.set(Constants.kIntakeSpeed);
 		} else {
 			roller.set(0);
 		}
-		if (onBelt) {
+		if (beltOn) {
 			belt.set(beltSpeed);
 		} else {
 			belt.set(0);
@@ -45,21 +47,50 @@ public class Intake extends SubsystemBase {
 	}
 
 	public void toggleStart() {
-		on = !on;
+		intakeOn = !intakeOn;
 	}
 
 	public void toggleBeltStart() {
-		onBelt = !onBelt;
+		beltOn = !beltOn;
 	}
 
 	public void turnOff() {
-		onBelt = false;
-		on = false;
+		beltOn = false;
+		intakeOn = false;
 	}
 
 	public boolean isOn() {
-		return (on && onBelt);
+		return (intakeOn && beltOn);
 	}
+
+	public void setAllEnabled(boolean turnOn) {
+		intakeOn = beltOn = turnOn;
+	}
+	
+	public void setBeltEnabled(boolean turnOn) {
+		beltOn = turnOn;
+	}
+
+	public void setIntakeEnabled(boolean turnOn) {
+		intakeOn = turnOn;
+	}
+
+	
+	public void setAllDirection(boolean turnForwards) {
+		belt.setInverted((turnForwards) ? beltForwardsBoolean : !beltForwardsBoolean);
+		roller.setInverted((turnForwards) ? intakeForwardsBoolean : !intakeForwardsBoolean);
+
+	}
+	
+	public void setBeltDirection(boolean turnForwards) {
+		belt.setInverted((turnForwards) ? beltForwardsBoolean : !beltForwardsBoolean);
+	}
+
+	public void setIntakeDirection(boolean turnForwards) {
+		roller.setInverted((turnForwards) ? intakeForwardsBoolean : !intakeForwardsBoolean);
+	}
+
+
 
 	public void flipDirectionBelt() {
 		belt.setInverted(!belt.getInverted());

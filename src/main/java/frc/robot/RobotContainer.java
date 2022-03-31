@@ -27,30 +27,31 @@ import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import frc.robot.commands.ReverseExtendableClimb;
-import frc.robot.commands.IntakeBelt;
-import frc.robot.commands.OneBallAuto;
-import frc.robot.commands.ExtendableClimb;
-import frc.robot.commands.IndexerIn;
-import frc.robot.commands.IndexerOut;
-import frc.robot.commands.ArmDown;
-import frc.robot.commands.ArmUp;
-// import frc.robot.commands.ChangeDriveDirection;
-import frc.robot.commands.ChangeDriveSpeed;
-// import frc.robot.commands.ChangeRotatingClimberSpeed;
-import frc.robot.commands.ChangeShooterSpeed;
-import frc.robot.commands.ReverseIntake;
-import frc.robot.commands.ReverseIntakeAndBelt;
-import frc.robot.commands.ReverseIntakeBelt;
-import frc.robot.commands.ReverseRotatingClimb;
-import frc.robot.commands.RotatingClimb;
-import frc.robot.commands.SetDriveDirection;
-import frc.robot.commands.SetDriveSpeed;
-// import frc.robot.commands.ToggleColorSensor;
-import frc.robot.commands.ToggleIntake;
-import frc.robot.commands.ToggleIntakeAndBelt;
-import frc.robot.commands.TwoCargoAuto;
-import frc.robot.commands.ToggleBelt;
+import frc.robot.commands.autos.OneBallAuto;
+import frc.robot.commands.autos.TwoCargoAuto;
+import frc.robot.commands.climb_commands.ExtendableClimb;
+import frc.robot.commands.climb_commands.ReverseExtendableClimb;
+import frc.robot.commands.climb_commands.ReverseRotatingClimb;
+import frc.robot.commands.climb_commands.RotatingClimb;
+import frc.robot.commands.drive_commands.ChangeDriveSpeed;
+import frc.robot.commands.drive_commands.SetDriveDirection;
+import frc.robot.commands.drive_commands.SetDriveSpeed;
+import frc.robot.commands.intake_commands.IntakeBelt;
+import frc.robot.commands.intake_commands.IntakeLiftDown;
+import frc.robot.commands.intake_commands.IntakeLiftUp;
+import frc.robot.commands.intake_commands.ReverseIntake;
+import frc.robot.commands.intake_commands.ReverseIntakeAndBelt;
+import frc.robot.commands.intake_commands.ReverseIntakeBelt;
+import frc.robot.commands.intake_commands.SetBeltDirection;
+import frc.robot.commands.intake_commands.SetBeltEnabled;
+import frc.robot.commands.intake_commands.SetIntakeDirection;
+import frc.robot.commands.intake_commands.SetIntakeEnabled;
+import frc.robot.commands.intake_commands.ToggleBelt;
+import frc.robot.commands.intake_commands.ToggleIntake;
+import frc.robot.commands.intake_commands.ToggleIntakeAndBelt;
+import frc.robot.commands.shooter_commands.ChangeShooterSpeed;
+import frc.robot.commands.shooter_commands.IndexerIn;
+import frc.robot.commands.shooter_commands.IndexerOut;
 //import frc.robot.commands.TwoCargoAuto;
 import frc.robot.subsystems.Climber;
 // import frc.robot.subsystems.ColorSensor;
@@ -58,15 +59,18 @@ import frc.robot.subsystems.DifferentialSubsystem;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.IntakeArm;
+import frc.robot.subsystems.IntakeLift;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
 import frc.robot.util.GeomUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -89,7 +93,7 @@ public class RobotContainer {
 	// public XboxController m_driverController = new XboxController(0);
 	public Joystick m_leftStick = new Joystick(0);
 	public Joystick m_rightStick = new Joystick(1);
-	public Joystick climbJoystick = new Joystick(2);
+	public Joystick m_oliviaMechanism = new Joystick(2);
 	public XboxController m_mechanismController = new XboxController(3);
 	public XboxController driveController = new XboxController(4);
 	// private final CANSparkMax leftMotor1 = new CANSparkMax(Constants.kLeftMotor1Port, MotorType.kBrushless);
@@ -111,7 +115,7 @@ public class RobotContainer {
 	// private final Drive m_robotDrive = new Drive();
 	private final Shooter m_shooter = new Shooter(new CANSparkMax(Constants.kOuttakeLId, MotorType.kBrushless), new CANSparkMax(Constants.kOuttakeRId, MotorType.kBrushless));
 	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
-	private final IntakeArm m_intakeArm = new IntakeArm(new CANSparkMax(Constants.kIntakeArmId, MotorType.kBrushless));
+	private final IntakeLift m_intakeLift = new IntakeLift(new CANSparkMax(Constants.kIntakeArmId, MotorType.kBrushless));
 	// private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
 	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless),
 			new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
@@ -125,8 +129,9 @@ public class RobotContainer {
 	public boolean intakeReversed = false;
 	public boolean intakeOn = false;
 	private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight"); 
-	private double kP = 0.1;
+	private double kP = 0.05;
 	private double minValue = 0.05;
+
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -159,7 +164,7 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		// input commands here
-		new JoystickButton(m_mechanismController, Button.kX.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.3));
+		new JoystickButton(m_mechanismController, Button.kX.value).whenPressed(new ChangeShooterSpeed(m_shooter, 1.0));
 		new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
 		new JoystickButton(m_mechanismController, Button.kStart.value).whenPressed(new ChangeShooterSpeed(m_shooter, -0.4));
 		// new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.3));
@@ -168,8 +173,8 @@ public class RobotContainer {
 		// new JoystickButton(m_driverController1, 11).whenPressed(new ToggleHopper(m_hopper));
 		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenPressed(new ReverseIntakeAndBelt(m_intake)); // toggle intake
 		new JoystickButton(m_mechanismController, Button.kLeftBumper.value).whenPressed(new ToggleIntakeAndBelt(m_intake)); // toggle intake belt
-		new POVButton(m_mechanismController, 180).whenHeld(new ArmUp(m_intakeArm)); // extend/retract arm
-		new POVButton(m_mechanismController, 0).whenHeld(new ArmDown(m_intakeArm));
+		new POVButton(m_mechanismController, 180).whenHeld(new IntakeLiftUp(m_intakeLift)); // extend/retract arm
+		new POVButton(m_mechanismController, 0).whenHeld(new IntakeLiftDown(m_intakeLift));
 		new POVButton(m_mechanismController, 90).whenHeld(new RotatingClimb(m_climber, 0.1)); // rotate arm
 		new POVButton(m_mechanismController, 270).whenHeld(new ReverseRotatingClimb(m_climber, 0.1));
 		// new JoystickButton(m_mechanismController, Button.kBack.value).whenPressed(new ToggleColorSensor(m_colorSensor));
@@ -184,8 +189,54 @@ public class RobotContainer {
 		// new JoystickButton(m_driverController, Button.kLeftBumper.value).whenHeld(new Climb(m_climber)); // toggle climber
 		// new JoystickButton(m_driverController, Button.kRightBumper.value).whenHeld(new ReverseClimb(m_climber)); // toggle climber
 
-		new JoystickButton(climbJoystick, 6).whenHeld(new RotatingClimb(m_climber, 1));
-		new JoystickButton(climbJoystick, 7).whenHeld(new ReverseRotatingClimb(m_climber, 1));
+		// olivia mechanism controller
+		// climb
+		new JoystickButton(m_oliviaMechanism, 6).whenHeld(new RotatingClimb(m_climber, 1));
+		new JoystickButton(m_oliviaMechanism, 7).whenHeld(new ReverseRotatingClimb(m_climber, 1));
+		new JoystickButton(m_oliviaMechanism, 10).whenHeld(new ExtendableClimb(m_climber));
+		new JoystickButton(m_oliviaMechanism, 11).whenHeld(new ReverseExtendableClimb(m_climber));
+
+		// intake
+
+		// belt and indexer on while held
+		new JoystickButton(m_oliviaMechanism, 1).whenPressed(new SequentialCommandGroup(
+			new SetBeltDirection(m_intake, true),	
+			new SetBeltEnabled(m_intake, true),
+			new IndexerOut(m_indexer)));
+		// belt off when released
+		new JoystickButton(m_oliviaMechanism, 1).whenReleased(new SetBeltEnabled(m_intake, false));
+
+		// intake on and intaking while held
+		new JoystickButton(m_oliviaMechanism, 8).whenPressed(new SequentialCommandGroup(
+			new SetIntakeDirection(m_intake, true),	
+			new SetIntakeEnabled(m_intake, true),
+			new SetBeltDirection(m_intake, true),
+			new SetBeltEnabled(m_intake, true)));
+		
+		// intake off when released
+		new JoystickButton(m_oliviaMechanism, 8).whenReleased(new SequentialCommandGroup(
+			new SetIntakeEnabled(m_intake, false),
+			new SetBeltEnabled(m_intake, false)));
+
+		// intake on and reversed while held
+		new JoystickButton(m_oliviaMechanism, 9).whenPressed(new SequentialCommandGroup(
+			new SetIntakeDirection(m_intake, false),	
+			new SetIntakeEnabled(m_intake, true),
+			new SetBeltDirection(m_intake, false),
+			new SetBeltEnabled(m_intake, true)));
+		// intake off when released
+		new JoystickButton(m_oliviaMechanism, 9).whenReleased(new SequentialCommandGroup(
+			new SetIntakeEnabled(m_intake, false),
+			new SetBeltEnabled(m_intake, false)));
+
+		new JoystickButton(m_oliviaMechanism, 4).whenPressed(new IntakeLiftUp(m_intakeLift));
+		new JoystickButton(m_oliviaMechanism, 5).whenPressed(new IntakeLiftDown(m_intakeLift));
+		new JoystickButton(m_oliviaMechanism, 3).whenPressed(new ChangeShooterSpeed(m_shooter, .7));
+		new JoystickButton(m_oliviaMechanism, 3).whenReleased(new ChangeShooterSpeed(m_shooter, 0));
+
+
+
+		
 
 		new JoystickButton(m_leftStick, 3).whenPressed(new IndexerOut(m_indexer));
 		new JoystickButton(m_leftStick, 2).whenPressed(new IndexerIn(m_indexer));
@@ -196,8 +247,7 @@ public class RobotContainer {
 		// new JoystickButton(m_rightStick, 5).whenHeld(new SetDriveDirection(m_diffSub, false));
 
 
-		new JoystickButton(climbJoystick, 10).whenHeld(new ExtendableClimb(m_climber));
-		new JoystickButton(climbJoystick, 11).whenHeld(new ReverseExtendableClimb(m_climber));
+
 
 		// new JoystickButton(m_leftStick, 4).whenPressed(new ChangeDriveSpeed(m_robotSubsystemDrive));
 		// new JoystickButton(m_leftStick, 5).whenPressed(new ChangeDriveDirection(m_robotSubsystemDrive));
@@ -209,8 +259,11 @@ public class RobotContainer {
 	}
 
 	public void driveControl() {
-		m_robotDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+		// m_robotDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
 		SmartDashboard.putNumber("Current Heading", m_robotDrive.getHeading());
+		SmartDashboard.putNumber("Current Simple Heading", m_robotDrive.getSimpleAngle());
+		SmartDashboard.putNumber("Turn rate", m_robotDrive.getTurnRate());
+
 
 		if(driveController.getLeftBumper()){
 			if(table.getEntry("tv").getDouble(0.0) == 1){
@@ -226,7 +279,16 @@ public class RobotContainer {
 				m_robotDrive.tankDrive(steeringAdjust, -steeringAdjust);
 			}
 		}
-		// m_robotDiffDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+		
+		else{
+			if (Math.abs(driveController.getLeftY()) < .2) {
+				m_robotDrive.curvatureDrive(driveController.getLeftY(), driveController.getRightX(), true);
+			} else {
+				m_robotDrive.curvatureDrive(driveController.getLeftY(), driveController.getRightX(), driveController.getRightBumper());
+			}
+		}
+
+		
 		// m_robotSubsystemDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
 		
 

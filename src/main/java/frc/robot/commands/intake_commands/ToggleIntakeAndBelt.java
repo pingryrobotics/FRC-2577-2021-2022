@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.intake_commands;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.autos;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +16,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer.AutoPosition;
+import frc.robot.commands.drive_commands.MoveBackwards;
+import frc.robot.commands.intake_commands.ToggleIntakeAndBelt;
+import frc.robot.commands.shooter_commands.ChangeShooterSpeed;
 import frc.robot.subsystems.DifferentialSubsystem;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;

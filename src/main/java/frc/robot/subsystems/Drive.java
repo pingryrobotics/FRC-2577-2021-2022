@@ -5,6 +5,7 @@ import frc.robot.Constants;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.ADIS16448_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -42,7 +44,7 @@ public class Drive extends SubsystemBase {
 	private final RelativeEncoder m_rightEncoder = rightMotor1.getEncoder();
 
 	// The gyro sensor
-	private final ADIS16448_IMU m_imu = new ADIS16448_IMU(); // 4 seconds for automatic calibration
+	private final ADIS16448_IMU m_imu = new ADIS16448_IMU(ADIS16448_IMU.IMUAxis.kZ, SPI.Port.kMXP, ADIS16448_IMU.CalibrationTime._1s); // 4 seconds for automatic calibration
 
 	// Odometry class for tracking robot pose
 	private final DifferentialDriveOdometry m_odometry;
@@ -72,6 +74,11 @@ public class Drive extends SubsystemBase {
 		rightMotor1.burnFlash();
 		rightMotor2.burnFlash();
 
+		leftMotor1.setIdleMode(IdleMode.kBrake);
+		leftMotor2.setIdleMode(IdleMode.kBrake);
+		rightMotor1.setIdleMode(IdleMode.kBrake);
+		rightMotor2.setIdleMode(IdleMode.kBrake);
+
 		m_leftMotors = new MotorControllerGroup(
 				leftMotor1, leftMotor2);
 
@@ -83,6 +90,8 @@ public class Drive extends SubsystemBase {
 		m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
 		resetEncoders();
+
+		m_imu.setYawAxis(IMUAxis.kY);
 		m_odometry = new DifferentialDriveOdometry(new Rotation2d(Math.toRadians(m_imu.getAngle()))); // wrong axis?
 																										// default is y
 	}
@@ -136,6 +145,10 @@ public class Drive extends SubsystemBase {
 	 */
 	public void tankDrive(double left, double right) {
 		m_drive.tankDrive(left, right);
+	}
+
+	public void curvatureDrive(double leftY, double rightX, boolean quickTurn) {
+		m_drive.curvatureDrive(leftY, -rightX, quickTurn);
 	}
 
 	/**
@@ -205,6 +218,10 @@ public class Drive extends SubsystemBase {
 	 */
 	public double getHeading() {
 		return (new Rotation2d(Math.toRadians(m_imu.getAngle()))).getDegrees();
+	}
+
+	public double getSimpleAngle() {
+		return m_imu.getAngle();
 	}
 
 	/**

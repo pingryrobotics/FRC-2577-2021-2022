@@ -5,25 +5,26 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.shooter_commands;
 
 import frc.robot.Constants;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * An example command that uses an example subsystem.
  */
-public class ReverseIntakeAndBelt extends CommandBase {
+public class IndexerIn extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-	private final Intake m_subsystem;
+	private final Indexer m_subsystem;
 
 	/**
 	 * Creates a new ExampleCommand.
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public ReverseIntakeAndBelt(Intake subsystem) {
+	public IndexerIn(Indexer subsystem) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
@@ -32,9 +33,8 @@ public class ReverseIntakeAndBelt extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-        m_subsystem.flipDirectionRollers();
-		m_subsystem.flipDirectionBelt();
-		// m_subsystem.setBeltSpeed(-Constants.kBeltSpeed);
+        m_subsystem.moveDown();
+		// m_subsystem.setBeltSpeed(Constants.kBeltSpeed);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
