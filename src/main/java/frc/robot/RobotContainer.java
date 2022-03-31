@@ -15,6 +15,8 @@ import java.sql.Driver;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -121,7 +123,7 @@ public class RobotContainer {
 			new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
 	private final Indexer m_indexer = new Indexer(new CANSparkMax(Constants.kIndexerId, MotorType.kBrushless));
 	private final Vision m_vision = new Vision(m_shooter);
-	// private final ColorSensor m_colorSensor = new ColorSensor(m_intake);
+	 // private final ColorSensor m_colorSensor = new ColorSensor(m_intake);
 	// private Drive m_robotSubsystemDrive;
 	private double speed = 1;
 	private Command m_autonomousCommand;
@@ -139,6 +141,16 @@ public class RobotContainer {
 	public RobotContainer() {
 		// Configure the button binding
 		configureButtonBindings();
+
+		CameraServer.startAutomaticCapture();
+		// USE TO GET OUTPUT STUFF FROM CAMERA
+		// Creates the CvSink and connects it to the UsbCamera
+		// CvSink cvSink = CameraServer.getVideo();
+
+		// Creates the CvSource and MjpegServer [2] and connects them
+		// CvSource outputStream = CameraServer.putVideo("Blur", 640, 480);
+
+
 		// m_robotDiffDrive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 		// m_leftMotors.setInverted(true);
 		// m_rightMotors.setInverted(true);
