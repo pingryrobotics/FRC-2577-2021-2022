@@ -135,7 +135,7 @@ public class RobotContainer {
 	private double minValue = 0.05;
 
 
-	SendableChooser<ChangeShooterSpeed> shooterRegression = new SendableChooser<>();
+	SendableChooser<Double> shooterRegression = new SendableChooser<>();
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -166,16 +166,17 @@ public class RobotContainer {
 		m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
 		m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
 		SmartDashboard.putData("Auto choices", m_chooser);
-		shooterRegression.addOption("0.1", new ChangeShooterSpeed(m_shooter, 0.1));
-		shooterRegression.addOption("0.2", new ChangeShooterSpeed(m_shooter, 0.2));
-		shooterRegression.addOption("0.3", new ChangeShooterSpeed(m_shooter, 0.3));
-		shooterRegression.addOption("0.4", new ChangeShooterSpeed(m_shooter, 0.4));
-		shooterRegression.addOption("0.5", new ChangeShooterSpeed(m_shooter, 0.5));
-		shooterRegression.addOption("0.6", new ChangeShooterSpeed(m_shooter, 0.6));
-		shooterRegression.addOption("0.7", new ChangeShooterSpeed(m_shooter, 0.7));
-		shooterRegression.addOption("0.8", new ChangeShooterSpeed(m_shooter, 0.8));
-		shooterRegression.addOption("0.9", new ChangeShooterSpeed(m_shooter, 0.9));
-		shooterRegression.addOption("1.0", new ChangeShooterSpeed(m_shooter, 1.0));
+		shooterRegression.addOption("0.1", 0.1);
+		shooterRegression.addOption("0.2", 0.2);
+		shooterRegression.addOption("0.3", 0.3);
+		shooterRegression.addOption("0.4", 0.4);
+		shooterRegression.addOption("0.5", 0.5);
+		shooterRegression.addOption("0.6", 0.6);
+		shooterRegression.addOption("0.7", 0.7);
+		shooterRegression.addOption("0.8", 0.8);
+		shooterRegression.addOption("0.9", 0.9);
+		shooterRegression.addOption("1.0", 1.0);
+
 		SmartDashboard.putData("Shooter Speed", shooterRegression);
 	}
 
@@ -301,6 +302,10 @@ public class RobotContainer {
 	}
 
 	public void driveControl() {
+		if (driveController.getRightBumper()) {
+			m_shooter.setDesiredSpeed(shooterRegression.getSelected());
+		}
+
 		// m_robotDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
 		SmartDashboard.putNumber("Current Heading", m_robotDrive.getHeading());
 		SmartDashboard.putNumber("Current Simple Heading", m_robotDrive.getSimpleAngle());
