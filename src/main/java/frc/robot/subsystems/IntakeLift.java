@@ -36,19 +36,20 @@ public class IntakeLift extends SubsystemBase {
 	}
 
 	public void flipDown() {
+		m_flipDownArm.getEncoder().setPosition(Constants.kFlipUpArmPosition);
 		while (m_flipDownArm.getEncoder().getPosition() > Constants.kFlipDownArmPosition) {
 			m_flipDownArm.set(-Constants.kFlipDownArmSpeed);
 		}
 		m_flipDownArm.set(0);
 	}
 	
-	public void flipUp() {
+	// public void flipUp() {
 		
-		while (m_flipDownArm.getEncoder().getPosition() < Constants.kFlipUpArmPosition) {
+		// while (m_flipDownArm.getEncoder().getPosition() < Constants.kFlipUpArmPosition) {
 			
-		}
-		m_flipDownArm.set(0);
-	}
+		// }
+		// m_flipDownArm.set(0);
+	// }
 
 	public void powerUpwards() {
 		m_flipDownArm.set(Constants.kFlipUpArmSpeed);
@@ -68,5 +69,9 @@ public class IntakeLift extends SubsystemBase {
 
 	public void zeroLift() {
 		m_flipDownArm.getEncoder().setPosition(0);
+	}
+
+	public void hold() {
+		m_flipDownArm.set(0.05);
 	}
 }

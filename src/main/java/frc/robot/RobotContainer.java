@@ -130,8 +130,6 @@ public class RobotContainer {
 	private double speed = 1;
 	private Command m_autonomousCommand;
 	private boolean isForwards = true;
-	public boolean intakeReversed = false;
-	public boolean intakeOn = false;
 	private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight"); 
 	private double kP = 0.05;
 	private double kPDistance = 0.1;
@@ -224,15 +222,11 @@ public class RobotContainer {
 		new JoystickButton(m_mechanismController, Button.kLeftBumper.value).whenReleased(new SequentialCommandGroup(
 				new SetIntakeEnabled(m_intake, false),
 				new SetBeltEnabled(m_intake, false))); // intake off when released
-		new POVButton(m_mechanismController, 180).whenHeld(new IntakeLiftUp(m_intakeLift)); // extend/retract arm
-		new POVButton(m_mechanismController, 0).whenHeld(new IntakeLiftDown(m_intakeLift));
+		new POVButton(m_mechanismController, 180).whenPressed(new IntakeLiftUp(m_intakeLift)); // extend/retract arm
+		new POVButton(m_mechanismController, 0).whenPressed(new IntakeLiftDown(m_intakeLift));
 		new POVButton(m_mechanismController, 90).whenHeld(new RotatingClimb(m_climber, 0.1)); // rotate arm
 		new POVButton(m_mechanismController, 270).whenHeld(new ReverseRotatingClimb(m_climber, 0.1));
 		// new JoystickButton(m_mechanismController, Button.kBack.value).whenPressed(new ToggleColorSensor(m_colorSensor));
-
-		SmartDashboard.putString("Direction", intakeReversed ? "Going out" : "Going in");
-		SmartDashboard.putString("Intake status", intakeOn ? "On" : "Off");
-
 
 		// new JoystickButton(m_mechanismController, Button.kBack.value).whenPressed(new ReverseIntake(m_intake)); // reverse intake
 		// new JoystickButton(m_0mechanismController, Button.kStart.value).whenPressed(new ReverseIntakeBelt(m_intake)); // reverse
@@ -256,7 +250,7 @@ public class RobotContainer {
 			new IndexerOut(m_indexer)));
 		// belt off when released
 		new JoystickButton(m_oliviaMechanism, 1).whenReleased(new SetBeltEnabled(m_intake, false));
-
+ 
 		// intake on and intaking while held
 		new JoystickButton(m_oliviaMechanism, 8).whenPressed(new SequentialCommandGroup(
 			new SetIntakeDirection(m_intake, true),	
