@@ -25,7 +25,8 @@ public class IntakeLiftDown extends CommandBase {
 
 	@Override
 	public void initialize() {
-		m_subsystem.powerUpwards();
+		// m_subsystem.powerDownwards();
+		m_subsystem.powerOff();
 		// m_subsystem.invertExtendable();
 		// m_subsystem.set((direc ? 1 : -1) * Constants.kClimberSpeed);
 	}

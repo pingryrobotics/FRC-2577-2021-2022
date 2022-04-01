@@ -27,6 +27,7 @@ public class IntakeLift extends SubsystemBase {
 		m_flipDownArm.setInverted(false);
 
 		m_flipDownArm.setIdleMode(IdleMode.kBrake);
+		
 	}
 
 	@Override
@@ -63,5 +64,9 @@ public class IntakeLift extends SubsystemBase {
 
 	public double getLiftPosition() {
 		return m_flipDownArm.getEncoder().getPosition();
+	}
+
+	public void zeroLift() {
+		m_flipDownArm.getEncoder().setPosition(0);
 	}
 }

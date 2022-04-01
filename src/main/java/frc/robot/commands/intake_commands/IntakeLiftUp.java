@@ -30,10 +30,10 @@ public class IntakeLiftUp extends CommandBase {
 		// m_subsystem.set((direc ? 1 : -1) * Constants.kClimberSpeed);
 	}
 
-	// @Override
-	// public void execute() {
-	// 	System.out.println("Lift position: " + m_subsystem.getLiftPosition());
-	// }
+	@Override
+	public void execute() {
+		System.out.println("Lift position: " + m_subsystem.getLiftPosition());
+	}
 
 	@Override
 	public boolean isFinished() {
@@ -42,6 +42,6 @@ public class IntakeLiftUp extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
-		m_subsystem.powerOff();
+		// m_subsystem.powerOff();
 	}
 }

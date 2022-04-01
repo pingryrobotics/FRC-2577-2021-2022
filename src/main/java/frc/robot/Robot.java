@@ -50,6 +50,7 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		CommandScheduler.getInstance().run();
 		m_robotContainer.driveControl();
+		m_robotContainer.updateShooterSpeed().schedule();
 		// m_robotContainer.configureButtonBindings();
 	}
 

@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import frc.robot.commands.autos.AutoTest;
 import frc.robot.commands.autos.OneBallAuto;
 import frc.robot.commands.autos.TwoCargoAuto;
 import frc.robot.commands.climb_commands.ExtendableClimb;
@@ -143,6 +144,7 @@ public class RobotContainer {
 	public RobotContainer() {
 		// Configure the button binding
 		configureButtonBindings();
+		m_intakeLift.zeroLift();
 
 		CameraServer.startAutomaticCapture();
 		// USE TO GET OUTPUT STUFF FROM CAMERA
@@ -165,6 +167,7 @@ public class RobotContainer {
 		// m_chooser.addOption("TB", new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter));
 		m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
 		m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
+		m_chooser.addOption("AutoTest", new AutoTest(m_robotDrive, m_intake, m_shooter));
 		SmartDashboard.putData("Auto choices", m_chooser);
 		shooterRegression.addOption("0.1", new ChangeShooterSpeed(m_shooter, 0.1));
 		shooterRegression.addOption("0.2", new ChangeShooterSpeed(m_shooter, 0.2));
@@ -177,6 +180,9 @@ public class RobotContainer {
 		shooterRegression.addOption("0.9", new ChangeShooterSpeed(m_shooter, 0.9));
 		shooterRegression.addOption("1.0", new ChangeShooterSpeed(m_shooter, 1.0));
 		SmartDashboard.putData("Shooter Speed", shooterRegression);
+
+		SmartDashboard.putNumber("Shoot speed", .4);
+		
 	}
 
 	/**
@@ -189,12 +195,12 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		// input commands here
-		new JoystickButton(m_mechanismController, Button.kX.value).whenPressed(new ChangeShooterSpeed(m_shooter, 1.0));
+		new JoystickButton(m_mechanismController, Button.kX.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.3)); // lower level
 		new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
 		new JoystickButton(m_mechanismController, Button.kStart.value).whenPressed(new ChangeShooterSpeed(m_shooter, -0.4));
 		// new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.3));
-		new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.60)); // lower level
-		new JoystickButton(m_mechanismController, Button.kBack.value).whenPressed(shooterRegression.getSelected());
+		new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.60)); // upper level from line
+		// new JoystickButton(m_mechanismController, Button.kBack.value).whenPressed(shooterRegression.getSelected());
 		
 		new JoystickButton(m_mechanismController, Button.kY.value).whenPressed(
 				new ChangeShooterSpeed(m_shooter, m_vision.getPower())); // automatic distance adjustment
@@ -272,10 +278,11 @@ public class RobotContainer {
 			new SetBeltEnabled(m_intake, false)));
 
 		new JoystickButton(m_oliviaMechanism, 4).whenPressed(new IntakeLiftUp(m_intakeLift));
-		new JoystickButton(m_oliviaMechanism, 5).whenPressed(new IntakeLiftDown(m_intakeLift));
+		new JoystickButton(m_oliviaMechanism, 4).whenReleased(new IntakeLiftDown(m_intakeLift));
 		new JoystickButton(m_oliviaMechanism, 3).whenPressed(new ChangeShooterSpeed(m_shooter, .7));
 		new JoystickButton(m_oliviaMechanism, 3).whenReleased(new ChangeShooterSpeed(m_shooter, 0));
 
+		new JoystickButton(m_oliviaMechanism, 2).whenPressed(new ToggleIntakeAndBelt(m_intake));
 
 
 		
@@ -337,8 +344,13 @@ public class RobotContainer {
 		// m_robotDrive.tankDrive(m_driverController.getRawAxis(Axis.kLeftY.value), m_driverController.getRawAxis(Axis.kRightY.value));
 	}
 
+	public Command updateShooterSpeed() {
+		return new ChangeShooterSpeed(m_shooter, 0);
+		// return new ChangeShooterSpeed(m_shooter, SmartDashboard.getNumber("Shoot speed", 0));
+	}
+
 	// A chooser for autonomous commands
-	SendableChooser<TwoCargoAuto> m_chooser = new SendableChooser<>();
+	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
 	/**
 	 * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -363,8 +375,8 @@ public class RobotContainer {
 
 
 
-		m_robotDrive.setPose(m_chooser.getSelected().pos.getPose());
-		System.out.println("chosen auto pos: " + m_chooser.getSelected().pos.getPose());
+		m_robotDrive.setPose(new Pose2d());
+		// System.out.println("chosen auto pos: " + m_chooser.getSelected().pos.getPose());
 		return m_chooser.getSelected();
 		// return void;
 	}

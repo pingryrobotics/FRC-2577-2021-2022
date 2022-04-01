@@ -44,7 +44,7 @@ public class Drive extends SubsystemBase {
 	private final RelativeEncoder m_rightEncoder = rightMotor1.getEncoder();
 
 	// The gyro sensor
-	private final ADIS16448_IMU m_imu = new ADIS16448_IMU(ADIS16448_IMU.IMUAxis.kZ, SPI.Port.kMXP, ADIS16448_IMU.CalibrationTime._1s); // 4 seconds for automatic calibration
+	private final ADIS16448_IMU m_imu = new ADIS16448_IMU(ADIS16448_IMU.IMUAxis.kX, SPI.Port.kMXP, ADIS16448_IMU.CalibrationTime._1s); // 4 seconds for automatic calibration
 
 	// Odometry class for tracking robot pose
 	private final DifferentialDriveOdometry m_odometry;
@@ -91,7 +91,7 @@ public class Drive extends SubsystemBase {
 
 		resetEncoders();
 
-		m_imu.setYawAxis(IMUAxis.kY);
+		// m_imu.setYawAxis(IMUAxis.kY);
 		m_odometry = new DifferentialDriveOdometry(new Rotation2d(Math.toRadians(m_imu.getAngle()))); // wrong axis?
 																										// default is y
 	}

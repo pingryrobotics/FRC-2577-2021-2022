@@ -74,7 +74,8 @@ public class DriveCommand extends CommandBase {
 						// Add kinematics to ensure max speed is actually obeyed
 						.setKinematics(Constants.kDriveKinematics)
 						// Apply the voltage constraint
-						.addConstraint(autoVoltageConstraint);
+						.addConstraint(autoVoltageConstraint)
+						.setReversed(reversed);
 
 
 		// limited to 2 points for now
@@ -83,6 +84,10 @@ public class DriveCommand extends CommandBase {
 			// 
 			// passPoints.add(waypoints.get(waypointInd));
 		// }
+
+		Translation2d difference = waypoints.get(waypoints.size()-1).getTranslation().minus(waypoints.get(0).getTranslation());
+		passPoints.add(difference.div(4));
+		passPoints.add(difference.div(4).plus(difference.div(4)));
 		// An example trajectory to follow. All units in meters.
 		Trajectory traj = TrajectoryGenerator.generateTrajectory(
 				// Start at the origin facing the +X direction

@@ -107,7 +107,7 @@ public class Vision extends SubsystemBase {
 		double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
 		distanceInches = (goalHeightInches - limelightHeightInches)
 				/ Math.tan(angleToGoalRadians);
-        SmartDashboard.putNumber("LimelightDist", targetOffsetAngle_Vertical);
+        SmartDashboard.putNumber("LimelightDist", distanceInches);
 
 		// SmartDashboard.putBoolean("Limelight Has Target", mSeesTarget);
 		// SmartDashboard.putNumber("Limelight Pipeline Latency (ms)", latency);

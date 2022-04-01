@@ -48,7 +48,7 @@ public class TwoCargoAuto extends SequentialCommandGroup {
         Pose2d startingPose = position.getPose();
 		pos = position;
 		addCommands(sequence(
-				new ChangeShooterSpeed(shooter, 1),
+				new ChangeShooterSpeed(shooter, 0.3),
 				new ToggleIntakeAndBelt(intake),
 				new WaitCommand(3.0),
 				new ToggleIntakeAndBelt(intake),	
