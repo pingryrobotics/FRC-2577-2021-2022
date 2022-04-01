@@ -80,14 +80,15 @@ public class DriveCommand extends CommandBase {
 
 		// limited to 2 points for now
 		List<Translation2d> passPoints = new ArrayList<Translation2d>();
-		// for (int waypointInd = 1; waypointInd < waypoints.size() - 2; waypointInd++) {
-			// 
+		for (int waypointInd = 0; waypointInd < waypoints.size() - 1; waypointInd++) {
+			Translation2d difference = waypoints.get(waypointInd + 1).getTranslation().minus(waypoints.get(waypointInd).getTranslation());
+			passPoints.add(difference);
 			// passPoints.add(waypoints.get(waypointInd));
-		// }
+		}
 
-		Translation2d difference = waypoints.get(waypoints.size()-1).getTranslation().minus(waypoints.get(0).getTranslation());
-		passPoints.add(difference.div(4));
-		passPoints.add(difference.div(4).plus(difference.div(4)));
+		// Translation2d difference = waypoints.get(waypoints.size()-1).getTranslation().minus(waypoints.get(0).getTranslation());
+		// passPoints.add(difference.div(4));
+		// passPoints.add(difference.div(4).plus(difference.div(4)));
 		// An example trajectory to follow. All units in meters.
 		Trajectory traj = TrajectoryGenerator.generateTrajectory(
 				// Start at the origin facing the +X direction
