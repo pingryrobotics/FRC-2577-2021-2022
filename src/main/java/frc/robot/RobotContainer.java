@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import frc.robot.commands.autos.AutoTest;
 import frc.robot.commands.autos.OneBallAuto;
 import frc.robot.commands.autos.TwoBallAuto;
 import frc.robot.commands.autos.TwoCargoAuto;
@@ -168,7 +167,7 @@ public class RobotContainer {
 		// m_chooser.addOption("TB", new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter));
 		// m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
 		// m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
-		m_chooser.addOption("Two Ball Auto", new TwoBallAuto(m_robotDrive, m_intake, m_intakeLift, m_shooter, m_indexer);
+		m_chooser.addOption("Two Ball Auto", new TwoBallAuto(m_robotDrive, m_intake, m_intakeLift, m_shooter, m_indexer));
 		SmartDashboard.putData("Auto choices", m_chooser);
 		shooterRegression.addOption("0.1", 0.1);
 		shooterRegression.addOption("0.2", 0.2);

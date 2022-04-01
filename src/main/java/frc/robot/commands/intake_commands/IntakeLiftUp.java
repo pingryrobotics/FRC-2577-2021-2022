@@ -37,7 +37,7 @@ public class IntakeLiftUp extends CommandBase {
 
 	@Override
 	public boolean isFinished() {
-		return m_subsystem.getLiftPosition() >= Constants.kFlipUpArmPosition;
+		return m_subsystem.getLiftPosition() <= Constants.kFlipUpArmPosition;
 	}
 
 	@Override

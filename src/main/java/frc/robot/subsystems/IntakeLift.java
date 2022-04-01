@@ -50,7 +50,9 @@ public class IntakeLift extends SubsystemBase {
 		// }
 		// m_flipDownArm.set(0);
 	// }
-
+	public void setPower(double speed){
+		m_flipDownArm.set(speed);
+	}
 	public void powerUpwards() {
 		m_flipDownArm.set(Constants.kFlipUpArmSpeed);
 	}
