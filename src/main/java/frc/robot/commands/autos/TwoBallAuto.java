@@ -13,16 +13,23 @@ import frc.robot.commands.drive_commands.DriveForwardPID;
 import frc.robot.commands.drive_commands.PIDTurn;
 import frc.robot.commands.drive_commands.SetDriveSpeed;
 import frc.robot.commands.drive_commands.limelightPID;
+import frc.robot.commands.intake_commands.IntakeLiftDown;
+import frc.robot.commands.intake_commands.IntakeLiftDownAutonomous;
+import frc.robot.commands.intake_commands.SetBeltEnabled;
 import frc.robot.commands.intake_commands.SetIntakeEnabled;
+import frc.robot.commands.shooter_commands.ChangeShooterSpeed;
+import frc.robot.commands.shooter_commands.IndexerOut;
 import frc.robot.subsystems.DifferentialSubsystem;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeLift;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.GeomUtil;
 
-public class AutoTest extends SequentialCommandGroup {
+public class TwoBallAuto extends SequentialCommandGroup {
 
-    public AutoTest(Drive drive, Intake intake, Shooter shooter) {
+    public TwoBallAuto(Drive drive, Intake intake, IntakeLift intakeLift, Shooter shooter, Indexer indexer) {
         Pose2d startingPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         drive.setPose(startingPose);
         drive.zeroHeading();
@@ -32,10 +39,17 @@ public class AutoTest extends SequentialCommandGroup {
         // ));
 
         addCommands(deadline(
+            new IntakeLiftDownAutonomous(intakeLift, 0.5),
+            new SetIntakeEnabled(intake, true),
+            new SetBeltEnabled(intake, true),
             new DriveForwardPID(drive, 1.0),
             new PIDTurn(drive, 180),
-            new limelightPID(drive, 3)
-
+            new ChangeShooterSpeed(shooter, 0.7),
+            new limelightPID(drive, 3),
+            new IndexerOut(indexer),
+            new WaitCommand(1),
+            new IndexerOut(indexer),
+            new ChangeShooterSpeed(shooter, 0)
         ));
 
 
