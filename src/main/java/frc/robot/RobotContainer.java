@@ -41,6 +41,7 @@ import frc.robot.commands.drive_commands.SetDriveDirection;
 import frc.robot.commands.drive_commands.SetDriveSpeed;
 import frc.robot.commands.intake_commands.IntakeBelt;
 import frc.robot.commands.intake_commands.IntakeLiftDown;
+import frc.robot.commands.intake_commands.IntakeLiftStop;
 import frc.robot.commands.intake_commands.IntakeLiftUp;
 import frc.robot.commands.intake_commands.ReverseIntake;
 import frc.robot.commands.intake_commands.ReverseIntakeAndBelt;
@@ -280,7 +281,11 @@ public class RobotContainer {
 			new SetBeltEnabled(m_intake, false)));
 
 		new JoystickButton(m_oliviaMechanism, 4).whenPressed(new IntakeLiftUp(m_intakeLift));
-		new JoystickButton(m_oliviaMechanism, 4).whenReleased(new IntakeLiftDown(m_intakeLift));
+		new JoystickButton(m_oliviaMechanism, 4).whenReleased(new IntakeLiftStop(m_intakeLift));
+
+		new JoystickButton(m_oliviaMechanism, 5).whenPressed(new IntakeLiftDown(m_intakeLift));
+		new JoystickButton(m_oliviaMechanism, 5).whenReleased(new IntakeLiftStop(m_intakeLift));
+
 		new JoystickButton(m_oliviaMechanism, 3).whenPressed(new ChangeShooterSpeed(m_shooter, .7));
 		new JoystickButton(m_oliviaMechanism, 3).whenReleased(new ChangeShooterSpeed(m_shooter, 0));
 
@@ -388,6 +393,14 @@ public class RobotContainer {
 		// System.out.println("chosen auto pos: " + m_chooser.getSelected().pos.getPose());
 		return m_chooser.getSelected();
 		// return void;
+	}
+
+	public void setDriveAuto() {
+		m_robotDrive.setAutoMotors();
+	}
+
+	public void setDriveTeleop() {
+		m_robotDrive.setTeleopMotors();
 	}
 
 

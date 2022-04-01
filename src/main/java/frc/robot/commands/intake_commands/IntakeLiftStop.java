@@ -8,7 +8,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeLift;
 
 /** An example command that uses an example subsystem. */
-public class IntakeLiftDown extends CommandBase {
+public class IntakeLiftStop extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
 	private final IntakeLift m_subsystem;
 
@@ -17,7 +17,7 @@ public class IntakeLiftDown extends CommandBase {
 	 *
 	 * @param m_intake The subsystem used by this command.
 	 */
-	public IntakeLiftDown(IntakeLift m_intake) {
+	public IntakeLiftStop(IntakeLift m_intake) {
 		m_subsystem = m_intake;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(m_intake);
@@ -26,7 +26,7 @@ public class IntakeLiftDown extends CommandBase {
 	@Override
 	public void initialize() {
 		// m_subsystem.powerDownwards();
-		m_subsystem.powerDownwards();
+		m_subsystem.powerOff();
 		// m_subsystem.invertExtendable();
 		// m_subsystem.set((direc ? 1 : -1) * Constants.kClimberSpeed);
 	}
