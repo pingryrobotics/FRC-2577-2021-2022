@@ -89,6 +89,7 @@ public class Drive extends SubsystemBase {
 
 		m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
+
 		resetEncoders();
 
 		// m_imu.setYawAxis(IMUAxis.kY);
@@ -100,7 +101,7 @@ public class Drive extends SubsystemBase {
 	public void periodic() {
 		// Update the odometry in the periodic block
 		m_odometry.update(
-				new Rotation2d(Math.toRadians(m_imu.getAngle())), m_leftEncoder.getPosition(),
+				new Rotation2d(Math.toRadians(m_imu.getAngle()), 0), m_leftEncoder.getPosition(),
 				m_rightEncoder.getPosition());
 		m_drive.feed();
 	}

@@ -16,12 +16,12 @@ import frc.robot.util.GeomUtil;
 public class AutoTest extends SequentialCommandGroup {
 
     public AutoTest(Drive drive, Intake intake, Shooter shooter) {
-        Pose2d startingPose = new Pose2d(new Translation2d(0, 0), new Rotation2d());
+        Pose2d startingPose = new Pose2d(new Translation2d(0, 0), new Rotation2d(Math.PI, 0));
         drive.setPose(startingPose);
         drive.zeroHeading();
         addCommands(sequence(
             new DriveCommand(drive, 0.0, List.of(startingPose, 
-            new Pose2d(new Translation2d(-1, 0.0), new Rotation2d())), 0.0,  true)
+            new Pose2d(new Translation2d(1, 0.0), new Rotation2d(Math.PI, 0))), 0.0,  false)
         ));
 
     }
