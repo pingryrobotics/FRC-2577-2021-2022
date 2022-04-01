@@ -5,6 +5,7 @@ import java.util.List;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.drive_commands.DriveCommand;
@@ -22,7 +23,7 @@ import frc.robot.util.GeomUtil;
 public class AutoTest extends SequentialCommandGroup {
 
     public AutoTest(Drive drive, Intake intake, Shooter shooter) {
-        Pose2d startingPose = new Pose2d(new Translation2d(0, 0), new Rotation2d(Math.PI, 0));
+        Pose2d startingPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         drive.setPose(startingPose);
         drive.zeroHeading();
         // addCommands(sequence(
@@ -36,6 +37,7 @@ public class AutoTest extends SequentialCommandGroup {
             new limelightPID(drive, 3)
 
         ));
+
 
     }
     

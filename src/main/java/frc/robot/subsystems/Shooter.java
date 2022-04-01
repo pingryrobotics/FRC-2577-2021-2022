@@ -8,6 +8,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
@@ -31,6 +33,9 @@ public class Shooter extends SubsystemBase {
 	public void periodic() {
 		outtake1.set(speed);
 		outtake2.set(speed);
+		if (speed != 0) {
+			SmartDashboard.putNumber("Flywheel speed", speed);
+		}
 	}
 
 	public void flipDirection() {

@@ -85,7 +85,7 @@ public class Drive extends SubsystemBase {
 		m_rightMotors = new MotorControllerGroup(
 				rightMotor1, rightMotor2);
 
-		m_leftMotors.setInverted(true);
+		// m_leftMotors.setInverted(true);
 
 		m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
@@ -93,7 +93,7 @@ public class Drive extends SubsystemBase {
 		resetEncoders();
 
 		// m_imu.setYawAxis(IMUAxis.kY);
-		m_odometry = new DifferentialDriveOdometry(new Rotation2d(Math.toRadians(m_imu.getAngle()))); // wrong axis?
+		m_odometry = new DifferentialDriveOdometry(new Rotation2d(Math.toRadians(m_imu.getAngle()), 0)); // wrong axis?
 																										// default is y
 	}
 
@@ -101,8 +101,8 @@ public class Drive extends SubsystemBase {
 	public void periodic() {
 		// Update the odometry in the periodic block
 		m_odometry.update(
-				new Rotation2d(Math.toRadians(m_imu.getAngle()), 0), m_leftEncoder.getPosition(),
-				m_rightEncoder.getPosition());
+				new Rotation2d(Math.toRadians(m_imu.getAngle()), 0), getLeftEncoderMeters(),
+				getRightEncoderMeters());
 		m_drive.feed();
 	}
 
@@ -116,7 +116,17 @@ public class Drive extends SubsystemBase {
 	}
 
 	public void setPose(Pose2d pose) {
-		m_odometry.resetPosition(pose, new Rotation2d(m_imu.getAngle() * -1));
+		m_odometry.resetPosition(pose, new Rotation2d(Math.toRadians(m_imu.getAngle())));
+		m_leftEncoder.setPosition(0);
+		m_rightEncoder.setPosition(0);
+	}
+
+	public double getLeftEncoderMeters() {
+		return m_leftEncoder.getPosition() * (2 * Math.PI * 6.25/2);
+	}
+
+	public double getRightEncoderMeters() {
+		return m_rightEncoder.getPosition() * (2 * Math.PI * 6.25/2);
 	}
 
 	/**
@@ -135,8 +145,20 @@ public class Drive extends SubsystemBase {
 	 */
 	public void resetOdometry(Pose2d pose) {
 		resetEncoders();
-		m_odometry.resetPosition(pose, new Rotation2d(Math.toRadians(Math.toRadians(m_imu.getAngle()))));
+		m_odometry.resetPosition(pose, new Rotation2d(Math.toRadians(m_imu.getAngle()), 0));
 	}
+
+	
+	public void setAutoMotors() {
+		m_leftMotors.setInverted(false);
+		m_rightMotors.setInverted(true);
+	}
+
+	public void setTeleopMotors() {
+		m_leftMotors.setInverted(true);
+		m_rightMotors.setInverted(false);
+	}
+
 
 	/**
 	 * Drives the robot using arcade controls.
