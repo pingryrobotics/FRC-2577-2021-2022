@@ -132,6 +132,7 @@ public class RobotContainer {
 	public boolean intakeOn = false;
 	private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight"); 
 	private double kP = 0.05;
+	private double kPDistance = 0.1;
 	private double minValue = 0.05;
 
 
@@ -315,6 +316,8 @@ public class RobotContainer {
 		if(driveController.getLeftBumper()){
 			if(table.getEntry("tv").getDouble(0.0) == 1){
 				double tx = table.getEntry("tx").getDouble(0.0);
+				double ty = table.getEntry("ty").getDouble(0.0);
+				double distance_error = table.getEntry("ty").getDouble(0.0);
 				double headingError = -table.getEntry("tx").getDouble(0.0);
 				double steeringAdjust = 0.0;
 				if(tx > 0){
@@ -323,7 +326,8 @@ public class RobotContainer {
 				else if(tx < 1.0){
 					steeringAdjust = kP*headingError + minValue;
 				}
-				m_robotDrive.tankDrive(steeringAdjust, -steeringAdjust);
+				double distanceAdjust = kPDistance * distance_error;
+				m_robotDrive.tankDrive(steeringAdjust + distanceAdjust, -steeringAdjust + distanceAdjust);
 			}
 		}
 		
