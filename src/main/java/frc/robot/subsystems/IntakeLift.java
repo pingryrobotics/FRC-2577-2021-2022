@@ -73,7 +73,11 @@ public class IntakeLift extends SubsystemBase {
 		m_flipDownArm.getEncoder().setPosition(0);
 	}
 
-	public void hold() {
+	public void holdUp() {
 		m_flipDownArm.set(0.05);
 	}
+
+	// public void holdDown() {
+	// 	m_flipDownArm.set(-0.05);
+	// }
 }

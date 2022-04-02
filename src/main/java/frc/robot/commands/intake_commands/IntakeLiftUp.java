@@ -43,6 +43,6 @@ public class IntakeLiftUp extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		// m_subsystem.powerOff();
-		m_subsystem.hold();
+		m_subsystem.holdUp();
 	}
 }

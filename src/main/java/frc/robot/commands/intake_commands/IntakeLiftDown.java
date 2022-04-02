@@ -27,29 +27,32 @@ public class IntakeLiftDown extends CommandBase {
 	@Override
 	public void initialize() {
 		// m_subsystem.powerDownwards();
-		m_subsystem.setPower(-0.1);
+		// m_subsystem.setPower(-0.1);
 		// m_subsystem.invertExtendable();
 		// m_subsystem.set((direc ? 1 : -1) * Constants.kClimberSpeed);
+		m_subsystem.powerDownwards();
 	}
 
 	@Override
 	public void execute(){
-		if(m_subsystem.getLiftPosition() >= 0){
-			double error = m_subsystem.getLiftPosition();
-			double power = error * kPLift;
-			m_subsystem.setPower(power);
-		}
+		// if(m_subsystem.getLiftPosition() >= 0){
+		// 	double error = m_subsystem.getLiftPosition();
+		// 	double power = error * kPLift;
+		// 	m_subsystem.setPower(power);
+		// }
 	}
 	
 
 	@Override
 	public boolean isFinished() {
 		// return !(m_subsystem.getLiftPosition() > Constants.kFlipDownArmPosition) ;
-		return m_subsystem.getLiftPosition() >= Constants.kFlipUpArmPosition + 0.5;
+		// return m_subsystem.getLiftPosition() >= Constants.kFlipUpDownPosition + 0.5;
+		return true;
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		m_subsystem.powerOff();
+		// m_subsystem.powerOff();
+		// m_subsystem.hold();
 	}
 }

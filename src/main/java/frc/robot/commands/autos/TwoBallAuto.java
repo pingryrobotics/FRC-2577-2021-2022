@@ -38,7 +38,7 @@ public class TwoBallAuto extends SequentialCommandGroup {
         //     new Pose2d(new Translation2d(1, 0.0), new Rotation2d(Math.PI, 0))), 0.0,  false)
         // ));
 
-        addCommands(deadline(
+        addCommands(sequence(
             new IntakeLiftDownAutonomous(intakeLift, 0.5),
             new SetIntakeEnabled(intake, true),
             new SetBeltEnabled(intake, true),
