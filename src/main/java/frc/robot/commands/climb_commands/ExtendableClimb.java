@@ -2,20 +2,21 @@ package frc.robot.commands.climb_commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.RotatingClimber;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.ExtendableClimber;
 
 /** An example command that uses an example subsystem. */
 public class ExtendableClimb extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-	private final Climber m_subsystem;
+	private final ExtendableClimber m_subsystem;
 
 	/**
 	 * Creates a new ExampleCommand.
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public ExtendableClimb(Climber subsystem) {
+	public ExtendableClimb(ExtendableClimber subsystem) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);

@@ -38,7 +38,7 @@ public class ChangeShooterSpeed extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
-		if (interrupted)
-			m_subsystem.setDesiredSpeed(0);
+		// if (interrupted)
+		// 	m_subsystem.setDesiredSpeed(0);
 	}
 }

@@ -22,6 +22,7 @@ public class limelightPID extends CommandBase{
     public limelightPID(Drive subsystem, double seconds) {
 		m_subsystem = subsystem;
         this.seconds = seconds;
+        timer = new Timer();
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
 	}

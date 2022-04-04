@@ -39,17 +39,18 @@ public class TwoBallAuto extends SequentialCommandGroup {
         // ));
 
         addCommands(sequence(
-            new IntakeLiftDownAutonomous(intakeLift, 0.5),
-            new SetIntakeEnabled(intake, true),
+            // new IntakeLiftDownAutonomous(intakeLift, 0.3),
+            // new SetIntakeEnabled(intake, true),
             new SetBeltEnabled(intake, true),
-            new DriveForwardPID(drive, 1.0),
-            new PIDTurn(drive, 180),
-            new ChangeShooterSpeed(shooter, 0.7),
+            new WaitCommand(2),
+            // new DriveForwardPID(drive, .5),
+            // new PIDTurn(drive, 180),
+            new ChangeShooterSpeed(shooter, 0.63),
             new limelightPID(drive, 3),
             new IndexerOut(indexer),
-            new WaitCommand(1),
-            new IndexerOut(indexer),
-            new ChangeShooterSpeed(shooter, 0)
+            new WaitCommand(1)
+            // new IndexerOut(indexer),
+            // new ChangeShooterSpeed(shooter, 0)
         ));
 
 

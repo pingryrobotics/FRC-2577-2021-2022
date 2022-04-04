@@ -35,13 +35,13 @@ public class IntakeLift extends SubsystemBase {
 		SmartDashboard.putNumber("Intake Arm", m_flipDownArm.getEncoder().getPosition());
 	}
 
-	public void flipDown() {
-		m_flipDownArm.getEncoder().setPosition(Constants.kFlipUpArmPosition);
-		while (m_flipDownArm.getEncoder().getPosition() > Constants.kFlipDownArmPosition) {
-			m_flipDownArm.set(-Constants.kFlipDownArmSpeed);
-		}
-		m_flipDownArm.set(0);
-	}
+	// public void flipDown() {
+		// m_flipDownArm.getEncoder().setPosition(Constants.kFlipUpArmPosition);
+		// while (m_flipDownArm.getEncoder().getPosition() > Constants.kFlipDownArmPosition) {
+			// m_flipDownArm.set(-Constants.kFlipDownArmSpeed);
+		// }
+		// m_flipDownArm.set(0);
+	// }
 	
 	// public void flipUp() {
 		

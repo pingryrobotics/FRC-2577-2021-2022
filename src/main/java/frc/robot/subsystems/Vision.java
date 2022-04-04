@@ -41,7 +41,7 @@ public class Vision extends SubsystemBase {
     public int desiredSnapshot = 0;
     private boolean mOutputsHaveChanged = true;
     private boolean mSeesTarget = false;
-    private final double limelightMountAngleDegrees = 30.0;
+    private final double limelightMountAngleDegrees = 26;
     private final double limelightHeightInches = 29.5;
 	private final double goalHeightInches = 104.0;
 
@@ -98,6 +98,7 @@ public class Vision extends SubsystemBase {
     @Override
 	public void periodic() {
 		double targetOffsetAngle_Vertical = ty.getDouble(1e9);
+        SmartDashboard.putNumber("limelight angle", targetOffsetAngle_Vertical);
 		if (targetOffsetAngle_Vertical == 1e9) { // if the target is not visible
 			mSeesTarget = false;
 		} else {

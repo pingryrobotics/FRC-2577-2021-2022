@@ -67,22 +67,22 @@ public final class Constants {
 	// public static final SPI.Port imuPort = SPI.Port.kOnboardCS0; // change
 	public static final double kImageCaptureLatency = 11.0 / 1000.0;
 
-	public static final double kFlipDownArmPosition = 11.8;
+	// public static final double kFlipDownArmPosition = 11.8;
 	public static final double kFlipUpArmPosition = 0;
-	public static final double kFlipDownArmSpeed = .1;
-	public static final double kFlipUpArmSpeed = .8;
+	public static final double kFlipDownArmSpeed = .65;
+	public static final double kFlipUpArmSpeed = 1;
 	public static final int kOuttakeSpeed = 1;
 	public static final double kIntakeSpeed = 0.4;
 	public static final double kIndexerSpeed = 1.0;
 	public static final double kBeltSpeed = 0.7;
 	public static final double kClimberSpeed = 1;
-	public static final double kRotatingSpeed = 0.1;
+	public static final double kRotatingSpeed = 1;
 	public static final int kSlideLimit = 1; // in rotations
 	public static final int kArmLimit = 1; // in rotations
 	public static final int kIntakeId = 20;
 	public static final int kOuttakeLId = 22;
 	public static final int kOuttakeRId = 23;
-	public static final int kClimberId = 30;
+	public static final int kExtendableClimberId = 30;
 	public static final int kRotatingArmId = 31;
 	public static final int kBeltId = 21;
 	public static final int kIndexerId = 24;

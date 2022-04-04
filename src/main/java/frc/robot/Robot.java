@@ -7,6 +7,13 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
+
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -25,6 +32,7 @@ import frc.robot.subsystems.Drive;
 public class Robot extends TimedRobot {
 	private RobotContainer m_robotContainer;
 	private Command m_autonomousCommand;
+	private Thread m_visionThread;
 	// private Command m_autonomousCommand;
 
 	private final Timer m_timer = new Timer();
@@ -32,6 +40,25 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		m_robotContainer = new RobotContainer();
+		m_visionThread = 
+			new Thread(
+				() -> {
+					UsbCamera camera = CameraServer.startAutomaticCapture();
+					camera.setResolution(640, 480);
+					CvSink cvSink = CameraServer.getVideo();
+					CvSource outputStream = CameraServer.putVideo("Processed Image", 640, 480);
+					Mat mat = new Mat();
+
+					while(!Thread.interrupted()){
+						if(cvSink.grabFrame(mat) == 0){
+							outputStream.notifyError(cvSink.getError());
+							continue;
+						}
+						Mat threholdedImage = 
+						Imgproc.rectangle(img, pt1, pt2, color);
+					}
+				}
+			)
 	}
 
 	@Override
@@ -51,7 +78,7 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		CommandScheduler.getInstance().run();
 		m_robotContainer.driveControl();
-		m_robotContainer.updateShooterSpeed().schedule();
+		// m_robotContainer.updateShooterSpeed().schedule();
 		// m_robotContainer.configureButtonBindings();
 	}
 

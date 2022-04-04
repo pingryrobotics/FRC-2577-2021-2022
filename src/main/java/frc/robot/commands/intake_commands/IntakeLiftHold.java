@@ -8,7 +8,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeLift;
 
 /** An example command that uses an example subsystem. */
-public class IntakeLiftUp extends CommandBase {
+public class IntakeLiftHold extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
 	private final IntakeLift m_subsystem;
 
@@ -17,7 +17,7 @@ public class IntakeLiftUp extends CommandBase {
 	 *
 	 * @param m_intake The subsystem used by this command.
 	 */
-	public IntakeLiftUp(IntakeLift m_intake) {
+	public IntakeLiftHold(IntakeLift m_intake) {
 		m_subsystem = m_intake;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(m_intake);
@@ -25,25 +25,21 @@ public class IntakeLiftUp extends CommandBase {
 
 	@Override
 	public void initialize() {
-		m_subsystem.powerUpwards();
+		// m_subsystem.powerDownwards();
+		m_subsystem.holdUp();
 		// m_subsystem.invertExtendable();
 		// m_subsystem.set((direc ? 1 : -1) * Constants.kClimberSpeed);
 	}
-
-	@Override
-	public void execute() {
-		System.out.println("Lift position: " + m_subsystem.getLiftPosition());
-	}
+	
 
 	@Override
 	public boolean isFinished() {
+		// return !(m_subsystem.getLiftPosition() > Constants.kFlipDownArmPosition) ;
 		return true;
-		// return m_subsystem.getLiftPosition() <= Constants.kFlipUpArmPosition;
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		// m_subsystem.powerOff();
-		// m_subsystem.holdUp();
 	}
 }

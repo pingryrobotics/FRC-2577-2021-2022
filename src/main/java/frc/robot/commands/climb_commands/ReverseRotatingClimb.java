@@ -2,13 +2,13 @@ package frc.robot.commands.climb_commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.RotatingClimber;
 import frc.robot.subsystems.ExampleSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class ReverseRotatingClimb extends CommandBase {
 	@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-	private final Climber m_subsystem;
+	private final RotatingClimber m_subsystem;
 	private final double speed;
 
 	/**
@@ -16,7 +16,7 @@ public class ReverseRotatingClimb extends CommandBase {
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public ReverseRotatingClimb(Climber subsystem, double speed) {
+	public ReverseRotatingClimb(RotatingClimber subsystem, double speed) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);

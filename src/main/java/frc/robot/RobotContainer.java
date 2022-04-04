@@ -41,6 +41,7 @@ import frc.robot.commands.drive_commands.SetDriveDirection;
 import frc.robot.commands.drive_commands.SetDriveSpeed;
 import frc.robot.commands.intake_commands.IntakeBelt;
 import frc.robot.commands.intake_commands.IntakeLiftDown;
+import frc.robot.commands.intake_commands.IntakeLiftHold;
 import frc.robot.commands.intake_commands.IntakeLiftStop;
 import frc.robot.commands.intake_commands.IntakeLiftUp;
 import frc.robot.commands.intake_commands.ReverseIntake;
@@ -57,10 +58,11 @@ import frc.robot.commands.shooter_commands.ChangeShooterSpeed;
 import frc.robot.commands.shooter_commands.IndexerIn;
 import frc.robot.commands.shooter_commands.IndexerOut;
 //import frc.robot.commands.TwoCargoAuto;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.RotatingClimber;
 // import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.DifferentialSubsystem;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.ExtendableClimber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeLift;
@@ -95,8 +97,8 @@ public class RobotContainer {
 	// 		new CANSparkMax(Constants.kHopperUpperId, MotorType.kBrushless));
 	// private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless));
 	// public XboxController m_driverController = new XboxController(0);
-	public Joystick m_leftStick = new Joystick(0);
-	public Joystick m_rightStick = new Joystick(1);
+	// public Joystick m_leftStick = new Joystick(0);
+	// public Joystick m_rightStick = new Joystick(1);
 	public Joystick m_oliviaMechanism = new Joystick(2);
 	public XboxController m_mechanismController = new XboxController(3);
 	public XboxController driveController = new XboxController(4);
@@ -121,8 +123,8 @@ public class RobotContainer {
 	private final Intake m_intake = new Intake(new CANSparkMax(Constants.kIntakeId, MotorType.kBrushless), new CANSparkMax(Constants.kBeltId, MotorType.kBrushless));
 	private final IntakeLift m_intakeLift = new IntakeLift(new CANSparkMax(Constants.kIntakeArmId, MotorType.kBrushless));
 	// private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless), new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
-	private final Climber m_climber = new Climber(new CANSparkMax(Constants.kClimberId, MotorType.kBrushless),
-			new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
+	private final RotatingClimber m_rotatingClimb = new RotatingClimber(new CANSparkMax(Constants.kRotatingArmId, MotorType.kBrushless));
+	private final ExtendableClimber m_extendableClimber = new ExtendableClimber(new CANSparkMax(Constants.kExtendableClimberId, MotorType.kBrushless));
 	private final Indexer m_indexer = new Indexer(new CANSparkMax(Constants.kIndexerId, MotorType.kBrushless));
 	private final Vision m_vision = new Vision(m_shooter);
 	 // private final ColorSensor m_colorSensor = new ColorSensor(m_intake);
@@ -142,6 +144,22 @@ public class RobotContainer {
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
+		shooterRegression.setDefaultOption("0.7", 0.7);
+
+		shooterRegression.addOption("0.1", 0.1);
+		shooterRegression.addOption("0.2", 0.2);
+		shooterRegression.addOption("0.3", 0.3);
+		shooterRegression.addOption("0.4", 0.4);
+		shooterRegression.addOption("0.5", 0.5);
+		shooterRegression.addOption("0.6", 0.6);
+		
+		shooterRegression.addOption("0.8", 0.8);
+		shooterRegression.addOption("0.9", 0.9);
+		shooterRegression.addOption("1.0", 1.0);
+
+		SmartDashboard.putData("Shooter Speed", shooterRegression);
+
+
 		// Configure the button binding
 		configureButtonBindings();
 		m_intakeLift.zeroLift();
@@ -163,27 +181,15 @@ public class RobotContainer {
 		// m_intake.toggleBeltStart();
 		
 		// m_robotSubsystemDrive = new Drive(m_leftMotors, m_rightMotors);
-		m_chooser.setDefaultOption("TA", new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter));
+		// m_chooser.setDefaultOption("TA", new TwoCargoAuto(AutoPosition.TARMAC_A, m_robotDrive, m_intake, m_shooter));
 		// m_chooser.addOption("TB", new TwoCargoAuto(AutoPosition.TARMAC_B, m_robotDrive, m_intake, m_shooter));
 		// m_chooser.addOption("TC", new TwoCargoAuto(AutoPosition.TARMAC_C, m_robotDrive, m_intake, m_shooter));
 		// m_chooser.addOption("TD", new TwoCargoAuto(AutoPosition.TARMAC_D, m_robotDrive, m_intake, m_shooter));
-		m_chooser.addOption("Two Ball Auto", new TwoBallAuto(m_robotDrive, m_intake, m_intakeLift, m_shooter, m_indexer));
+		m_chooser.setDefaultOption("Two Ball Auto", new TwoBallAuto(m_robotDrive, m_intake, m_intakeLift, m_shooter, m_indexer));
+		m_chooser.addOption("One ball auto", new OneBallAuto(m_robotDrive, m_intake, m_shooter, m_indexer));
 		SmartDashboard.putData("Auto choices", m_chooser);
-		shooterRegression.addOption("0.1", 0.1);
-		shooterRegression.addOption("0.2", 0.2);
-		shooterRegression.addOption("0.3", 0.3);
-		shooterRegression.addOption("0.4", 0.4);
-		shooterRegression.addOption("0.5", 0.5);
-		shooterRegression.addOption("0.6", 0.6);
-		shooterRegression.addOption("0.7", 0.7);
-		shooterRegression.addOption("0.8", 0.8);
-		shooterRegression.addOption("0.9", 0.9);
-		shooterRegression.addOption("1.0", 1.0);
-
-		SmartDashboard.putData("Shooter Speed", shooterRegression);
-
-		SmartDashboard.putNumber("Shoot speed", .4);
 		
+		SmartDashboard.putNumber("Shoot speed", .65);		
 	}
 
 	/**
@@ -199,12 +205,17 @@ public class RobotContainer {
 		new JoystickButton(m_mechanismController, Button.kX.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.3)); // lower level
 		new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0));
 		new JoystickButton(m_mechanismController, Button.kStart.value).whenPressed(new ChangeShooterSpeed(m_shooter, -0.4));
+		new JoystickButton(m_mechanismController, Button.kBack.value).whenPressed(new IndexerIn(m_indexer));
 		// new JoystickButton(m_mechanismController, Button.kA.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.3));
-		new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(new ChangeShooterSpeed(m_shooter, 0.60)); // upper level from line
-		// new JoystickButton(m_mechanismController, Button.kBack.value).whenPressed(shooterRegression.getSelected());
-		
-		new JoystickButton(m_mechanismController, Button.kY.value).whenPressed(
-				new ChangeShooterSpeed(m_shooter, m_vision.getPower())); // automatic distance adjustment
+		new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(new ChangeShooterSpeed(m_shooter, .67)); // upper level from line
+		new JoystickButton(m_mechanismController, Button.kY.value).whenPressed(new SequentialCommandGroup(
+				new SetBeltDirection(m_intake, true),	
+				new SetBeltEnabled(m_intake, true),
+				new IndexerOut(m_indexer)));
+		new JoystickButton(m_mechanismController, Button.kY.value).whenReleased(new SequentialCommandGroup(
+				new SetBeltEnabled(m_intake, false)));
+					// new JoystickButton(m_mechanismController, Button.kB.value).whenPressed(
+				// new ChangeShooterSpeed(m_shooter, m_vision.getPower())); // automatic distance adjustment
 		// new JoystickButton(m_driverController1, 11).whenPressed(new ToggleHopper(m_hopper));
 		new JoystickButton(m_mechanismController, Button.kRightBumper.value).whenPressed(new SequentialCommandGroup(
 				new SetIntakeDirection(m_intake, false),
@@ -222,24 +233,25 @@ public class RobotContainer {
 		new JoystickButton(m_mechanismController, Button.kLeftBumper.value).whenReleased(new SequentialCommandGroup(
 				new SetIntakeEnabled(m_intake, false),
 				new SetBeltEnabled(m_intake, false))); // intake off when released
-		new POVButton(m_mechanismController, 180).whenPressed(new IntakeLiftUp(m_intakeLift)); // extend/retract arm
-		new POVButton(m_mechanismController, 0).whenPressed(new IntakeLiftDown(m_intakeLift));
-		new POVButton(m_mechanismController, 90).whenHeld(new RotatingClimb(m_climber, 0.1)); // rotate arm
-		new POVButton(m_mechanismController, 270).whenHeld(new ReverseRotatingClimb(m_climber, 0.1));
-		// new JoystickButton(m_mechanismController, Button.kBack.value).whenPressed(new ToggleColorSensor(m_colorSensor));
-
-		// new JoystickButton(m_mechanismController, Button.kBack.value).whenPressed(new ReverseIntake(m_intake)); // reverse intake
-		// new JoystickButton(m_0mechanismController, Button.kStart.value).whenPressed(new ReverseIntakeBelt(m_intake)); // reverse
+		new POVButton(m_mechanismController, 0).whenPressed(new IntakeLiftUp(m_intakeLift)); // extend/retract arm
+		new POVButton(m_mechanismController, 0).whenReleased(new IntakeLiftStop(m_intakeLift)); // extend/retract arm
+		new POVButton(m_mechanismController, 180).whenPressed(new IntakeLiftDown(m_intakeLift));
+		new POVButton(m_mechanismController, 180).whenReleased(new IntakeLiftStop(m_intakeLift)); // extend/retract arm
+		new JoystickButton(m_mechanismController, Button.kLeftStick.value).whenPressed(new IntakeLiftHold(m_intakeLift));
+		new JoystickButton(m_mechanismController, Button.kRightStick.value).whenPressed(new IntakeLiftStop(m_intakeLift)); // extend/retract arm
+		new POVButton(m_mechanismController, 270).whenHeld(new RotatingClimb(m_rotatingClimb, 1)); // rotate arm
+		new POVButton(m_mechanismController, 90).whenHeld(new ReverseRotatingClimb(m_rotatingClimb, 1));
+		// new JoystickButton(m_mechanismController, Button.`.value).whenPressed(new ToggleColorSensor(m_colorSensor));
 
 		// new JoystickButton(m_driverController, Button.kLeftBumper.value).whenHeld(new Climb(m_climber)); // toggle climber
 		// new JoystickButton(m_driverController, Button.kRightBumper.value).whenHeld(new ReverseClimb(m_climber)); // toggle climber
 
 		// olivia mechanism controller
 		// climb
-		new JoystickButton(m_oliviaMechanism, 6).whenHeld(new RotatingClimb(m_climber, 1));
-		new JoystickButton(m_oliviaMechanism, 7).whenHeld(new ReverseRotatingClimb(m_climber, 1));
-		new JoystickButton(m_oliviaMechanism, 10).whenHeld(new ExtendableClimb(m_climber));
-		new JoystickButton(m_oliviaMechanism, 11).whenHeld(new ReverseExtendableClimb(m_climber));
+		new JoystickButton(m_oliviaMechanism, 6).whenHeld(new RotatingClimb(m_rotatingClimb, 1));
+		new JoystickButton(m_oliviaMechanism, 7).whenHeld(new ReverseRotatingClimb(m_rotatingClimb, 1));
+		new JoystickButton(m_oliviaMechanism, 10).whenHeld(new ExtendableClimb(m_extendableClimber));
+		new JoystickButton(m_oliviaMechanism, 11).whenHeld(new ReverseExtendableClimb(m_extendableClimber));
 
 		// intake
 
@@ -280,19 +292,39 @@ public class RobotContainer {
 		new JoystickButton(m_oliviaMechanism, 5).whenPressed(new IntakeLiftDown(m_intakeLift));
 		new JoystickButton(m_oliviaMechanism, 5).whenReleased(new IntakeLiftStop(m_intakeLift));
 
-		new JoystickButton(m_oliviaMechanism, 3).whenPressed(new ChangeShooterSpeed(m_shooter, .7));
+		new JoystickButton(m_oliviaMechanism, 3).whenPressed(new ChangeShooterSpeed(m_shooter, .63));
 		new JoystickButton(m_oliviaMechanism, 3).whenReleased(new ChangeShooterSpeed(m_shooter, 0));
 
-		new JoystickButton(m_oliviaMechanism, 2).whenPressed(new ToggleIntakeAndBelt(m_intake));
+		new JoystickButton(m_oliviaMechanism, 2).whenPressed(new ChangeShooterSpeed(m_shooter, .6));
+		new JoystickButton(m_oliviaMechanism, 2).whenReleased(new ChangeShooterSpeed(m_shooter, 0));
 
+
+		// diego controls
+
+		new JoystickButton(driveController, Button.kLeftBumper.value).whenPressed(new SequentialCommandGroup(
+			new IndexerOut(m_indexer),
+			new SetBeltEnabled(m_intake, true),
+			new SetBeltDirection(m_intake, true)
+		));
 
 		
+		new JoystickButton(driveController, Button.kLeftBumper.value).whenReleased(
+			new SetBeltEnabled(m_intake, false));
 
-		new JoystickButton(m_leftStick, 3).whenPressed(new IndexerOut(m_indexer));
-		new JoystickButton(m_leftStick, 2).whenPressed(new IndexerIn(m_indexer));
 
-		new JoystickButton(m_rightStick, 3).whenHeld(new ExtendableClimb(m_climber));
-		new JoystickButton(m_rightStick, 2).whenHeld(new ReverseExtendableClimb(m_climber));
+		// new JoystickButton(driveController, Button.kLeftBumper.value).whenPressed(new Limeli, requirements)
+
+		
+		// // tank drive
+		// new JoystickButton(m_leftStick, 3).whenPressed(new IndexerOut(m_indexer));
+		// new JoystickButton(m_leftStick, 2).whenPressed(new IndexerIn(m_indexer));
+
+		// new JoystickButton(m_rightStick, 3).whenHeld(new ExtendableClimb(m_climber));
+		// new JoystickButton(m_rightStick, 2).whenHeld(new ReverseExtendableClimb(m_climber));
+		
+		// // end tank drive
+		
+		
 		// new JoystickButton(m_rightStick, 4).whenHeld(new SetDriveDirection(m_diffSub, true));
 		// new JoystickButton(m_rightStick, 5).whenHeld(new SetDriveDirection(m_diffSub, false));
 
@@ -309,9 +341,9 @@ public class RobotContainer {
 	}
 
 	public void driveControl() {
-		if (driveController.getRightBumper()) {
-			m_shooter.setDesiredSpeed(shooterRegression.getSelected());
-		}
+		// if (driveController.getRightBumper()) {
+		// 	m_shooter.setDesiredSpeed(shooterRegression.getSelected());
+		// }
 
 		// m_robotDrive.tankDrive(m_leftStick.getY(), m_rightStick.getY());
 		SmartDashboard.putNumber("Current Heading", m_robotDrive.getHeading());
@@ -322,8 +354,6 @@ public class RobotContainer {
 		if(driveController.getLeftBumper()){
 			if(table.getEntry("tv").getDouble(0.0) == 1){
 				double tx = table.getEntry("tx").getDouble(0.0);
-				double ty = table.getEntry("ty").getDouble(0.0);
-				double distance_error = table.getEntry("ty").getDouble(0.0);
 				double headingError = -table.getEntry("tx").getDouble(0.0);
 				double steeringAdjust = 0.0;
 				if(tx > 0){
@@ -332,9 +362,30 @@ public class RobotContainer {
 				else if(tx < 1.0){
 					steeringAdjust = kP*headingError + minValue;
 				}
-				double distanceAdjust = kPDistance * distance_error;
-				m_robotDrive.tankDrive(steeringAdjust + distanceAdjust, -steeringAdjust + distanceAdjust);
+				m_robotDrive.tankDrive(steeringAdjust, -steeringAdjust);
+				// m_robotDrive.tankDrive(steeringAdjust + 0.05, -steeringAdjust + -0.05);
+
 			}
+		}
+
+		else if(driveController.getRightBumper()){
+				if(table.getEntry("tv").getDouble(0.0) == 1){
+					double tx = table.getEntry("tx").getDouble(0.0);
+					double ty = table.getEntry("ty").getDouble(0.0);
+					double distance_error = table.getEntry("ty").getDouble(0.0);
+					double headingError = -table.getEntry("tx").getDouble(0.0);
+					double steeringAdjust = 0.0;
+					if(tx > 0){
+						steeringAdjust = kP*headingError - minValue;
+					}
+					else if(tx < 1.0){
+						steeringAdjust = kP*headingError + minValue;
+					}
+					double distanceAdjust = kPDistance * distance_error;
+					m_robotDrive.tankDrive(steeringAdjust + distanceAdjust, -steeringAdjust + distanceAdjust);
+					// m_robotDrive.tankDrive(steeringAdjust + 0.05, -steeringAdjust + -0.05);
+	
+				}
 		}
 		
 		else{
@@ -352,10 +403,10 @@ public class RobotContainer {
 		// m_robotDrive.tankDrive(m_driverController.getRawAxis(Axis.kLeftY.value), m_driverController.getRawAxis(Axis.kRightY.value));
 	}
 
-	public Command updateShooterSpeed() {
-		return new ChangeShooterSpeed(m_shooter, 0);
+	// public Command updateShooterSpeed() {
+		// return new ChangeShooterSpeed(m_shooter, 0);
 		// return new ChangeShooterSpeed(m_shooter, SmartDashboard.getNumber("Shoot speed", 0));
-	}
+	// }
 
 	// A chooser for autonomous commands
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -383,7 +434,7 @@ public class RobotContainer {
 
 
 
-		m_robotDrive.setPose(new Pose2d());
+		// m_robotDrive.setPose(new Pose2d());
 		// System.out.println("chosen auto pos: " + m_chooser.getSelected().pos.getPose());
 		return m_chooser.getSelected();
 		// return void;

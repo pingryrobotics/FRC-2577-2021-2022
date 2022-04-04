@@ -50,4 +50,9 @@ public class PIDTurn extends CommandBase{
         return headingToGo - m_subsystem.getHeading() <= 3 && headingToGo - m_subsystem.getHeading() >= -3;
     }
 
+	@Override
+	public void end(boolean interrupted) {
+		m_subsystem.tankDrive(0, 0);
+	} 
+
 }

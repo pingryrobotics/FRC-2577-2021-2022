@@ -24,6 +24,7 @@ public class DriveForwardPID extends CommandBase{
 	public DriveForwardPID(Drive subsystem, double timeout) {
 		m_subsystem = subsystem;
         seconds = timeout;
+		this.timer = new Timer();
 		initialHeading = subsystem.getHeading();
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
@@ -51,5 +52,10 @@ public class DriveForwardPID extends CommandBase{
     public boolean isFinished(){
         return timer.get() >= seconds;
     }
+
+	@Override
+	public void end(boolean interrupted) {
+		m_subsystem.tankDrive(0, 0);
+	} 
 
 }

@@ -3,7 +3,7 @@ package frc.robot.commands.intake_commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.RotatingClimber;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeLift;
@@ -23,6 +23,7 @@ public class IntakeLiftDownAutonomous extends CommandBase {
 	public IntakeLiftDownAutonomous(IntakeLift m_intake, double seconds) {
 		m_subsystem = m_intake;
 		this.seconds = seconds;
+		this.timer = new Timer();
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(m_intake);
 	}
