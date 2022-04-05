@@ -140,6 +140,7 @@ public class RobotContainer {
 
 
 	SendableChooser<Double> shooterRegression = new SendableChooser<>();
+	SendableChooser<Boolean> teamChooser = new SendableChooser<>();
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -159,6 +160,11 @@ public class RobotContainer {
 		shooterRegression.addOption("1.0", 1.0);
 
 		SmartDashboard.putData("Shooter Speed", shooterRegression);
+
+
+		teamChooser.addOption("Red", true);
+		teamChooser.addOption("Blue", false);
+		SmartDashboard.putData("Team color", teamChooser);
 
 
 		// Configure the button binding
@@ -442,7 +448,7 @@ public class RobotContainer {
 	}
 
 	public boolean getTeamColor() {
-		return isRed;
+		return teamChooser.getSelected();
 	}
 
 
