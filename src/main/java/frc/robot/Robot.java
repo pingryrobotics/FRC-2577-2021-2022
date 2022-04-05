@@ -7,6 +7,7 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
@@ -64,14 +65,22 @@ public class Robot extends TimedRobot {
 						}
 						Scalar lowHSVBlue = new Scalar(0, 0, 0);
 						Scalar highHSVBlue = new Scalar(0, 0, 0);
-
+						
+						Scalar actualValue1; 
+						Scalar actualValue2;
 						if(m_robotContainer.getTeamColor()){
-
+							
 						}
 						else{
 
 						}
-						Mat threholdedImage = 
+
+						Mat thresholdedImage = new Mat();
+						Core.inRange(mat, actualValue1, actualValue2, thresholdedImage);
+
+						Mat edges = new Mat();
+						Imgproc.Canny(thresholdedImage, edges, 100, 300);
+
 						Imgproc.rectangle(img, pt1, pt2, color);
 					}
 				}
