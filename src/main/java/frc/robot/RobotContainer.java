@@ -136,6 +136,7 @@ public class RobotContainer {
 	private double kP = 0.05;
 	private double kPDistance = 0.1;
 	private double minValue = 0.05;
+	private boolean isRed = true;
 
 
 	SendableChooser<Double> shooterRegression = new SendableChooser<>();
@@ -439,6 +440,11 @@ public class RobotContainer {
 		return m_chooser.getSelected();
 		// return void;
 	}
+
+	public boolean getTeamColor() {
+		return isRed;
+	}
+
 
 	public void setDriveAuto() {
 		m_robotDrive.setAutoMotors();

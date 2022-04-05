@@ -8,12 +8,16 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -21,6 +25,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Drive;
@@ -33,6 +38,8 @@ public class Robot extends TimedRobot {
 	private RobotContainer m_robotContainer;
 	private Command m_autonomousCommand;
 	private Thread m_visionThread;
+	private boolean red = true;
+	private NetworkTable table;
 	// private Command m_autonomousCommand;
 
 	private final Timer m_timer = new Timer();
@@ -40,7 +47,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		m_robotContainer = new RobotContainer();
-		m_visionThread = 
+		NetworkTableInstance inst = NetworkTableInstance.getDefault();
+		SmartDashboard.getEntry("oi")
 			new Thread(
 				() -> {
 					UsbCamera camera = CameraServer.startAutomaticCapture();
@@ -53,6 +61,15 @@ public class Robot extends TimedRobot {
 						if(cvSink.grabFrame(mat) == 0){
 							outputStream.notifyError(cvSink.getError());
 							continue;
+						}
+						Scalar lowHSVBlue = new Scalar(0, 0, 0);
+						Scalar highHSVBlue = new Scalar(0, 0, 0);
+
+						if(m_robotContainer.getTeamColor()){
+
+						}
+						else{
+
 						}
 						Mat threholdedImage = 
 						Imgproc.rectangle(img, pt1, pt2, color);
