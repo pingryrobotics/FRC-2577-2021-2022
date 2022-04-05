@@ -4,11 +4,18 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.text.html.ListView;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
@@ -49,9 +56,11 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		m_robotContainer = new RobotContainer();
 		NetworkTableInstance inst = NetworkTableInstance.getDefault();
-		SmartDashboard.getEntry("oi")
-			new Thread(
-				() -> {
+		SmartDashboard.getEntry("oi");
+			m_visionThread = new Thread(new Runnable() {
+
+				@Override
+				public void run() {
 					UsbCamera camera = CameraServer.startAutomaticCapture();
 					camera.setResolution(640, 480);
 					CvSink cvSink = CameraServer.getVideo();
@@ -63,28 +72,64 @@ public class Robot extends TimedRobot {
 							outputStream.notifyError(cvSink.getError());
 							continue;
 						}
-						Scalar lowHSVBlue = new Scalar(0, 0, 0);
-						Scalar highHSVBlue = new Scalar(0, 0, 0);
+						Scalar lowHSVBlue = new Scalar(203, 51, 35);
+						Scalar highHSVBlue = new Scalar(223, 71, 55);
+
+						Scalar lowHSVRed = new Scalar(0, 74, 64);
+						Scalar highHSVRed = new Scalar(12, 94, 84);
 						
-						Scalar actualValue1; 
-						Scalar actualValue2;
+						Scalar actualHSVLow; 
+						Scalar actualHSVHigh;
 						if(m_robotContainer.getTeamColor()){
-							
+							actualHSVLow = lowHSVRed;
+							actualHSVHigh = highHSVRed;
 						}
 						else{
-
+							actualHSVLow = lowHSVBlue;
+							actualHSVHigh = highHSVBlue;
 						}
 
 						Mat thresholdedImage = new Mat();
-						Core.inRange(mat, actualValue1, actualValue2, thresholdedImage);
+						Core.inRange(mat, actualHSVLow, actualHSVHigh, thresholdedImage);
 
 						Mat edges = new Mat();
 						Imgproc.Canny(thresholdedImage, edges, 100, 300);
 
-						Imgproc.rectangle(img, pt1, pt2, color);
-					}
+						List<MatOfPoint> contours = new ArrayList<>();
+						Mat hierarchy = new Mat();
+						
+						Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+
+						int sz = contours.size();
+
+						MatOfPoint2f[] contoursPoly = new MatOfPoint2f[sz];
+						Rect biggestRect = new Rect();
+						Rect[] boundRects = new Rect[sz];
+						for (int i = 0; i < sz; i++) {
+							contoursPoly[i] = new MatOfPoint2f();
+							Imgproc.approxPolyDP(
+								new MatOfPoint2f(contours.get(i).toArray()),
+								contoursPoly[i],
+								3,
+								true);
+							boundRects[i] = Imgproc.boundingRect(new MatOfPoint2f(contoursPoly[i].toArray()));
+							if (boundRects[i].area() >= biggestRect.area()) {
+								biggestRect = boundRects[i];
+							}
+						}
+
+						Imgproc.rectangle(thresholdedImage, biggestRect, new Scalar(255, 0, 0), 4);
+						int rectCenterX = biggestRect.x + (biggestRect.width / 2);
+						
+						
+
+
+					
 				}
-			)
+				
+			};
+
+
 	}
 
 	@Override
